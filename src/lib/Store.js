@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
+import axios from "axios";
+
+axios.defaults.headers.common["apikey"] =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
 // export const supabase = createClient(
-//   process.env.NEXT_PUBLIC_SUPABASE_URL,
-//   process.env.NEXT_PUBLIC_SUPABASE_KEY
+//   process.env.PUBLIC_SUPABASE_URL,
+//   process.env.PUBLIC_SUPABASE_KEY
 // );
 
 export const supabase = createClient(
@@ -11,9 +15,6 @@ export const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E"
 );
 
-/**
- * @param {number} channelId the currently selected Channel
- */
 export const useStore = (props) => {
   const [logs, setLogs] = useState([]);
   const [devices, setDevices] = useState([]);
@@ -35,6 +36,7 @@ export const useStore = (props) => {
         setDevices((devices) => [...devices, payload.new]);
       })
       .on("UPDATE", (payload) => {
+        console.log(payload);
         handleUpdateDevice(payload.new);
       })
       .on("DELETE", (payload) => {
@@ -57,32 +59,43 @@ export const useStore = (props) => {
   // handle event update device
   useEffect(() => {
     if (updateDevice) {
-      let alt_devices = devices;
-      alt_devices.map((e) => {
-        if (e.id === updateDevice.id) {
-          e.idDevice = updateDevice.idDevice;
-        }
-        return null;
-      });
-      setDevices(alt_devices);
-      handleUpdateDevice(null);
+      if (devices) {
+        console.log('updateDevice: ' + devices);
+        setDevices((devices) =>
+          devices.map((e) => {
+            if (e.id === updateDevice.id) {
+              e.code = updateDevice.code;
+            }
+            return e;
+          })
+        );
+      }
     }
-  }, [updateDevice, devices]);
 
+    // return () => {
+    //   setDevices(devices);
+    // };
+  }, [updateDevice]);
 
   // handle event delete device
   useEffect(() => {
     if (deleteDevice) {
-      setDevices(devices.filter((device) => device.id !== deleteDevice.id));
+      if (devices) {
+        setDevices(devices.filter((device) => device.id !== deleteDevice.id));
+      }
     }
-  }, [deleteDevice, devices]);
+
+    // return () => {
+    //   setDevices(devices);
+    // };
+  }, [deleteDevice]);
 
   //Init with 50 rows first
   async function fetchLogs() {
     let { data: log, error } = await supabase
       .from("logs")
       .select("*")
-      .order("time", { ascending: false })
+      .order("date_create", { ascending: false })
       .limit(50);
 
     if (error) throw error;
@@ -90,14 +103,28 @@ export const useStore = (props) => {
     setLogs(log);
   }
 
-
   //Init devices
   async function fetchDevice() {
-    let { data: devices, error } = await supabase.from("devices").select("*");
+    let tokenStr = "";
 
-    if (error) throw error;
+    if (typeof Storage !== "undefined") {
+      //Nếu hỗ trợ
+      let data = JSON.parse(localStorage.getItem("supabase.auth.token"));
 
-    setDevices(devices);
+      tokenStr = data["currentSession"]["access_token"];
+      console.log("token: " + tokenStr);
+    } else {
+      // Nếu không hỗ trợ
+      alert("Trình duyệt của bạn không hỗ trợ Local Storage");
+    }
+
+    let res = await axios.get(
+      "https://ngbkythjduonfnmwrasm.supabase.co/rest/v1/devices?select=*",
+      { headers: { Authorization: `Bearer ${tokenStr}` } }
+    );
+
+    console.log(res.data);
+    setDevices(res.data);
   }
 
   function clearLogs() {

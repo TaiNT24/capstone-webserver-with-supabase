@@ -1,11 +1,39 @@
 import { Layout, Menu } from "antd";
 import { UserOutlined, LaptopOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { useAuth } from "../lib/use-auth";
+import { useHistory, useLocation } from "react-router-dom";
+import routes from "../pages/routes";
+import { useEffect, useState } from "react";
 
 const { Sider } = Layout;
 
 const { SubMenu } = Menu;
 
 export default function Siderbar() {
+  const [selectedItem, setSelectedItem] = useState("/log");
+
+  const auth = useAuth();
+  let history = useHistory();
+  let location = useLocation();
+
+  useEffect(() => {
+    let newPath = location.pathname;
+    history;
+    if (newPath === "/") {
+      newPath = "/log";
+    }
+    setSelectedItem(newPath);
+    console.log("selectedItem: " + selectedItem);
+  });
+
+  const clickLogout = () => {
+    alert("Logout");
+    auth.signout(() => {
+      history.replace("/login");
+    });
+  };
+
   return (
     <Sider
       style={{
@@ -21,20 +49,37 @@ export default function Siderbar() {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["5"]}
-        defaultOpenKeys={["sub2"]}
+        // defaultSelectedKeys={selectedItem}
+        // defaultOpenKeys={selectedGroup}
+        selectedKeys={selectedItem}
       >
-        <SubMenu key="sub1" icon={<UserOutlined />} title="User">
+        <Menu.Item icon={<LaptopOutlined />} key="/log">
+          <Link to="/log">Track vehicle's log</Link>
+        </Menu.Item>
+
+        <SubMenu
+          key="manage_staff"
+          icon={<UserOutlined />}
+          title="Manage Staff"
+        >
           <Menu.Item key="1">option1</Menu.Item>
-          <Menu.Item key="2">option2</Menu.Item>
-          <Menu.Item key="3">option3</Menu.Item>
-          <Menu.Item key="4">option4</Menu.Item>
         </SubMenu>
-        <SubMenu key="sub2" icon={<LaptopOutlined />} title="Track robot's log">
-          <Menu.Item key="5">Track Log</Menu.Item>
-          <Menu.Item key="6">option6</Menu.Item>
-          <Menu.Item key="7">option7</Menu.Item>
-          <Menu.Item key="8">option8</Menu.Item>
+
+        <SubMenu
+          key="manage_vehicle"
+          icon={<UserOutlined />}
+          title="Manage Vehicle"
+        >
+          <Menu.Item key="2">option2</Menu.Item>
+        </SubMenu>
+
+        <SubMenu key="my_account" icon={<UserOutlined />} title="My account" >
+          <Menu.Item key="/about">
+            <Link to="/about">About Page</Link>
+          </Menu.Item>
+          <Menu.Item key="/logout" onClick={clickLogout}>
+            Lougout
+          </Menu.Item>
         </SubMenu>
       </Menu>
     </Sider>

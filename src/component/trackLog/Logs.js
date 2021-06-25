@@ -1,5 +1,5 @@
 import { Layout, Table, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FilterDevice from "./FilterDevice";
 import ClearLog from "./ClearLog";
@@ -33,34 +33,39 @@ const columns = [
 export default function Logs(props) {
   const { listLog, devices, clearLogs } = useStore();
 
-  const [idDeviceFilter, setIdDeviceFilter] = useState(listLog);
+  const [idDeviceFilter, setIdDeviceFilter] = useState([]);
+  const [data, setData] = useState();
 
-  function data() {
-    const data = [];
+  useEffect(() => {
+    const dataX = [];
 
-    listLog.map((e, index) => {
-      if (idDeviceFilter.length === 0) {
-        data.push({
-          key: index,
-          time: e.time,
-          idDevice: e.idDevice,
-          content: e.content,
-        });
-      } else {
-        if (idDeviceFilter.includes(e.idDevice)) {
-          data.push({
+    if(listLog != null && devices != null 
+      && listLog.length != 0 && devices.length != 0 ){
+      listLog.map((e, index) => {
+        if (idDeviceFilter.length === 0) {
+          dataX.push({
             key: index,
-            time: e.time,
-            idDevice: e.idDevice,
+            time: e.date_create,
+            idDevice: devices.filter(device => device.id === e.device)[0].code ,
             content: e.content,
           });
+        } else {
+          if (idDeviceFilter.includes(e.device)) {
+            dataX.push({
+              key: index,
+              time: e.date_create,
+              idDevice: devices.filter(device => device.id === e.device)[0].code,
+              content: e.content,
+            });
+          }
         }
-      }
-      return null;
-    });
+        return e;
+      });
+    }
 
-    return data;
-  }
+    setData(dataX);
+
+  }, [listLog, devices, idDeviceFilter]);
 
   function updateIdDeviceFilter(value) {
     setIdDeviceFilter(value);
@@ -86,7 +91,7 @@ export default function Logs(props) {
       <Table
         pagination={false}
         columns={columns}
-        dataSource={data()}
+        dataSource={data}
         scroll={{ y: 350 }}
         style={{ marginTop: 10 }}
       />

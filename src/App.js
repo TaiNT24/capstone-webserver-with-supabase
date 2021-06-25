@@ -1,26 +1,30 @@
 import React from "react";
-import { Layout } from "antd";
+import { Route, Switch } from "react-router-dom";
+import { useAuth } from "./lib/use-auth";
+
 import "./App.less";
 
-import Sidebar from "./component/Siderbar";
-import Content from "./component/Content";
+import LoginForm from "./pages/login/Login";
+import Home from "./pages/home/Home";
+import PublicRoute from "./component/PublicRoute";
+
+const authPath = '/login';
 
 const App = () => {
-  const height = () => {
-    var element = document.getElementsByTagName("BODY")[0];
-    var positionInfo = element.getBoundingClientRect();
-    var height = positionInfo.height;
-    return height;
-  };
+  let auth = useAuth();
+  let authed = auth.isLogin();
 
+  console.log("App.js init: " + auth.user);
   return (
-    <Layout>
-      <Sidebar />
+    <Switch>
+      <PublicRoute path="/login">
+        <LoginForm />
+      </PublicRoute>
 
-      <Layout className="site-layout" style={{ marginLeft: 250 }}>
-        <Content minHeight={height()} />
-      </Layout>
-    </Layout>
+      <Route>
+        <Home authed={authed} authPath={authPath} />
+      </Route>
+    </Switch>
   );
 };
 

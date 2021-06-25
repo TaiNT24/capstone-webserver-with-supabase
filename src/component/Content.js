@@ -1,4 +1,7 @@
-import Logs from "./trackLog/Logs";
+import { Switch } from "react-router-dom";
+
+import routes from "../pages/routes";
+import renderRoutes from "../pages/renderRoutes";
 
 export default function Content(props) {
   return (
@@ -10,7 +13,13 @@ export default function Content(props) {
         minHeight: props.minHeight,
       }}
     >
-      <Logs />
+      <Switch>
+        {renderRoutes(routes, props.authed, props.authPath)}
+      </Switch>
     </div>
   );
+}
+
+function About() {
+  return "<h1>About</h1>";
 }
