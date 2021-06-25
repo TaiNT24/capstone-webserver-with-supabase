@@ -27,11 +27,11 @@ const routes = [
     restricted: false, // <-- NEW
     component: LoginForm,
   },
-    {
-      path: "*",
-      restricted: true, // <-- NEW
-      component: () => "Page not found",
-    },
+  {
+    path: "*",
+    restricted: true, // <-- NEW
+    component: () => "Page not found",
+  },
 ];
 
 export default routes;
