@@ -39,14 +39,19 @@ export default function Logs(props) {
   useEffect(() => {
     const dataX = [];
 
-    if(listLog != null && devices != null 
-      && listLog.length != 0 && devices.length != 0 ){
+    if (
+      listLog != null &&
+      devices != null &&
+      listLog.length != 0 &&
+      devices.length != 0
+    ) {
       listLog.map((e, index) => {
         if (idDeviceFilter.length === 0) {
           dataX.push({
             key: index,
             time: e.date_create,
-            idDevice: devices.filter(device => device.id === e.device)[0].code ,
+            idDevice: devices.filter((device) => device.id === e.device)[0]
+              .code,
             content: e.content,
           });
         } else {
@@ -54,7 +59,8 @@ export default function Logs(props) {
             dataX.push({
               key: index,
               time: e.date_create,
-              idDevice: devices.filter(device => device.id === e.device)[0].code,
+              idDevice: devices.filter((device) => device.id === e.device)[0]
+                .code,
               content: e.content,
             });
           }
@@ -64,7 +70,6 @@ export default function Logs(props) {
     }
 
     setData(dataX);
-
   }, [listLog, devices, idDeviceFilter]);
 
   function updateIdDeviceFilter(value) {
@@ -73,15 +78,15 @@ export default function Logs(props) {
 
   return (
     <Layout>
-      <FilterDevice
-        idDeviceList={devices}
-        onChangeDeviceFilter={updateIdDeviceFilter}
-      />
+      <Content style={{ textAlign: "center" }}>
+        <Title level={3}>Logs</Title>
+      </Content>
 
-      <Layout>
-        <Content style={{ textAlign: "center" }}>
-          <Title level={3}>Logs</Title>
-        </Content>
+      <Layout style={{ alignContent: "center" }}>
+        <FilterDevice
+          idDeviceList={devices}
+          onChangeDeviceFilter={updateIdDeviceFilter}
+        />
 
         <Sider style={{ backgroundColor: "#f0f2f5" }}>
           <ClearLog clearLogs={clearLogs} />

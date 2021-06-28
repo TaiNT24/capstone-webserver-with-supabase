@@ -20,10 +20,16 @@ export default function Siderbar() {
 
   useEffect(() => {
     let newPath = location.pathname;
-    history;
+
     if (newPath === "/") {
       newPath = "/log";
     }
+
+    // ex: /staff/{id}
+    if(newPath.lastIndexOf('/') > 1){
+      newPath = newPath.substring(0, newPath.lastIndexOf('/'))
+    }
+
     setSelectedItem(newPath);
     console.log("selectedItem: " + selectedItem);
   });
@@ -65,7 +71,9 @@ export default function Siderbar() {
             icon={<UserOutlined />}
             title="Manage Staff"
           >
-            <Menu.Item key="1">option1</Menu.Item>
+            <Menu.Item key="/staff">
+              <Link to="/staff">Staff</Link>
+            </Menu.Item>
           </SubMenu>
 
           <SubMenu

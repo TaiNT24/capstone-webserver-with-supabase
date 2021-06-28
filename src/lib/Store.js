@@ -103,28 +103,12 @@ export const useStore = (props) => {
     setLogs(log);
   }
 
-  //Init devices
   async function fetchDevice() {
-    let tokenStr = "";
+    let { data: devices, error } = await supabase.from("devices").select("*");
 
-    if (typeof Storage !== "undefined") {
-      //Nếu hỗ trợ
-      let data = JSON.parse(localStorage.getItem("supabase.auth.token"));
+    if (error) throw error;
 
-      tokenStr = data["currentSession"]["access_token"];
-      console.log("token: " + tokenStr);
-    } else {
-      // Nếu không hỗ trợ
-      alert("Trình duyệt của bạn không hỗ trợ Local Storage");
-    }
-
-    let res = await axios.get(
-      "https://ngbkythjduonfnmwrasm.supabase.co/rest/v1/devices?select=*",
-      { headers: { Authorization: `Bearer ${tokenStr}` } }
-    );
-
-    console.log(res.data);
-    setDevices(res.data);
+    setDevices(devices);
   }
 
   function clearLogs() {
@@ -139,19 +123,58 @@ export const useStore = (props) => {
   };
 };
 
-/**
- * Insert a new message into the DB
- * @param {string} message The message text
- * @param {number} channel_id
- * @param {number} user_id The author
- */
-export const addMessage = async (message, channel_id, user_id) => {
+export const fetchStaff = async (page) => {
   try {
-    let { body } = await supabase
-      .from("messages")
-      .insert([{ message, channel_id, user_id }]);
-    return body;
+    if(!page) page = 0;
+    page = page * 8;
+
+    let { data: staffs, error } = await supabase
+      .from("accounts")
+      .select("id, email, full_name, date_create, status")
+      .eq("role", 'staff')
+      .range(page, page + 7);
+
+    if(error) {
+      console.log("error_fetchStaff", error);
+    }
+
+    return staffs;
   } catch (error) {
-    console.log("error", error);
+    console.log("error_fetchStaff", error);
   }
+  return null;
+};
+
+export const fetchStaffById = async (id) => {
+  try {
+    let { data: staffs, error } = await supabase
+      .from("accounts")
+      .select("*")
+      .eq("id", id);
+
+    if(error) {
+      console.log("error_fetchStaff", error);
+    }
+    return staffs[0];
+  } catch (error) {
+    console.log("error_fetchStaff", error);
+  }
+  return null;
+};
+
+export const fetchStaffCount = async () => {
+  try {
+    let { data: staffs, error, count } = await supabase
+      .from("accounts")
+      .select("id", { count: 'exact', head: true })
+      .eq("role", 'staff')
+
+    if(error) {
+      console.log("error_fetchStaffCount", error);
+    }
+    return count;
+  } catch (error) {
+    console.log("error_fetchStaffCount", error);
+  }
+  return null;
 };

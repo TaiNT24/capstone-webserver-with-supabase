@@ -77,7 +77,7 @@ function useProvideAuth() {
       error_return = error_validRole;
     }
 
-    return accounts[0].role === "admin";
+    return accounts[0].role === "manager";
   };
 
   const signin = async (email, password, callbackFunc) => {

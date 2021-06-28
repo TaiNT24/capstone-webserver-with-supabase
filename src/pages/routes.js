@@ -1,6 +1,8 @@
 import LoginForm from "./login/Login";
 import About from "./about/About";
-import Logs from "../component/trackLog/Logs";
+import Staff from "./staff/Staff";
+import Logs from "./trackLog/Logs";
+import StaffDetail from "./staff/StaffDetail";
 
 const routes = [
   {
@@ -20,6 +22,18 @@ const routes = [
     exact: true,
     restricted: true, // <-- NEW
     component: About,
+  },
+  {
+    path: "/staff/:id",
+    exact: true,
+    restricted: true, // <-- NEW
+    component: StaffDetail,
+  },
+  {
+    path: "/staff",
+    exact: true,
+    restricted: true, // <-- NEW
+    component: Staff,
   },
   {
     path: "/login",
