@@ -22,7 +22,7 @@ const FilterDevice = (props) => {
       <Select
         mode="multiple"
         allowClear
-        style={{ width: "50%", alignSelf: "center", margin: 10 }}
+        style={{ width: "40%", alignSelf: "center", marginLeft: "1em" }}
         placeholder="Choose Filter ID Device"
         defaultValue={[]}
         onChange={handleChange}

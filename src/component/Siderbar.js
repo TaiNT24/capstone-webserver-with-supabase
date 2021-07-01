@@ -1,21 +1,22 @@
-import { Layout, Menu, Button } from "antd";
-import { UserOutlined, LaptopOutlined } from "@ant-design/icons";
+import { Layout, Menu } from "antd";
+import {
+  UserOutlined,
+  LaptopOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useAuth } from "../lib/use-auth";
 import { useHistory, useLocation } from "react-router-dom";
-import routes from "../pages/routes";
 import { useEffect, useState } from "react";
 import ModalConfirmLogout from "./ModalConfirmLogout";
 
 const { Sider } = Layout;
 
-const { SubMenu } = Menu;
+// const { SubMenu } = Menu;
 
 export default function Siderbar() {
   const [selectedItem, setSelectedItem] = useState("/log");
   const [showConfirm, setShowConfirm] = useState(false);
 
-  let history = useHistory();
   let location = useLocation();
 
   useEffect(() => {
@@ -26,8 +27,8 @@ export default function Siderbar() {
     }
 
     // ex: /staff/{id}
-    if(newPath.lastIndexOf('/') > 1){
-      newPath = newPath.substring(0, newPath.lastIndexOf('/'))
+    if (newPath.lastIndexOf("/") > 1) {
+      newPath = newPath.substring(0, newPath.lastIndexOf("/"));
     }
 
     setSelectedItem(newPath);
@@ -66,35 +67,54 @@ export default function Siderbar() {
             <Link to="/log">Track vehicle's log</Link>
           </Menu.Item>
 
-          <SubMenu
+          {/* <SubMenu
             key="manage_staff"
             icon={<UserOutlined />}
             title="Manage Staff"
-          >
-            <Menu.Item key="/staff">
+          > */}
+          <Menu.ItemGroup title="Manage Staff">
+            <Menu.Item key="/staff" icon={<UserOutlined />}>
               <Link to="/staff">Staff</Link>
             </Menu.Item>
-          </SubMenu>
+          </Menu.ItemGroup>
+          {/* </SubMenu> */}
 
-          <SubMenu
+          {/* <SubMenu
             key="manage_vehicle"
             icon={<UserOutlined />}
             title="Manage Vehicle"
-          >
-            <Menu.Item key="2">option2</Menu.Item>
-          </SubMenu>
+          > */}
+          <Menu.ItemGroup title="Manage Vehicle">
+          <Menu.Item key="/vehicles">
+              <Link to="/vehicles">Vehicles</Link>
+            </Menu.Item>
+            <Menu.Item key="/canvas">
+              <Link to="/canvas">Canvas</Link>
+            </Menu.Item>
+          </Menu.ItemGroup>
+          {/* </SubMenu> */}
 
-          <SubMenu key="my_account" icon={<UserOutlined />} title="My account">
+          {/* <SubMenu key="my_account" icon={<UserOutlined />} title="My account"> */}
+          <Menu.ItemGroup title="My account">
             <Menu.Item key="/about">
               <Link to="/about">About Page</Link>
             </Menu.Item>
-            <Menu.Item key="/logout" onClick={clickLogout}>
+
+            <Menu.Item
+              key="/logout"
+              onClick={clickLogout}
+              icon={<LogoutOutlined />}
+            >
               Logout
             </Menu.Item>
-          </SubMenu>
+          </Menu.ItemGroup>
+          {/* </SubMenu> */}
         </Menu>
       </Sider>
-      <ModalConfirmLogout showConfirm={showConfirm} cancleLogout={cancleLogout}/>
+      <ModalConfirmLogout
+        showConfirm={showConfirm}
+        cancleLogout={cancleLogout}
+      />
     </>
   );
 }

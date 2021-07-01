@@ -32,12 +32,15 @@ const columns = [
 
 export default function Logs(props) {
   const { listLog, devices, clearLogs } = useStore();
+  const [loading, setLoading] = useState();
+
 
   const [idDeviceFilter, setIdDeviceFilter] = useState([]);
   const [data, setData] = useState();
 
   useEffect(() => {
     const dataX = [];
+    setLoading(true);
 
     if (
       listLog != null &&
@@ -70,6 +73,9 @@ export default function Logs(props) {
     }
 
     setData(dataX);
+    if(data){
+      setLoading(false);
+    }
   }, [listLog, devices, idDeviceFilter]);
 
   function updateIdDeviceFilter(value) {
@@ -79,27 +85,32 @@ export default function Logs(props) {
   return (
     <Layout>
       <Content style={{ textAlign: "center" }}>
-        <Title level={3}>Logs</Title>
+        <Title level={2}>Logs</Title>
       </Content>
 
-      <Layout style={{ alignContent: "center" }}>
-        <FilterDevice
-          idDeviceList={devices}
-          onChangeDeviceFilter={updateIdDeviceFilter}
-        />
+      <Layout style={{}}>
+        <Content style={{}}>
+          <FilterDevice
+            idDeviceList={devices}
+            onChangeDeviceFilter={updateIdDeviceFilter}
+          />
+        </Content>
 
         <Sider style={{ backgroundColor: "#f0f2f5" }}>
           <ClearLog clearLogs={clearLogs} />
         </Sider>
       </Layout>
 
-      <Table
-        pagination={false}
-        columns={columns}
-        dataSource={data}
-        scroll={{ y: 350 }}
-        style={{ marginTop: 10 }}
-      />
+      <Layout style={{ marginTop: "1em" }}>
+        <Table
+          pagination={false}
+          columns={columns}
+          dataSource={data}
+          loading={loading}
+          scroll={{ y: 350 }}
+          style={{ marginTop: 10 }}
+        />
+      </Layout>
     </Layout>
   );
 }

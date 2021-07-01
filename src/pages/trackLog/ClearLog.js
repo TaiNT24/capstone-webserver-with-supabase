@@ -11,6 +11,7 @@ export default function ButtonSize(props) {
         icon={<ClearOutlined />}
         size="large"
         onClick={props.clearLogs}
+        style={{ width: "80%", marginLeft: "10%"}}
       >
         Clear Log
       </Button>

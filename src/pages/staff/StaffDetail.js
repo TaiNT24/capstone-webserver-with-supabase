@@ -1,171 +1,277 @@
 import { useParams } from "react-router-dom";
-import { fetchStaffById } from "../../lib/Store";
-import { Avatar, Layout, Row, Col, Input, Typography } from "antd";
+import {
+  fetchStaffById,
+  fetchDevice,
+  fetchMappingDevice,
+} from "../../lib/Store";
+import {
+  Avatar,
+  Layout,
+  Row,
+  Col,
+  Input,
+  Typography,
+  Button,
+  Select,
+} from "antd";
 import {
   UserOutlined,
   MailOutlined,
   CalendarOutlined,
   CarryOutOutlined,
+  EditOutlined,
   CloseCircleOutlined,
-  CheckCircleOutlined,
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import moment from "moment";
+import UpdateStatusButton from "../../component/UpdateStatusButton";
+import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
+const { Option } = Select;
+
 const colSpanSelect = 9;
 
 export default function StaffDetail(props) {
   const { id } = useParams();
 
   const [user, setUser] = useState(null);
+  const [tag, setTag] = useState(null);
+  const [isDisableUpdateMappingDevice, setIsDisableUpdateMappingDevice] =
+    useState(true);
+  const [defaultChildrenDevice, setDefaultChildrenDevice] = useState();
+  const [oldDefaultChildrenDevice, setOldDefaultChildrenDevice] = useState();
+
+  const [isCancel, setIsCancel] = useState(false);
+
+  const [isSaveChanged, setIsSaveChanged] = useState(false);
 
   useEffect(() => {
     fetchStaffById(id).then((staff) => {
       setUser(staff);
+      setTag({
+        id: staff.id,
+        status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
+      });
     });
-  });
+    loadMappingDevice(id);
+  }, []);
+
+  useEffect(() => {
+    if (isCancel && user) {
+      setDefaultChildrenDevice(oldDefaultChildrenDevice);
+      setIsCancel(false);
+    }
+  }, [isCancel]);
+
+  useEffect(() => {
+    if (user) {
+      // loadMappingDevice();
+    }
+  }, [user]);
+
+  function loadMappingDevice(userId) {
+    fetchDevice().then((devices) => {
+      const children = [];
+
+      devices.map((device) => {
+        children.push(<Option key={device.code}>{device.code}</Option>);
+      });
+
+      //
+      fetchMappingDevice(userId).then((mapping_devices) => {
+        const default_children = [];
+
+        mapping_devices.map((device) => {
+          devices.map((child) => {
+            if (device.device_id === child.id) {
+              default_children.push(child.code);
+            }
+          });
+        });
+
+        setDefaultChildrenDevice(default_children);
+        setOldDefaultChildrenDevice(default_children);
+      });
+    });
+  }
 
   return (
     <Layout>
-      {/* <Row> */}
-        <Row>
-          <Title level={3}>Staff's Profile</Title>
-        </Row>
+      <Row justify="center" style={{ marginBottom: "1em" }}>
+        <Title level={2}>Staff's Profile</Title>
+      </Row>
 
-        <Row>
-          <Col
-            span={6}
-            offset={0}
-            style={{ backgroundColor: "rgb(181 175 167)", height: "42em" }}
-          >
-            <Row justify="center">
-              <Avatar
-                size={128}
-                icon={<UserOutlined />}
-                src="https://scontent.fsgn3-1.fna.fbcdn.net/v/t1.6435-9/181028952_1726041634270682_3678233076061175252_n.jpg?_nc_cat=109&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=3bVFLE3sThMAX8SoJOA&_nc_ht=scontent.fsgn3-1.fna&oh=254d7a03e05405fdb920c50e6bb432af&oe=60DEB00E"
+      <Row>
+        <Col
+          span={6}
+          offset={0}
+          style={{ backgroundColor: "rgb(181 175 167)", height: "42em" }}
+        >
+          <Row justify="center">
+            <Avatar size={128} icon={<UserOutlined />} src={user?.avatar} />
+          </Row>
+
+          <Row justify="center">{user?.full_name}</Row>
+        </Col>
+
+        <Col span={16} offset={2} style={{}}>
+          <Row align="middle">
+            <Col span={5}>
+              <Title level={5}>Email:</Title>
+            </Col>
+
+            <Col span={colSpanSelect}>
+              <Input
+                disabled
+                style={{ fontWeight: "bold" }}
+                size="large"
+                prefix={
+                  <MailOutlined className="site-form-item-icon icon-custome" />
+                }
+                value={user?.email}
+                disabled
               />
-            </Row>
 
-            <Row justify="center">{user?.full_name}</Row>
-          </Col>
+            </Col>
+          </Row>
 
-          <Col span={16} offset={2} style={{}}>
-            <Row align="middle">
-              <Col span={5}>
-                <Title level={5}>Email:</Title>
-              </Col>
+          <br />
 
-              <Col span={colSpanSelect}>
-                <Input
-                  disabled
-                  style={{ fontWeight: "bold" }}
-                  size="large"
-                  prefix={<MailOutlined className="site-form-item-icon" />}
-                  value={user?.email}
-                  disabled
+          <Row align="middle">
+            <Col span={5}>
+              <Title style={{}} level={5}>
+                Full Name:
+              </Title>
+            </Col>
+
+            <Col span={colSpanSelect}>
+              <Input
+                disabled
+                size="large"
+                prefix={
+                  <UserOutlined className="site-form-item-icon icon-custome" />
+                }
+                value={user?.full_name}
+              />
+            </Col>
+          </Row>
+
+          <br />
+
+          <Row align="middle">
+            <Col span={5}>
+              <Title style={{}} level={5}>
+                Birthday:
+              </Title>
+            </Col>
+
+            <Col span={colSpanSelect}>
+              <Input
+                disabled
+                size="large"
+                prefix={
+                  <CalendarOutlined className="site-form-item-icon icon-custome" />
+                }
+                value={moment(user?.birthday).format("MM/DD/YYYY")}
+              />
+            </Col>
+          </Row>
+
+          <br />
+
+          <Row align="middle">
+            <Col span={5}>
+              <Title style={{}} level={5}>
+                Role:
+              </Title>
+            </Col>
+
+            <Col span={colSpanSelect}>
+              <Input
+                disabled
+                size="large"
+                prefix={
+                  <CarryOutOutlined className="site-form-item-icon icon-custome" />
+                }
+                value={user?.role.toUpperCase()}
+              />
+            </Col>
+          </Row>
+
+          <br />
+
+          <Row align="middle">
+            <Col span={5} style={{}}>
+              <Title level={5}>Status:</Title>
+            </Col>
+
+            <Col span={colSpanSelect}>
+              {tag ? <UpdateStatusButton tag={tag} /> : null}
+            </Col>
+          </Row>
+
+          <br />
+
+          <Row align="middle">
+            <Col span={5}>
+              <Title style={{}} level={5}>
+                Control vehicle:
+              </Title>
+            </Col>
+
+            <Col span={colSpanSelect}>
+              {defaultChildrenDevice ? (
+                <MappingDeviceToUser
+                  isDisable={isDisableUpdateMappingDevice}
+                  id={user?.id}
+                  defaultChildrenDevice={defaultChildrenDevice}
+                  isSaved={isSaveChanged}
+                  savedSuccess={() => setIsSaveChanged(false)}
+                  onUpdateDevices={(value) => setOldDefaultChildrenDevice(value)}
                 />
-
-                {/* <Text code style={{ fontSize: "1.4em" }}>
-                <MailOutlined className="site-form-item-icon" />
-                {user?.email}
-              </Text> */}
-              </Col>
-            </Row>
-
-            <br />
-
-            <Row align="middle">
-              <Col span={5}>
-                <Title style={{}} level={5}>
-                  Full Name:
-                </Title>
-              </Col>
-
-              <Col span={colSpanSelect}>
-                <Input
-                  disabled
-                  size="large"
-                  prefix={
-                    <UserOutlined
-                      style={{ fontSize: "16px", color: "#08c" }}
-                      className="site-form-item-icon"
-                    />
+              ) : null}
+            </Col>
+            <Col span={4} offset={1}>
+              <Button
+                size="large"
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  if (!isDisableUpdateMappingDevice) {
+                    setIsSaveChanged(true);
                   }
-                  value={user?.full_name}
-                />
-              </Col>
-            </Row>
-
-            <br />
-
-            <Row align="middle">
-              <Col span={5}>
-                <Title style={{}} level={5}>
-                  Birthday:
-                </Title>
-              </Col>
-
-              <Col span={colSpanSelect}>
-                <Input
-                  disabled
+                  setIsDisableUpdateMappingDevice(
+                    !isDisableUpdateMappingDevice
+                  );
+                }}
+              >
+                {isDisableUpdateMappingDevice ? "Edit" : "Save"}
+              </Button>
+            </Col>
+            {isDisableUpdateMappingDevice ? null : (
+              <Col span={4}>
+                <Button
                   size="large"
-                  prefix={<CalendarOutlined className="site-form-item-icon" />}
-                  value={moment(user?.birthday).format("MM/DD/YYYY")}
-                />
+                  type="primary"
+                  danger
+                  icon={<CloseCircleOutlined />}
+                  onClick={() => {
+                    setIsCancel(true);
+                    setDefaultChildrenDevice(null);
+
+                    setIsDisableUpdateMappingDevice(
+                      !isDisableUpdateMappingDevice
+                    );
+                  }}
+                >
+                  Cancel
+                </Button>
               </Col>
-            </Row>
-
-            <br />
-
-            <Row align="middle">
-              <Col span={5}>
-                <Title style={{}} level={5}>
-                  Role:
-                </Title>
-              </Col>
-
-              <Col span={colSpanSelect}>
-                <Input
-                  disabled
-                  size="large"
-                  prefix={<CarryOutOutlined className="site-form-item-icon" />}
-                  value={user?.role.toUpperCase()}
-                />
-              </Col>
-            </Row>
-
-            <br />
-
-            <Row align="middle">
-              <Col span={5} style={{}}>
-                <Title level={5}>Status:</Title>
-              </Col>
-
-              <Col span={colSpanSelect}>
-                <Input
-                  disabled
-                  size="large"
-                  prefix={
-                    user?.status === 0 ? (
-                      <CheckCircleOutlined
-                        className="site-form-item-icon"
-                        style={{ color: "green" }}
-                      />
-                    ) : (
-                      <CloseCircleOutlined
-                        className="site-form-item-icon"
-                        style={{ color: "red" }}
-                      />
-                    )
-                  }
-                  value={user?.status === 0 ? "ACTIVE" : "INACTIVE"}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      {/* </Row> */}
+            )}
+          </Row>
+        </Col>
+      </Row>
     </Layout>
   );
 }

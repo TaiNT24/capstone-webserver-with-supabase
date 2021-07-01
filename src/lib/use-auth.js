@@ -36,7 +36,6 @@ function useProvideAuth() {
       async (event, session) => {
         const currentUser = session?.user;
         console.log("onAuthStateChange: "+ session);
-        console.log("event: "+ event);
 
         if (currentUser) {
 
@@ -74,7 +73,6 @@ function useProvideAuth() {
 
     if (error_validRole) {
       console.log("validRole_use-auth error: " + error_validRole);
-      error_return = error_validRole;
     }
 
     return accounts[0].role === "manager";
