@@ -3,9 +3,8 @@ import About from "./about/About";
 import Staff from "./staff/Staff";
 import Logs from "./trackLog/Logs";
 import StaffDetail from "./staff/StaffDetail";
-import Canvas from "./vehicle/Canvas";
-import Vehicles from "./vehicle/Vehicles";
 import VehicleDetails from "./vehicle/VehicleDetails";
+import Vehicles from "./vehicle/Vehicles";
 
 const routes = [
   {
@@ -37,12 +36,6 @@ const routes = [
     exact: true,
     restricted: true, // <-- NEW
     component: Staff,
-  },
-  {
-    path: "/canvas",
-    exact: true,
-    restricted: true, // <-- NEW
-    component: Canvas,
   },
   {
     path: "/vehicles/:code",

@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { fetchAllDevice } from "../../lib/Store";
 
 let city = new Image();
 city.src = "/img/backgound_canvas.png";
 
-const draw = (ctx, frameCount, devices) => {
+const draw = (ctx, frameCount, devices, area) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   ctx.fillStyle = "#f00";
@@ -17,63 +16,56 @@ const draw = (ctx, frameCount, devices) => {
     let shape = new Path2D();
 
     ctx.beginPath();
-    // ctx.arc(50, 100, 20, 0, 2*Math.PI)
 
-    let x = 1; //device is inactive
-    if(device.status ==! 1){ // device is active
-        x = Math.sin(frameCount * 0.08) ** 2
+    let statusFrame = 1; //device is inactive
+    let statusStyle = "#f00"; //red
+
+    if (device.status == 0) {
+      // device is active
+      statusStyle = "#389e0d"; //green
+    } else if (device.status == 2) {
+      // device is running
+      statusFrame = Math.sin(frameCount * 0.08) ** 2;
+      statusStyle = "#096dd9"; //blue
     }
-    shape.arc(
-      position.x,
-      position.y,
-      10 * x,
-      0,
-      2 * Math.PI
-    );
+
+    ctx.fillStyle = statusStyle;
+
+    shape.arc(position.x, position.y, 10 * statusFrame, 0, 2 * Math.PI);
     ctx.fill(shape);
 
     // ctx.moveTo(position.x + 10, position.y + 10);
     ctx.save();
 
     ctx.fillStyle = "black";
-    ctx.fillText(device.code, position.x - 10,  position.y + 20);
+    ctx.fillText(device.code, position.x - 10, position.y + 20);
 
     ctx.restore();
   });
 };
 
-const backgroundDraw = (ctx) => {
-  let WIDTH = 400;
-  let HEIGHT = 300;
+const backgroundDraw = (ctx, area) => {
+  ctx.clearRect(0, 0, area.width, area.height);
 
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  // ctx.drawImage(city, 0, 0);
 
-  ctx.drawImage(city, 0, 0);
-
-  //   ctx.fillStyle = "blue";
-
-  //   ctx.beginPath();
-  //   // ctx.arc(50, 100, 20, 0, 2*Math.PI)
-  //   ctx.arc(400, 400, 400, 0, 2 * Math.PI);
-  //   ctx.fill();
+  ctx.fillStyle = "#bfbfbf";
+  ctx.fillRect(0, 0, area.width, area.height);
 };
 
-export function useCanvas() {
+export function useCanvas(devices, area) {
   const [height, setHeight] = useState();
   const [width, setWidth] = useState();
 
-  const { devices } = fetchAllDevice();
 
   const canvasRef = useRef(null);
   const canvasRefBackground = useRef(null);
-
-  const [coordinates, setCoordinates] = useState([]);
 
   useEffect(() => {
     let element = document.getElementsByTagName("BODY")[0];
     let positionInfo = element.getBoundingClientRect();
     let height1 = positionInfo.height;
-    let width1 = positionInfo.width;
+    let width1 = positionInfo.width - 250; // nav side bar
 
     setHeight(height1);
     setWidth(width1);
@@ -82,34 +74,33 @@ export function useCanvas() {
   useEffect(() => {
     const canvasObj = canvasRef.current;
     const ctx = canvasObj.getContext("2d");
-
+  
     const backgroundCanvasObj = canvasRefBackground.current;
     const backgroundCtx = backgroundCanvasObj.getContext("2d");
 
     let animationFrameId;
 
-    if (devices != null && devices.length > 0) {
+    if (devices != null && devices.length > 0 && area != null) {
       let frameCount = 0;
+      window.cancelAnimationFrame(animationFrameId);
 
       //Our draw came here
       function render() {
         frameCount++;
-        draw(ctx, frameCount, devices);
+        draw(ctx, frameCount, devices, area);
         animationFrameId = window.requestAnimationFrame(render);
       }
 
-      backgroundDraw(backgroundCtx);
+      backgroundDraw(backgroundCtx, area);
       render();
     }
 
-    // return () => {
-    //   window.cancelAnimationFrame(animationFrameId);
-    // };
-  }, [devices, draw]);
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+    };
+  }, [devices, area]);
 
   return [
-    coordinates,
-    setCoordinates,
     canvasRefBackground,
     canvasRef,
     width,

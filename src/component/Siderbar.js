@@ -5,13 +5,11 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ModalConfirmLogout from "./ModalConfirmLogout";
 
 const { Sider } = Layout;
-
-// const { SubMenu } = Menu;
 
 export default function Siderbar() {
   const [selectedItem, setSelectedItem] = useState("/log");
@@ -67,37 +65,21 @@ export default function Siderbar() {
             <Link to="/log">Track vehicle's log</Link>
           </Menu.Item>
 
-          {/* <SubMenu
-            key="manage_staff"
-            icon={<UserOutlined />}
-            title="Manage Staff"
-          > */}
           <Menu.ItemGroup title="Manage Staff">
             <Menu.Item key="/staff" icon={<UserOutlined />}>
               <Link to="/staff">Staff</Link>
             </Menu.Item>
           </Menu.ItemGroup>
-          {/* </SubMenu> */}
 
-          {/* <SubMenu
-            key="manage_vehicle"
-            icon={<UserOutlined />}
-            title="Manage Vehicle"
-          > */}
           <Menu.ItemGroup title="Manage Vehicle">
-          <Menu.Item key="/vehicles">
+            <Menu.Item key="/vehicles">
               <Link to="/vehicles">Vehicles</Link>
             </Menu.Item>
-            <Menu.Item key="/canvas">
-              <Link to="/canvas">Canvas</Link>
-            </Menu.Item>
           </Menu.ItemGroup>
-          {/* </SubMenu> */}
 
-          {/* <SubMenu key="my_account" icon={<UserOutlined />} title="My account"> */}
-          <Menu.ItemGroup title="My account">
-            <Menu.Item key="/about">
-              <Link to="/about">About Page</Link>
+          <Menu.ItemGroup title="My account" >
+            <Menu.Item key="/about" icon={<UserOutlined />}>
+              <Link to="/about">My Profile</Link>
             </Menu.Item>
 
             <Menu.Item
@@ -108,7 +90,6 @@ export default function Siderbar() {
               Logout
             </Menu.Item>
           </Menu.ItemGroup>
-          {/* </SubMenu> */}
         </Menu>
       </Sider>
       <ModalConfirmLogout

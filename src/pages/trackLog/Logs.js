@@ -1,11 +1,11 @@
-import { Layout, Table, Typography } from "antd";
+import { Layout, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FilterDevice from "./FilterDevice";
 import ClearLog from "./ClearLog";
-import { useStore } from "../../lib/Store";
+import { useStoreGetLog } from "../../lib/Store";
+import { MainTitle } from "../../utils/Text";
 
-const { Title } = Typography;
 const { Sider, Content } = Layout;
 
 const columns = [
@@ -31,9 +31,8 @@ const columns = [
 ];
 
 export default function Logs(props) {
-  const { listLog, devices, clearLogs } = useStore();
+  const {listLog, clearLogs} = useStoreGetLog();
   const [loading, setLoading] = useState();
-
 
   const [idDeviceFilter, setIdDeviceFilter] = useState([]);
   const [data, setData] = useState();
@@ -44,16 +43,16 @@ export default function Logs(props) {
 
     if (
       listLog != null &&
-      devices != null &&
+      props.devices != null &&
       listLog.length != 0 &&
-      devices.length != 0
+      props.devices.length != 0
     ) {
       listLog.map((e, index) => {
         if (idDeviceFilter.length === 0) {
           dataX.push({
             key: index,
             time: e.date_create,
-            idDevice: devices.filter((device) => device.id === e.device)[0]
+            idDevice: props.devices.filter((device) => device.id === e.device)[0]
               .code,
             content: e.content,
           });
@@ -62,7 +61,7 @@ export default function Logs(props) {
             dataX.push({
               key: index,
               time: e.date_create,
-              idDevice: devices.filter((device) => device.id === e.device)[0]
+              idDevice: props.devices.filter((device) => device.id === e.device)[0]
                 .code,
               content: e.content,
             });
@@ -70,13 +69,14 @@ export default function Logs(props) {
         }
         return e;
       });
-    }
 
+    }
     setData(dataX);
-    if(data){
+
+    if(data ){ 
       setLoading(false);
     }
-  }, [listLog, devices, idDeviceFilter]);
+  }, [listLog, props.devices, idDeviceFilter]);
 
   function updateIdDeviceFilter(value) {
     setIdDeviceFilter(value);
@@ -84,14 +84,12 @@ export default function Logs(props) {
 
   return (
     <Layout>
-      <Content style={{ textAlign: "center" }}>
-        <Title level={2}>Logs</Title>
-      </Content>
+      <MainTitle value="Logs"/>
 
       <Layout style={{}}>
         <Content style={{}}>
           <FilterDevice
-            idDeviceList={devices}
+            idDeviceList={props.devices}
             onChangeDeviceFilter={updateIdDeviceFilter}
           />
         </Content>

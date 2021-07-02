@@ -1,16 +1,12 @@
-import { Table, Layout, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Table, Layout } from "antd";
 import {
   fetchStaff,
   fetchStaffCount,
-  updateStatusStaff,
 } from "../../lib/Store";
 import { useState, useEffect } from "react";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import StaffProfile from "./StaffProfile";
-
-const { Title } = Typography;
-const { Content } = Layout;
+import { MainTitle } from "../../utils/Text";
 
 export default function Staff(props) {
   const [data, setData] = useState(null);
@@ -64,9 +60,6 @@ export default function Staff(props) {
       fixed: "right",
       width: 100,
       render: (id) => {
-        {
-          /* <Link to={{ pathname: `/staff/${id}` }}>View Detail</Link> */
-        }
         return (
           <a onClick={() => onOpenProfile(id)} key={id}>
             View Profile
@@ -115,9 +108,7 @@ export default function Staff(props) {
 
   return (
     <Layout>
-      <Content style={{ textAlign: "center" }}>
-        <Title level={2}>Staffs</Title>
-      </Content>
+      <MainTitle value="Staffs" />
 
       <Table
         columns={columns}

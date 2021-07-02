@@ -1,21 +1,31 @@
 import { Select } from "antd";
+import { useEffect, useState } from "react";
 
 const { Option } = Select;
 
 const FilterDevice = (props) => {
+  const [listDevice, setListDevice] = useState();
+
   const handleChange = (value) => {
     props.onChangeDeviceFilter(value);
   };
 
-  const renderListIdDevice = () => {
+  useEffect(() => {
     const children = [];
 
-    props.idDeviceList.map((e) => {
-      return children.push(<Option key={e.id} value={e.id}>{e.code}</Option>);
-    });
+    if (props.idDeviceList != null) {
 
-    return children;
-  };
+      props.idDeviceList.map((e) => {
+        return children.push(
+          <Option key={e.id} value={e.id}>
+            {e.code}
+          </Option>
+        );
+      });
+    }
+
+    setListDevice(children);
+  }, [props.idDeviceList]);
 
   return (
     <>
@@ -27,7 +37,7 @@ const FilterDevice = (props) => {
         defaultValue={[]}
         onChange={handleChange}
       >
-        {renderListIdDevice()}
+        {listDevice}
       </Select>
       <br />
     </>

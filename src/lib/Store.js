@@ -15,21 +15,13 @@ export const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E"
 );
 
-export const useStore = (props) => {
-  const [logs, setLogs] = useState([]);
-  const [devices, setDevices] = useState([]);
+export const useStoreGetDevice = (props) => {
+  const [devices, setDevices] = useState();
   const [updateDevice, handleUpdateDevice] = useState(null);
   const [deleteDevice, handleDeleteDevice] = useState(null);
 
   // set up listeners
   useEffect(() => {
-    const logListener = supabase
-      .from("logs")
-      .on("INSERT", (payload) => {
-        setLogs((logs) => [...logs, payload.new]);
-      })
-      .subscribe();
-
     const deviceListener = supabase
       .from("devices")
       .on("INSERT", (payload) => {
@@ -45,12 +37,12 @@ export const useStore = (props) => {
       .subscribe();
 
     //Load initial data
-    fetchLogs();
     loadDevice();
 
     // Cleanup on unmount
     return () => {
-      logListener.unsubscribe();
+      console.log("useStoreGetDevice: unmounted");
+
       deviceListener.unsubscribe();
     };
     // eslint-disable-next-line
@@ -64,7 +56,7 @@ export const useStore = (props) => {
         setDevices((devices) =>
           devices.map((e) => {
             if (e.id === updateDevice.id) {
-              e.code = updateDevice.code;
+              e = updateDevice;
             }
             return e;
           })
@@ -90,6 +82,47 @@ export const useStore = (props) => {
     // };
   }, [deleteDevice]);
 
+  async function loadDevice() {
+    let { data: devices, error } = await supabase
+      .from("devices")
+      .select("*")
+      .order("last_connection", { ascending: false });
+
+    if (error) throw error;
+
+    setDevices(devices);
+  }
+
+  return {
+    // We can export computed values here to map the authors to each message
+    devices: devices,
+  };
+};
+
+export const useStoreGetLog = (props) => {
+  const [logs, setLogs] = useState();
+
+  // set up listeners
+  useEffect(() => {
+    const logListener = supabase
+      .from("logs")
+      .on("INSERT", (payload) => {
+        setLogs((logs) => [...logs, payload.new]);
+      })
+      .subscribe();
+
+    //Load initial data
+    fetchLogs();
+
+    // Cleanup on unmount
+    return () => {
+      console.log("useStoreGetLog: unmounted");
+
+      logListener.unsubscribe();
+    };
+    // eslint-disable-next-line
+  }, []);
+
   //Init with 50 rows first
   async function fetchLogs() {
     let { data: log, error } = await supabase
@@ -103,14 +136,6 @@ export const useStore = (props) => {
     setLogs(log);
   }
 
-  async function loadDevice() {
-    let { data: devices, error } = await supabase.from("devices").select("*");
-
-    if (error) throw error;
-
-    setDevices(devices);
-  }
-
   function clearLogs() {
     setLogs([]);
   }
@@ -118,7 +143,6 @@ export const useStore = (props) => {
   return {
     // We can export computed values here to map the authors to each message
     listLog: logs,
-    devices: devices,
     clearLogs: clearLogs,
   };
 };
@@ -213,7 +237,7 @@ export const fetchDevice = async () => {
     let { data: devices, error } = await supabase
       .from("devices")
       .select("id, name, code")
-      .eq("status", 0); // 0: active, 1: inactive
+      .neq("status", 1); // 0: active, 1: inactive
 
     if (error) {
       console.log("error_fetchDevice", error);
@@ -285,81 +309,3 @@ export const updateMappingDevice = async (id, devices) => {
   return false;
 };
 
-export const fetchAllDevice = () => {
-  const [devices, setDevices] = useState([]);
-  const [updateDevice, handleUpdateDevice] = useState(null);
-  const [deleteDevice, handleDeleteDevice] = useState(null);
-
-  // set up listeners
-  useEffect(() => {
-    const deviceListener = supabase
-      .from("devices")
-      .on("INSERT", (payload) => {
-        setDevices((devices) => [...devices, payload.new]);
-      })
-      .on("UPDATE", (payload) => {
-        console.log(payload);
-        handleUpdateDevice(payload.new);
-      })
-      .on("DELETE", (payload) => {
-        handleDeleteDevice(payload.old);
-      })
-      .subscribe();
-
-    loadDevice();
-
-    return () => {
-      deviceListener.unsubscribe();
-    };
-    // eslint-disable-next-line
-  }, []);
-
-  // handle event update device
-  useEffect(() => {
-    if (updateDevice) {
-      if (devices) {
-        console.log("updateDevice: " + devices);
-        setDevices((devices) =>
-          devices.map((e) => {
-            if (e.id === updateDevice.id) {
-              e = updateDevice;
-            }
-            return e;
-          })
-        );
-      }
-    }
-
-    // return () => {
-    //   setDevices(devices);
-    // };
-  }, [updateDevice]);
-
-  // handle event delete device
-  useEffect(() => {
-    if (deleteDevice) {
-      if (devices) {
-        setDevices(devices.filter((device) => device.id !== deleteDevice.id));
-      }
-    }
-
-    // return () => {
-    //   setDevices(devices);
-    // };
-  }, [deleteDevice]);
-
-  async function loadDevice() {
-    let { data: devices, error } = await supabase
-      .from("devices")
-      .select("*")
-      .order("last_connection", { ascending: false });
-
-    if (error) throw error;
-
-    setDevices(devices);
-  }
-
-  return {
-    devices: devices,
-  };
-};

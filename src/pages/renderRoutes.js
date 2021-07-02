@@ -1,8 +1,5 @@
 import React from 'react'
-// import Switch from 'react-router/Switch'
 import { Route, Redirect, Switch } from 'react-router-dom'
-
-
 
 const renderRoutes = (routes, authed, authPath, extraProps = {}, switchProps = {}) => {
 

@@ -8,9 +8,9 @@ import LoginForm from "./pages/login/Login";
 import Home from "./pages/home/Home";
 import PublicRoute from "./component/PublicRoute";
 
-const authPath = '/login';
+const authPath = "/login";
 
-const App = () => {
+export default function App() {
   let auth = useAuth();
   let authed = auth.isLogin();
 
@@ -22,10 +22,11 @@ const App = () => {
       </PublicRoute>
 
       <Route>
-        <Home authed={authed} authPath={authPath} />
+        <Home
+          authed={authed}
+          authPath={authPath}
+        />
       </Route>
     </Switch>
   );
-};
-
-export default App;
+}

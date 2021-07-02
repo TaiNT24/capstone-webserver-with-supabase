@@ -1,45 +1,45 @@
-import { useRef, useEffect, useState } from "react";
+import { Layout} from "antd";
 import { useCanvas } from "./useCanvas";
 
-function Canvas(props) {
+export default function Canvas(props) {
+
+  const area = {
+    height: 1000,
+    width: 1000
+  }
+
   const [
-    coordinates,
-    setCoordinates,
     canvasRefBackground,
     canvasRef,
     width,
     height,
-  ] = useCanvas();
+  ] = useCanvas(props.devices, area);
 
   return (
-    <>
-      <div style={{ position: "relative" }}>
+      <Layout style={{ position: "relative", height: area.height, width: area.width }}>
         <canvas
-          id="layer2"
+          id="layer1"
           ref={canvasRefBackground}
           style={{ zIndex: "1", position: "absolute", left: "0px", top: "0px" }}
-          height={height}
-          width={width}
+          height={area.height}
+          width={area.width}
         >
           This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
 
         <canvas
-          className="App-canvas"
+          id="layer2"
           ref={canvasRef}
-          width={width}
-          height={height}
+          width={area.width}
+          height={area.height}
           style={{
             zIndex: "2",
             position: "absolute",
             left: "0px",
             top: "0px",
           }}
-          // onClick={handleCanvasClick}
         />
-      </div>
-    </>
+      </Layout>
   );
 }
 
-export default Canvas;
