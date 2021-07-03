@@ -108,6 +108,7 @@ export default function Vehicles(props) {
     if (columnsRender) {
       setLoading(false);
     }
+    // eslint-disable-next-line
   }, [devices]);
 
   useEffect(() => {

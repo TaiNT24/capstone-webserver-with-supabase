@@ -55,6 +55,7 @@ export default function StaffDetail(props) {
       });
     });
     loadMappingDevice(id);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function StaffDetail(props) {
       setDefaultChildrenDevice(oldDefaultChildrenDevice);
       setIsCancel(false);
     }
+    // eslint-disable-next-line
   }, [isCancel]);
 
   function loadMappingDevice(userId) {

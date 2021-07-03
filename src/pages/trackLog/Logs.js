@@ -76,6 +76,7 @@ export default function Logs(props) {
     if(data ){ 
       setLoading(false);
     }
+    // eslint-disable-next-line
   }, [listLog, props.devices, idDeviceFilter]);
 
   function updateIdDeviceFilter(value) {

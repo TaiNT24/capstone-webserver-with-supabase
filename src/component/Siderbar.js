@@ -33,6 +33,7 @@ export default function Siderbar(props) {
 
     setSelectedItem(newPath);
     console.log("selectedItem: " + selectedItem);
+    // eslint-disable-next-line
   }, [location.pathname]); //netlify suggess
 
   const clickLogout = () => {

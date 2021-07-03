@@ -67,6 +67,7 @@ export const useStoreGetDevice = (props) => {
     // return () => {
     //   setDevices(devices);
     // };
+    // eslint-disable-next-line
   }, [updateDevice]);
 
   // handle event delete device
@@ -80,6 +81,7 @@ export const useStoreGetDevice = (props) => {
     // return () => {
     //   setDevices(devices);
     // };
+    // eslint-disable-next-line
   }, [deleteDevice]);
 
   async function loadDevice() {

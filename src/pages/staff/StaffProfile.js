@@ -66,6 +66,7 @@ export default function StaffProfile(props) {
       });
     });
     loadMappingDevice(props.id);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export default function StaffProfile(props) {
       setDefaultChildrenDevice(oldDefaultChildrenDevice);
       setIsCancel(false);
     }
+    // eslint-disable-next-line
   }, [isCancel]);
 
   useEffect(() => {

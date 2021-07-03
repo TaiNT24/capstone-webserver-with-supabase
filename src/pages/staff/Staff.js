@@ -1,12 +1,11 @@
-import { Table, Layout } from "antd";
-import {
-  fetchStaff,
-  fetchStaffCount,
-} from "../../lib/Store";
+import { Table, Layout, Anchor } from "antd";
+import { fetchStaff, fetchStaffCount } from "../../lib/Store";
 import { useState, useEffect } from "react";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import StaffProfile from "./StaffProfile";
 import { MainTitle } from "../../utils/Text";
+
+const { Link } = Anchor;
 
 export default function Staff(props) {
   const [data, setData] = useState(null);
@@ -61,9 +60,12 @@ export default function Staff(props) {
       width: 100,
       render: (id) => {
         return (
-          <a href="#" onClick={() => onOpenProfile(id)} key={id}>
-            View Profile
-          </a>
+          // <a href="#" onClick={() => onOpenProfile(id)} key={id}>
+          //   View Profile
+          // </a>
+          <Anchor onClick={() => onOpenProfile(id)}>
+            <Link href="#">View Profile</Link>
+          </Anchor>
         );
       },
     },
