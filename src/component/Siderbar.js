@@ -8,10 +8,12 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ModalConfirmLogout from "./ModalConfirmLogout";
+import VehicleIcon from "../lib/custome-icon/VehicleIcon";
+import { MainTitle } from "../utils/Text";
 
 const { Sider } = Layout;
 
-export default function Siderbar() {
+export default function Siderbar(props) {
   const [selectedItem, setSelectedItem] = useState("/log");
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -54,6 +56,7 @@ export default function Siderbar() {
         width={250}
       >
         <div className="logo" />
+        <MainTitle value={"Welcome"} level={4} style={{color: "white"}}/>
         <Menu
           theme="dark"
           mode="inline"
@@ -72,7 +75,7 @@ export default function Siderbar() {
           </Menu.ItemGroup>
 
           <Menu.ItemGroup title="Manage Vehicle">
-            <Menu.Item key="/vehicles">
+            <Menu.Item key="/vehicles" icon={<VehicleIcon />}>
               <Link to="/vehicles">Vehicles</Link>
             </Menu.Item>
           </Menu.ItemGroup>

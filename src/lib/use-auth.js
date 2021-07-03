@@ -29,16 +29,12 @@ function useProvideAuth() {
 
     setUser(session?.user ?? null);
 
-    if (user) {
-    }
-
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         const currentUser = session?.user;
-        console.log("onAuthStateChange: "+ session);
+        console.log("onAuthStateChange: " + session);
 
         if (currentUser) {
-
           let isValidRole = await validRole(currentUser.id);
           if (isValidRole) {
             setUser(currentUser);
@@ -76,6 +72,21 @@ function useProvideAuth() {
     }
 
     return accounts[0].role === "manager";
+  };
+
+  const fetchUser = async (id) => {
+    let { data: accounts, error: error_fetchUser } = await supabase
+      .from("accounts")
+      .select("*")
+      .eq("id", id);
+
+    if (error_fetchUser) {
+      console.log("fetchUser_use-auth error: " + error_fetchUser);
+      return null;
+    }
+    if(accounts){
+      return accounts;
+    }
   };
 
   const signin = async (email, password, callbackFunc) => {
@@ -135,6 +146,7 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
+    fetchUser,
     signin,
     signout,
     isLogin,

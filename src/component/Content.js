@@ -2,15 +2,8 @@ import { Switch } from "react-router-dom";
 
 import routes from "../pages/routes";
 import renderRoutes from "../pages/renderRoutes";
-import { useStoreGetDevice } from "../lib/Store";
 
 export default function Content(props) {
-
-  const { devices } = useStoreGetDevice();
-
-  const extraProps = {
-    devices: devices
-  };
 
   return (
     <div
@@ -22,12 +15,8 @@ export default function Content(props) {
       }}
     >
       <Switch>
-        {renderRoutes(routes, props.authed, props.authPath, extraProps)}
+        {renderRoutes(routes, props.authed, props.authPath, props.extraProps)}
       </Switch>
     </div>
   );
-}
-
-function About() {
-  return "<h1>About</h1>";
 }

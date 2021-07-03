@@ -2,11 +2,11 @@ import { Typography, Row } from "antd";
 
 const { Title } = Typography;
 
-export const MainTitle = (props, rest = {}) => {
+export const MainTitle = (props) => {
       
       return (
         <Row className="row-center-ele">
-          <Title level={2} {...rest}>{props.value}</Title>
+          <Title level={props.level??2} {...props}>{props.value}</Title>
         </Row>
       );
 };

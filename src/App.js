@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { useAuth } from "./lib/use-auth";
 
 import "./App.less";
 
@@ -8,13 +7,9 @@ import LoginForm from "./pages/login/Login";
 import Home from "./pages/home/Home";
 import PublicRoute from "./component/PublicRoute";
 
-const authPath = "/login";
-
 export default function App() {
-  let auth = useAuth();
-  let authed = auth.isLogin();
-
-  console.log("App.js init: " + auth.user);
+  console.log("App.js init: ");
+  
   return (
     <Switch>
       <PublicRoute path="/login">
@@ -22,10 +17,7 @@ export default function App() {
       </PublicRoute>
 
       <Route>
-        <Home
-          authed={authed}
-          authPath={authPath}
-        />
+        <Home/>
       </Route>
     </Switch>
   );
