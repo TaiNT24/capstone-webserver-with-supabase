@@ -66,7 +66,12 @@ export default function Vehicles(props) {
             break;
 
           default:
-            "UN_SET";
+status = (
+              <Tag icon={<SyncOutlined spin />} color="#108ee9">
+                UN_SET_STATUS
+              </Tag>
+            );
+            
         }
 
         render.push(
