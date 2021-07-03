@@ -13,7 +13,7 @@ const renderRoutes = (routes, authed, authPath, extraProps = {}, switchProps = {
           strict={route.strict}
           render={(props) => {
             // !route.restricted
-            if( authed || route.path == authPath) {
+            if( authed || route.path === authPath) {
               return <route.component {...props} {...extraProps} route={route}/>
             }
 

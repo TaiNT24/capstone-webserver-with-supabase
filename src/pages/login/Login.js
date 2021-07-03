@@ -1,7 +1,7 @@
 import { Form, Input, Button, Row, Col, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAuth } from "../../lib/use-auth";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useState } from "react";
 
 const { Title } = Typography;
@@ -12,7 +12,7 @@ export default function LoginForm() {
   const auth = useAuth();
 
   let history = useHistory();
-  let location = useLocation();
+  // let location = useLocation();
 
   //login
   const onFinish = (values) => {

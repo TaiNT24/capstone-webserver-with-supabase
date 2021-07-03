@@ -1,4 +1,4 @@
-import { Select, message, List, Button, Card, Row, Col, Tag } from "antd";
+import { Select, message, Button, Row, Col, Tag } from "antd";
 import { fetchDevice, updateMappingDevice } from "../lib/Store";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -49,7 +49,7 @@ export default function MappingDeviceToUser(props) {
               {device.code}
             </Option>
           );
-
+          return device;
         });
 
         setChildren(childrenX);
@@ -86,9 +86,9 @@ export default function MappingDeviceToUser(props) {
       deviceAllowed.forEach((ele, index) => {
         grid.push(
           <Col span={8} style={{ marginBottom: "0.5em" }} key={index}>
-            <Button type="primary" size="middle" >
+            <Button type="primary" size="middle">
               {/* <Link to={location => ({ ...location, pathname: `/vehicles/${ele}` })}>{ele}</Link> */}
-              <Link to={{pathname: `/vehicles/${ele}`}}>{ele}</Link>
+              <Link to={{ pathname: `/vehicles/${ele}` }}>{ele}</Link>
             </Button>
           </Col>
         );

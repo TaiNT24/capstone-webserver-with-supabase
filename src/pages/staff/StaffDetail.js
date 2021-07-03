@@ -64,18 +64,13 @@ export default function StaffDetail(props) {
     }
   }, [isCancel]);
 
-  useEffect(() => {
-    if (user) {
-      // loadMappingDevice();
-    }
-  }, [user]);
-
   function loadMappingDevice(userId) {
     fetchDevice().then((devices) => {
       const children = [];
 
       devices.map((device) => {
         children.push(<Option key={device.code}>{device.code}</Option>);
+        return null;
       });
 
       //
@@ -87,7 +82,9 @@ export default function StaffDetail(props) {
             if (device.device_id === child.id) {
               default_children.push(child.code);
             }
+            return null;
           });
+          return null;
         });
 
         setDefaultChildrenDevice(default_children);
@@ -123,7 +120,6 @@ export default function StaffDetail(props) {
 
             <Col span={colSpanSelect}>
               <Input
-                disabled
                 style={{ fontWeight: "bold" }}
                 size="large"
                 prefix={
@@ -132,7 +128,6 @@ export default function StaffDetail(props) {
                 value={user?.email}
                 disabled
               />
-
             </Col>
           </Row>
 
@@ -228,7 +223,9 @@ export default function StaffDetail(props) {
                   defaultChildrenDevice={defaultChildrenDevice}
                   isSaved={isSaveChanged}
                   savedSuccess={() => setIsSaveChanged(false)}
-                  onUpdateDevices={(value) => setOldDefaultChildrenDevice(value)}
+                  onUpdateDevices={(value) =>
+                    setOldDefaultChildrenDevice(value)
+                  }
                 />
               ) : null}
             </Col>

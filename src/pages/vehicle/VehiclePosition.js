@@ -10,9 +10,7 @@ export default function Canvas(props) {
 
   const [
     canvasRefBackground,
-    canvasRef,
-    width,
-    height,
+    canvasRef
   ] = useCanvas(props.devices, area);
 
   return (

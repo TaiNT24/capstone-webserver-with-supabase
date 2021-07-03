@@ -1,13 +1,13 @@
 import { Tabs } from "antd";
 import { UnorderedListOutlined, EnvironmentOutlined } from "@ant-design/icons";
 
-import Vehicles from "./VehicleList";
+import VehicleList from "./VehicleList";
 import Canvas from "./VehiclePosition";
 import { useEffect, useState } from "react";
 
 const { TabPane } = Tabs;
 
-export default function (props) {
+export default function Vehicles (props) {
   const [devices, setDevices] = useState();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function (props) {
         }
         key="Vehicle_List"
       >
-        <Vehicles devices={devices} />
+        <VehicleList devices={devices} />
       </TabPane>
       <TabPane
         tab={

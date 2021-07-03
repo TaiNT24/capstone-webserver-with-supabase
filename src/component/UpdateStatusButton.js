@@ -15,7 +15,7 @@ export default function UpdateStatusButton(props) {
     setTag(props.tag);
     setIsCheckItem(props.tag.status === "ACTIVE");
     setIdUpdate(props.tag.id);
-  }, []);
+  }, [props.tag]);  //netlify suggess
 
   const showPopconfirm = () => {
     setVisible(true);

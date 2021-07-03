@@ -66,12 +66,11 @@ export default function Vehicles(props) {
             break;
 
           default:
-status = (
+            status = (
               <Tag icon={<SyncOutlined spin />} color="#108ee9">
                 UN_SET_STATUS
               </Tag>
             );
-            
         }
 
         render.push(
@@ -106,7 +105,7 @@ status = (
 
     setColumnsRender(render);
 
-    if (columnsRender ) {
+    if (columnsRender) {
       setLoading(false);
     }
   }, [devices]);
@@ -126,7 +125,9 @@ status = (
 
       {!loading ? (
         <Row gutter={24} style={{ margin: "0 1em" }}>
-          {columnsRender?.length > 0 ? columnsRender : `There is no device: + ${loading}`}
+          {columnsRender?.length > 0
+            ? columnsRender
+            : `There is no device: + ${loading}`}
         </Row>
       ) : null}
     </Layout>

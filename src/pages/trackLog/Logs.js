@@ -44,8 +44,8 @@ export default function Logs(props) {
     if (
       listLog != null &&
       props.devices != null &&
-      listLog.length != 0 &&
-      props.devices.length != 0
+      listLog.length !== 0 &&
+      props.devices.length !== 0
     ) {
       listLog.map((e, index) => {
         if (idDeviceFilter.length === 0) {

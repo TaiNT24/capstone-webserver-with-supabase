@@ -20,10 +20,10 @@ const draw = (ctx, frameCount, devices, area) => {
     let statusFrame = 1; //device is inactive
     let statusStyle = "#f00"; //red
 
-    if (device.status == 0) {
+    if (device.status === 0) {
       // device is active
       statusStyle = "#389e0d"; //green
-    } else if (device.status == 2) {
+    } else if (device.status === 2) {
       // device is running
       statusFrame = Math.sin(frameCount * 0.08) ** 2;
       statusStyle = "#096dd9"; //blue

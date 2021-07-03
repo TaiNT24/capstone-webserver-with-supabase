@@ -33,7 +33,7 @@ export default function Siderbar(props) {
 
     setSelectedItem(newPath);
     console.log("selectedItem: " + selectedItem);
-  });
+  }, [location.pathname]); //netlify suggess
 
   const clickLogout = () => {
     setShowConfirm(true);

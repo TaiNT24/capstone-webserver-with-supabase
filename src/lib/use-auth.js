@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { supabase } from "./Store";
-import { useHistory, useLocation } from "react-router-dom";
 
 const authContext = createContext();
 
@@ -21,8 +20,8 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
 
-  const history = useHistory();
-  const location = useLocation();
+  // const history = useHistory();
+  // const location = useLocation();
 
   useEffect(() => {
     const session = supabase.auth.session();
@@ -95,7 +94,7 @@ function useProvideAuth() {
     try {
       const {
         user: user_signin,
-        session,
+        // session,
         error,
       } = await supabase.auth.signIn({
         email: email,

@@ -190,7 +190,7 @@ export const fetchStaffById = async (id) => {
 export const fetchStaffCount = async () => {
   try {
     let {
-      data: staffs,
+      // data: staffs,
       error,
       count,
     } = await supabase
@@ -272,7 +272,7 @@ export const updateMappingDevice = async (id, devices) => {
   let error1 = null;
   let error2 = null;
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("mapping_device")
       .delete()
       .eq("user_id", id);
@@ -287,7 +287,7 @@ export const updateMappingDevice = async (id, devices) => {
         });
       });
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("mapping_device")
         .insert(listDeviceInsert);
 

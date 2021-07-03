@@ -61,7 +61,7 @@ export default function Staff(props) {
       width: 100,
       render: (id) => {
         return (
-          <a onClick={() => onOpenProfile(id)} key={id}>
+          <a href="#" onClick={() => onOpenProfile(id)} key={id}>
             View Profile
           </a>
         );

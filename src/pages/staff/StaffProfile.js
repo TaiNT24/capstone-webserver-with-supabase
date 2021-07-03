@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Drawer, Row, Col, Avatar, Divider, Button, Typography, Select } from "antd";
+import { Drawer, Row, Col, Avatar, Button, Typography } from "antd";
 import { MainTitle } from "../../utils/Text";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import moment from "moment";
@@ -15,7 +15,6 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-const { Option } = Select;
 const { Title } = Typography;
 
 const DescriptionItem = ({ title, content }) => (
@@ -45,8 +44,6 @@ const RowInfo = ({ title, content }) => {
 export default function StaffProfile(props) {
   //useState
   const [visible, setVisible] = useState(false);
-
-  const [id, setId] = useState(props.id);
 
   const [user, setUser] = useState(null);
   const [tag, setTag] = useState(null);
@@ -84,12 +81,6 @@ export default function StaffProfile(props) {
 
   function loadMappingDevice(userId) {
     fetchDevice().then((devices) => {
-      const children = [];
-
-      devices.map((device) => {
-        children.push(<Option key={device.code}>{device.code}</Option>);
-      });
-
       //
       fetchMappingDevice(userId).then((mapping_devices) => {
         const default_children = [];
@@ -99,7 +90,9 @@ export default function StaffProfile(props) {
             if (device.device_id === child.id) {
               default_children.push(child.code);
             }
+            return null;
           });
+          return null;
         });
 
         setDefaultChildrenDevice(default_children);
