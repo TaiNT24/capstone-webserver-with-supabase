@@ -73,6 +73,7 @@ export default function MappingDeviceToUser(props) {
         }
       });
     }
+    // eslint-disable-next-line
   }, [props.isDisable]);
 
   useEffect(() => {
