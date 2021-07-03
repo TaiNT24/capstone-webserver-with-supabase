@@ -15,6 +15,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
+const { Option } = Select;
 const { Title } = Typography;
 
 const DescriptionItem = ({ title, content }) => (
