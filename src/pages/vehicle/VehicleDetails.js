@@ -186,7 +186,7 @@ export default function VehicleDetails(props) {
                   style={{}}
                   size="large"
                   value={device?.date_create}
-                  disabled
+                  readOnly
                 />
               </RowInline>
 
@@ -235,7 +235,7 @@ export default function VehicleDetails(props) {
                   style={{}}
                   size="large"
                   value={device?.last_connection}
-                  disabled
+                  readOnly
                 />
               </RowInline>
               <Row justify="center">
