@@ -3,7 +3,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAuth } from "../../lib/use-auth";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
-import img from '../../lib/img/background_login_origin.jpeg';
+import img from '../../lib/img/background_login_min.jpeg';
 
 const { Title } = Typography;
 
