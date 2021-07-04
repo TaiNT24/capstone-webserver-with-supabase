@@ -164,6 +164,8 @@ export default function StaffProfile(props) {
                 setDefaultChildrenDevice(value);
                 setOldDefaultChildrenDevice(value);
               }}
+
+              {...props}
             />
           ) : null}
         </Col>

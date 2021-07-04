@@ -83,13 +83,15 @@ export default function MappingDeviceToUser(props) {
   useEffect(() => {
     const grid = [];
 
-    if (deviceAllowed != null) {
+    if (deviceAllowed != null && props.devices) {
       deviceAllowed.forEach((ele, index) => {
+        let idVehicle = props.devices.filter((device) => device.code === ele)[0].id;
+
         grid.push(
           <Col span={8} style={{ marginBottom: "0.5em" }} key={index}>
             <Button type="primary" size="middle">
               {/* <Link to={location => ({ ...location, pathname: `/vehicles/${ele}` })}>{ele}</Link> */}
-              <Link to={{ pathname: `/vehicles/${ele}` }}>{ele}</Link>
+              <Link to={{ pathname: `/vehicles/${idVehicle}` }}>{ele}</Link>
             </Button>
           </Col>
         );
@@ -97,7 +99,8 @@ export default function MappingDeviceToUser(props) {
     }
 
     setGridDeviceButton(grid);
-  }, [deviceAllowed]);
+
+  }, [deviceAllowed, props.devices]);
 
   return (
     <>

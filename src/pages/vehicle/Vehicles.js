@@ -17,7 +17,7 @@ export default function Vehicles (props) {
   }, [props.devices]);
 
   return (
-    <Tabs defaultActiveKey="Vehicle_List">
+    <Tabs defaultActiveKey="Vehicle_List" >
       <TabPane
         tab={
           <span>

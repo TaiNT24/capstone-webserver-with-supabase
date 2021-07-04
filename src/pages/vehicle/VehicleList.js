@@ -3,6 +3,7 @@ import {
   CheckCircleOutlined,
   SyncOutlined,
   CloseCircleOutlined,
+  WarningOutlined
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { MainTitle } from "../../utils/Text";
@@ -41,7 +42,7 @@ export default function Vehicles(props) {
         let mac_add = device.mac_address;
         let last_connection = device.last_connection;
 
-        code = "Device code: " + code;
+        code = "Vehicle code: " + code;
         switch (device.status) {
           case 0:
             status = (
@@ -67,7 +68,7 @@ export default function Vehicles(props) {
 
           default:
             status = (
-              <Tag icon={<SyncOutlined spin />} color="#108ee9">
+              <Tag icon={<WarningOutlined />} color="#f50">
                 UN_SET_STATUS
               </Tag>
             );
@@ -75,7 +76,7 @@ export default function Vehicles(props) {
 
         render.push(
           <Col span={8} key={device.id}>
-            <Link to={{ pathname: `/vehicles/${device.code}` }}>
+            <Link to={{ pathname: `/vehicles/${device.id}` }}>
               <Card
                 className="card-vehicel"
                 style={{
@@ -117,7 +118,7 @@ export default function Vehicles(props) {
   }, [props.devices]);
 
   return (
-    <Layout>
+    <Layout className="ant-layout-inside">
       <MainTitle value="Vehicle List" />
 
       <Row justify="center">
@@ -128,7 +129,7 @@ export default function Vehicles(props) {
         <Row gutter={24} style={{ margin: "0 1em" }}>
           {columnsRender?.length > 0
             ? columnsRender
-            : `There is no device: + ${loading}`}
+            : `There is no vehicle`}
         </Row>
       ) : null}
     </Layout>

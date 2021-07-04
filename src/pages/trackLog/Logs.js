@@ -84,7 +84,7 @@ export default function Logs(props) {
   }
 
   return (
-    <Layout>
+    <Layout className="ant-layout-inside">
       <MainTitle value="Logs"/>
 
       <Layout style={{}}>

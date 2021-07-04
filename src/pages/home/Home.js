@@ -13,7 +13,6 @@ export default function Home(props) {
 
   if(auth.user){
     auth.fetchUser(auth.user.id).then((data) => {
-      debugger
       account = data[0];
     });
   }

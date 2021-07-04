@@ -311,3 +311,107 @@ export const updateMappingDevice = async (id, devices) => {
   return false;
 };
 
+export const updateVehicle = async (id, dataUpdate) => {
+  try {
+    const { data, error } = await supabase
+      .from("devices")
+      .update({
+        code: dataUpdate.code,
+        mac_address: dataUpdate.mac_address,
+        status: dataUpdate.status,
+      })
+      .eq("id", id);
+
+    if (error) {
+      console.log("error_updateVehicle", error);
+      return error;
+    }
+    return data;
+  } catch (error) {
+    console.log("error_updateVehicle", error);
+    return error;
+  }
+};
+
+export const fetchAllStaff = async () => {
+  try {
+    let { data: staffs, error } = await supabase
+      .from("accounts")
+      .select("id, email, full_name, date_create, status")
+      .eq("role", "staff")
+      .order("date_create", { ascending: false });
+
+    if (error) {
+      console.log("error_fetchAllStaff", error);
+    }
+
+    return staffs;
+  } catch (error) {
+    console.log("error_fetchAllStaff", error);
+  }
+  return null;
+};
+
+export const fetchTask = async (loadCount) => {
+  try {
+    let page = loadCount * 10;
+
+    let { data: tasks, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .order("date_create", { ascending: false });
+    // .range(page, page + 10)
+    // .limit(10);
+
+    if (error) {
+      console.log("error_fetchTask", error);
+      return error;
+    }
+
+    return tasks;
+  } catch (error) {
+    console.log("error_fetchTask", error);
+    return error;
+  }
+};
+
+export const fetchTaskFilterByDevice = async (deviceFilter) => {
+  try {
+    let { data: tasks, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .in("device_id", deviceFilter)
+      .order("date_create", { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.log("error_fetchTask", error);
+      return error;
+    }
+
+    return tasks;
+  } catch (error) {
+    console.log("error_fetchTask", error);
+    return error;
+  }
+};
+
+export const fetchTaskDetailById = async (id) => {
+  try {
+    let { data: taskDetail, error } = await supabase
+      .from("location_history_detail")
+      .select("*")
+      .eq("task_id", id)
+      .order("date_create", { ascending: true });
+
+    if (error) {
+      console.log("error_fetchTaskDetailById", error);
+      return error;
+    }
+
+    return taskDetail;
+  } catch (error) {
+    console.log("error_fetchTaskDetailById", error);
+    return error;
+  }
+};

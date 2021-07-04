@@ -32,3 +32,11 @@ code {
   background-repeat: repeat-x;
   animation: animatedBackground 3s linear infinite alternate;
 }
+
+.body-login {
+  background-image: url(./lib/img/AdobeStock_186921364.jpeg);
+  height: 50em;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+}

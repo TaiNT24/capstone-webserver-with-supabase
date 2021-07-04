@@ -98,7 +98,7 @@ export default function Staff(props) {
           operation: staff.id,
         });
 
-        return dataTable;
+        return null;
       });
     }
 
@@ -107,7 +107,7 @@ export default function Staff(props) {
   }
 
   return (
-    <Layout>
+    <Layout className="ant-layout-inside">
       <MainTitle value="Staffs" />
 
       <Table
@@ -128,6 +128,7 @@ export default function Staff(props) {
           showProfile={showProfile}
           id={idProfile}
           onCloseProfile={onCloseProfile}
+          {...props}
         />
       ) : null}
     </Layout>

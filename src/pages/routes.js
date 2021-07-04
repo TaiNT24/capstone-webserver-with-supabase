@@ -5,6 +5,8 @@ import Logs from "./trackLog/Logs";
 import StaffDetail from "./staff/StaffDetail";
 import VehicleDetails from "./vehicle/VehicleDetails";
 import Vehicles from "./vehicle/Vehicles";
+import Tasks from "./task/Tasks";
+import TaskDetail from "./task/TaskDetail";
 
 const routes = [
   {
@@ -38,7 +40,7 @@ const routes = [
     component: Staff,
   },
   {
-    path: "/vehicles/:code",
+    path: "/vehicles/:id",
     exact: true,
     restricted: true, // <-- NEW
     component: VehicleDetails,
@@ -48,6 +50,18 @@ const routes = [
     exact: true,
     restricted: true, // <-- NEW
     component: Vehicles,
+  },
+  {
+    path: "/tasks/:id",
+    exact: true,
+    restricted: true, // <-- NEW
+    component: TaskDetail,
+  },
+  {
+    path: "/tasks",
+    exact: true,
+    restricted: true, // <-- NEW
+    component: Tasks,
   },
   {
     path: "/login",

@@ -3,6 +3,7 @@ import {
   UserOutlined,
   LaptopOutlined,
   LogoutOutlined,
+  HistoryOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -78,6 +79,12 @@ export default function Siderbar(props) {
           <Menu.ItemGroup title="Manage Vehicle">
             <Menu.Item key="/vehicles" icon={<VehicleIcon />}>
               <Link to="/vehicles">Vehicles</Link>
+            </Menu.Item>
+          </Menu.ItemGroup>
+
+          <Menu.ItemGroup title="Tasks">
+            <Menu.Item key="/tasks" icon={<HistoryOutlined />}>
+              <Link to="/tasks">History Tasks</Link>
             </Menu.Item>
           </Menu.ItemGroup>
 
