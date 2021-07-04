@@ -35,7 +35,7 @@ export default function LoginForm() {
   return (
     <div
       className="body-login"
-      style={{ backgroundImage: `url(${img})`, height: "60em" }}
+      style={{ backgroundImage: `url(${img})`, height: "100vh" }}
     >
       <Row justify="center">
         <Col className="form-outside-login">
