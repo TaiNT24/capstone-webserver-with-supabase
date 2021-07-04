@@ -245,11 +245,10 @@ export default function Tasks(props) {
 
       <Table
         className="table"
-        scroll={{ scrollToFirstRowOnChange: false }}
         columns={columns}
         dataSource={data}
         pagination={false}
-        scroll={{ x: 1100, y: 460 }}
+        scroll={{ x: 1100, y: 460 , scrollToFirstRowOnChange: false }}
         loading={loading}
         // onChange={handleTableChange}
       />

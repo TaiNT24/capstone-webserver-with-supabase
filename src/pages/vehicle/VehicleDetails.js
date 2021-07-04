@@ -149,7 +149,7 @@ export default function VehicleDetails(props) {
                           (device) => device.code === value
                         );
 
-                        if (arr.length > 0 && arr[0].code != device?.code) {
+                        if (arr.length > 0 && arr[0].code !== device?.code) {
                           return Promise.reject("Dupplicate code");
                         } else {
                           return Promise.resolve();

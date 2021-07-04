@@ -354,7 +354,7 @@ export const fetchAllStaff = async () => {
 
 export const fetchTask = async (loadCount) => {
   try {
-    let page = loadCount * 10;
+    // let page = loadCount * 10;
 
     let { data: tasks, error } = await supabase
       .from("tasks")
