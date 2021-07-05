@@ -3,7 +3,7 @@ import {
   CheckCircleOutlined,
   SyncOutlined,
   CloseCircleOutlined,
-  WarningOutlined
+  WarningOutlined,
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { MainTitle } from "../../utils/Text";
@@ -38,7 +38,26 @@ export default function Vehicles(props) {
       devices.forEach((device) => {
         let code = device.code;
         let status;
-        let battery = device.battery + " %";
+
+        let colorBattery = "green";
+        if (device.battery < 20) {
+          colorBattery = "warning";
+        } else if (device.battery < 50) {
+          colorBattery = "blue";
+        }
+        let battery = (
+          <Tag
+            style={{
+              width: "4em",
+              height: "2.5em",
+              lineHeight: "2.5em",
+              textAlign: "center",
+            }}
+            color={colorBattery}
+          >
+            {device.battery} %
+          </Tag>
+        );
         let mac_add = device.mac_address;
         let last_connection = device.last_connection;
 
@@ -127,9 +146,7 @@ export default function Vehicles(props) {
 
       {!loading ? (
         <Row gutter={24} style={{ margin: "0 1em" }}>
-          {columnsRender?.length > 0
-            ? columnsRender
-            : `There is no vehicle`}
+          {columnsRender?.length > 0 ? columnsRender : `There is no vehicle`}
         </Row>
       ) : null}
     </Layout>

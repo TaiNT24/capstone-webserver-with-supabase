@@ -106,7 +106,7 @@ export default function Logs(props) {
           columns={columns}
           dataSource={data}
           loading={loading}
-          scroll={{ y: 350 }}
+          scroll={{ y: 420 }}
           style={{ marginTop: 10 }}
         />
       </Layout>

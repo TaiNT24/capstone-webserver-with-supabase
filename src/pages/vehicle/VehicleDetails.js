@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  Layout,
   Row,
   Col,
   Input,
@@ -13,11 +12,9 @@ import {
   message,
 } from "antd";
 import { MainTitle } from "../../utils/Text";
-import {
-  CloseCircleOutlined,
-  SaveOutlined,
-} from "@ant-design/icons";
+import { CloseCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import { updateVehicle } from "../../lib/Store";
+import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -115,7 +112,7 @@ export default function VehicleDetails(props) {
   };
 
   return (
-    <Layout className="ant-layout-inside">
+    <div className="ant-layout-inside" height="100vh">
       <MainTitle value="Vehicle Detail" />
 
       <Row>
@@ -130,7 +127,7 @@ export default function VehicleDetails(props) {
                 borderRadius: "1em",
                 marginLeft: "1em",
                 // boxShadow: "0 0 10px 0 rgb(0 0 0 / 15%)",
-                boxShadow: "rgb(29 165 122 / 45%) 0px 0px 10px 0px"
+                boxShadow: "rgb(29 165 122 / 45%) 0px 0px 10px 0px",
               }}
             >
               <RowInline title="Code:">
@@ -182,12 +179,15 @@ export default function VehicleDetails(props) {
               </RowInline>
 
               <RowInline title="Date Create:" marginBottom="2em">
-                <Input
+                {/* <Input
                   style={{}}
                   size="large"
-                  value={device?.date_create}
+                  value=
                   readOnly
-                />
+                /> */}
+                <span style={{ fontSize: "1.15em" }}>
+                  {device?.date_create}
+                </span>
               </RowInline>
 
               <RowInline title="Battery:" marginBottom="2em">
@@ -231,12 +231,15 @@ export default function VehicleDetails(props) {
               ) : null}
 
               <RowInline title="Last Connection:" marginBottom="2em">
-                <Input
+                {/* <Input
                   style={{}}
                   size="large"
                   value={device?.last_connection}
                   readOnly
-                />
+                /> */}
+                <span style={{ fontSize: "1.15em" }}>
+                  {device?.last_connection}
+                </span>
               </RowInline>
               <Row justify="center">
                 <Button
@@ -258,7 +261,7 @@ export default function VehicleDetails(props) {
                     icon={<CloseCircleOutlined />}
                     onClick={onReset}
                   >
-                    Cancle
+                    Cancel
                   </Button>
                 ) : null}
               </Row>
@@ -266,8 +269,10 @@ export default function VehicleDetails(props) {
           </Col>
         ) : null}
 
-        <Col span={15}></Col>
+        <Col span={14} offset={1}>
+          <TaskRecentByVehicle idVehicle={id} />
+        </Col>
       </Row>
-    </Layout>
+    </div>
   );
 }

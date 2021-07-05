@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 
 export default function Tasks(props) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState();
   const [devicesFilter, setDevicesFilter] = useState([]);
 
@@ -77,38 +77,42 @@ export default function Tasks(props) {
       dataIndex: "detail",
       width: 100,
       fixed: "right",
-      render: ({ id, status }) => {
-        return (
-          <Link to={{ pathname: `/tasks/${id}`, state: { status: status } }}>
-            View map
-          </Link>
-        );
-      },
+      render: ({ id, status }) => (
+        <Link
+          to={{ pathname: `/tasks/${id}`, state: { status: status } }}
+          key={id}
+        >
+          View map
+        </Link>
+      ),
     },
   ];
 
   useEffect(() => {
-    setLoading(true);
-
     if (props.devices) {
-      let deviceListFilter = [];
+      if (!data) {
+        setLoading(true);
 
-      props.devices.forEach((device) => {
-        deviceListFilter.push({
-          text: device.code,
-          value: device.id,
+        let deviceListFilter = [];
+
+        props.devices.forEach((device) => {
+          deviceListFilter.push({
+            key: device.id,
+            text: device.code,
+            value: device.id,
+          });
         });
-      });
 
-      setDevicesFilter(deviceListFilter);
+        setDevicesFilter(deviceListFilter);
 
-      fetchTask().then((dataTask) => {
-        if (dataTask.length >= 0) {
-          setupData(dataTask);
-        } else {
-          console.log("error_fetchTask: " + dataTask);
-        }
-      });
+        fetchTask().then((dataTask) => {
+          if (dataTask.length >= 0) {
+            setupData(dataTask);
+          } else {
+            console.log("error_fetchTask: " + dataTask);
+          }
+        });
+      }
     }
     // eslint-disable-next-line
   }, [props.devices]);
@@ -184,11 +188,13 @@ export default function Tasks(props) {
           });
         });
 
-        if (data.length === 0) {
-          setData(dataShow);
-        } else {
-          setData((data) => [...data, dataShow]);
-        }
+        setData(dataShow);
+
+        // if (data.length === 0) {
+        //   setData(dataShow);
+        // } else {
+        //   setData((data) => [...data, dataShow]);
+        // }
       } else {
         console.log("error_fetchAllStaff: " + dataStaff);
       }
@@ -248,7 +254,7 @@ export default function Tasks(props) {
         columns={columns}
         dataSource={data}
         pagination={false}
-        scroll={{ x: 1100, y: 460 , scrollToFirstRowOnChange: false }}
+        scroll={{ x: 1100, y: 460, scrollToFirstRowOnChange: false }}
         loading={loading}
         // onChange={handleTableChange}
       />
