@@ -9,7 +9,7 @@ const radius_point = 5;
 const font_coordinate = "18px georgia";
 const font_vehicle = "12px georgia";
 
-const draw = (ctx, frameCount, devices, area) => {
+const draw = (ctx, devices, area) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   ctx.fillStyle = "#f00";
@@ -31,7 +31,7 @@ const draw = (ctx, frameCount, devices, area) => {
       statusStyle = "#389e0d"; //green
     } else if (device.status === 2) {
       // device is running
-      statusFrame = Math.sin(frameCount * 0.08) ** 2;
+      // statusFrame = Math.sin(frameCount * 0.08) ** 2;
       statusStyle = "#096dd9"; //blue
     }
 
@@ -70,7 +70,7 @@ const backgroundDraw = (ctx, area) => {
 
   // ctx.drawImage(city, 0, 0);
 
-  ctx.fillStyle = "#bfbfbf";
+  ctx.fillStyle = "#d9d9d9"; //color background
   ctx.fillRect(
     area.move_point,
     0,
@@ -82,7 +82,7 @@ const backgroundDraw = (ctx, area) => {
   ctx.save();
 
   ctx.beginPath();
-  ctx.strokeStyle = "#8c8c8c";
+  ctx.strokeStyle = "#bfbfbf"; // color grid
 
   for (let x = 0 + area.move_point; x <= area.width ; ) {
     ctx.moveTo(x, 0);
@@ -125,26 +125,26 @@ export function useCanvas(devices, area) {
     const backgroundCanvasObj = canvasRefBackground.current;
     const backgroundCtx = backgroundCanvasObj.getContext("2d");
 
-    let animationFrameId;
+    // let animationFrameId;
 
     if (devices != null && devices.length > 0 && area != null) {
-      let frameCount = 0;
-      window.cancelAnimationFrame(animationFrameId);
+      // let frameCount = 0;
+      // window.cancelAnimationFrame(animationFrameId);
 
       //Our draw came here
       function render() {
-        frameCount++;
-        draw(ctx, frameCount, devices, area);
-        animationFrameId = window.requestAnimationFrame(render);
+        // frameCount++;
+        draw(ctx, devices, area);
+        // animationFrameId = window.requestAnimationFrame(render);
       }
 
       backgroundDraw(backgroundCtx, area);
       render();
     }
 
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-    };
+    // return () => {
+    //   window.cancelAnimationFrame(animationFrameId);
+    // };
   }, [devices, area]);
 
   return [canvasRefBackground, canvasRef, width, height];
