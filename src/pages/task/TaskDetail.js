@@ -1,4 +1,3 @@
-import { Layout } from "antd";
 import { useLocation, useParams } from "react-router-dom";
 import { MainTitle } from "../../utils/Text";
 import { useCanvas } from "./useCanvas";

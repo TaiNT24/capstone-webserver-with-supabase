@@ -1,4 +1,3 @@
-import { Layout} from "antd";
 import { useCanvas } from "./useCanvas";
 
 export default function Canvas(props) {
