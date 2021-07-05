@@ -151,7 +151,7 @@ export default function TaskRecentByVehicle(props) {
       <List
         style={{ overflow: "auto", height: "36em" }}
         className="demo-loadmore-list"
-        header={<Title level={5}>Quick Recent Task</Title>}
+        header={<Title level={5} style={{textAlign: "center"}}>Quick Recent Task</Title>}
         bordered
         loading={initLoading}
         itemLayout="horizontal"
