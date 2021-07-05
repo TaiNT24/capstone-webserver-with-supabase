@@ -79,8 +79,8 @@ export default function Tasks(props) {
       fixed: "right",
       render: ({ id, status }) => {
         return (
-          <Link to={{ pathname: `tasks/${id}`, state: { status: status } }}>
-            See detail
+          <Link to={{ pathname: `/tasks/${id}`, state: { status: status } }}>
+            View map
           </Link>
         );
       },
@@ -104,7 +104,7 @@ export default function Tasks(props) {
 
       fetchTask().then((dataTask) => {
         if (dataTask.length >= 0) {
-          setupData(dataTask, props.devices);
+          setupData(dataTask);
         } else {
           console.log("error_fetchTask: " + dataTask);
         }
@@ -113,7 +113,7 @@ export default function Tasks(props) {
     // eslint-disable-next-line
   }, [props.devices]);
 
-  function setupData(dataTask, devices) {
+  function setupData(dataTask) {
     const dataShow = [];
 
     fetchAllStaff().then((dataStaff) => {

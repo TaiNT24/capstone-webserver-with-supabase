@@ -17,7 +17,7 @@ export default function Vehicles (props) {
   }, [props.devices]);
 
   return (
-    <Tabs defaultActiveKey="Vehicle_List" >
+    <Tabs defaultActiveKey="Vehicle_List" style={{height: "100vh"}}>
       <TabPane
         tab={
           <span>
@@ -29,7 +29,7 @@ export default function Vehicles (props) {
       >
         <VehicleList devices={devices} />
       </TabPane>
-      <TabPane
+      <TabPane 
         tab={
           <span>
             <EnvironmentOutlined />
@@ -38,7 +38,10 @@ export default function Vehicles (props) {
         }
         key="Vehicle_Position"
       >
-        <Canvas devices={devices} />
+       
+        <Canvas
+        devices={devices} />
+     
       </TabPane>
     </Tabs>
   );

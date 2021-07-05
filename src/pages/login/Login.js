@@ -38,7 +38,7 @@ export default function LoginForm() {
       style={{ backgroundImage: `url(${img})`, height: "100vh" }}
     >
       <Row justify="center">
-        <Col className="form-outside-login">
+        <Col className="form-outside-login"  style={{boxShadow: "rgb(171 171 171 / 62%) 0px 0px 10px 6px"}}>
           <Row justify="center">
             <Title
               className="text-login"

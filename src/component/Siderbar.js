@@ -15,7 +15,7 @@ import { MainTitle } from "../utils/Text";
 const { Sider } = Layout;
 
 export default function Siderbar(props) {
-  const [selectedItem, setSelectedItem] = useState("/log");
+  const [selectedItem, setSelectedItem] = useState("/vehicles");
   const [showConfirm, setShowConfirm] = useState(false);
 
   let location = useLocation();
@@ -24,7 +24,7 @@ export default function Siderbar(props) {
     let newPath = location.pathname;
 
     if (newPath === "/") {
-      newPath = "/log";
+      newPath = "/vehicles";
     }
 
     // ex: /staff/{id}
@@ -66,9 +66,11 @@ export default function Siderbar(props) {
           // defaultOpenKeys={selectedGroup}
           selectedKeys={selectedItem}
         >
-          <Menu.Item icon={<LaptopOutlined />} key="/log">
-            <Link to="/log">Track vehicle's log</Link>
-          </Menu.Item>
+          <Menu.ItemGroup title="Manage Vehicle">
+            <Menu.Item key="/vehicles" icon={<VehicleIcon />}>
+              <Link to="/vehicles">Vehicles</Link>
+            </Menu.Item>
+          </Menu.ItemGroup>
 
           <Menu.ItemGroup title="Manage Staff">
             <Menu.Item key="/staff" icon={<UserOutlined />}>
@@ -76,22 +78,20 @@ export default function Siderbar(props) {
             </Menu.Item>
           </Menu.ItemGroup>
 
-          <Menu.ItemGroup title="Manage Vehicle">
-            <Menu.Item key="/vehicles" icon={<VehicleIcon />}>
-              <Link to="/vehicles">Vehicles</Link>
-            </Menu.Item>
-          </Menu.ItemGroup>
-
           <Menu.ItemGroup title="Tasks">
             <Menu.Item key="/tasks" icon={<HistoryOutlined />}>
               <Link to="/tasks">History Tasks</Link>
             </Menu.Item>
+
+            <Menu.Item icon={<LaptopOutlined />} key="/log">
+            <Link to="/log">Track vehicle's log</Link>
+          </Menu.Item>
           </Menu.ItemGroup>
 
           <Menu.ItemGroup title="My account" >
-            <Menu.Item key="/about" icon={<UserOutlined />}>
+            {/* <Menu.Item key="/about" icon={<UserOutlined />}>
               <Link to="/about">My Profile</Link>
-            </Menu.Item>
+            </Menu.Item> */}
 
             <Menu.Item
               key="/logout"

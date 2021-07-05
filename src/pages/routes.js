@@ -13,7 +13,7 @@ const routes = [
     path: "/",
     exact: true,
     restricted: true, // <-- NEW
-    component: Logs,
+    component: Vehicles,
   },
   {
     path: "/log",

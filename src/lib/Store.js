@@ -415,3 +415,25 @@ export const fetchTaskDetailById = async (id) => {
     return error;
   }
 };
+
+export const fetchTaskByVehicleId = async (id, row) => {
+  try {
+    let { data: tasks, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("device_id", id)
+      .order("date_create", { ascending: false })
+      .range(row * 3 , row + 2);
+
+    if (error) {
+      console.log("error_fetchTaskByVehicleId", error);
+      return error;
+    }
+    debugger
+
+    return tasks;
+  } catch (error) {
+    console.log("error_fetchTaskByVehicleId", error);
+    return error;
+  }
+};

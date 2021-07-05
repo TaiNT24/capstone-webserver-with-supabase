@@ -3,6 +3,12 @@ import { useState, useEffect, useRef } from "react";
 let city = new Image();
 city.src = "/img/backgound_canvas.png";
 
+let percent = 1;
+const radius_point = 5;
+
+const font_coordinate = "18px georgia";
+const font_vehicle = "12px georgia";
+
 const draw = (ctx, frameCount, devices, area) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -10,8 +16,8 @@ const draw = (ctx, frameCount, devices, area) => {
 
   devices.forEach((device) => {
     let position = {
-      x: device.last_x,
-      y: device.last_y,
+      x: device.last_x * percent + area.move_point,
+      y: area.height - device.last_y * percent  // dời trục Oy = height
     };
     let shape = new Path2D();
 
@@ -31,17 +37,32 @@ const draw = (ctx, frameCount, devices, area) => {
 
     ctx.fillStyle = statusStyle;
 
-    shape.arc(position.x, position.y, 10 * statusFrame, 0, 2 * Math.PI);
+    shape.arc(
+      position.x,
+      position.y,
+      radius_point * statusFrame,
+      0,
+      2 * Math.PI
+    );
     ctx.fill(shape);
 
-    // ctx.moveTo(position.x + 10, position.y + 10);
     ctx.save();
 
     ctx.fillStyle = "black";
-    ctx.fillText(device.code, position.x - 10, position.y + 20);
+    ctx.font = font_vehicle;
+
+    ctx.fillText(device.code, position.x - 10, position.y + 15);
 
     ctx.restore();
   });
+
+  //draw Coordinate
+  ctx.fillStyle = "black";
+  ctx.font = font_coordinate;
+  ctx.fillText("O", 0, area.height + area.move_point);
+
+  ctx.fillText("x", area.width, area.height + area.move_point);
+  ctx.fillText("y", 5, 15);
 };
 
 const backgroundDraw = (ctx, area) => {
@@ -50,13 +71,39 @@ const backgroundDraw = (ctx, area) => {
   // ctx.drawImage(city, 0, 0);
 
   ctx.fillStyle = "#bfbfbf";
-  ctx.fillRect(0, 0, area.width, area.height);
+  ctx.fillRect(
+    area.move_point,
+    0,
+    area.width + area.move_point,
+    area.height
+  );
+
+  //draw grid
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#8c8c8c";
+
+  for (let x = 0 + area.move_point; x <= area.width ; ) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, area.height);
+    x = x + 100 * percent;
+  }
+
+  for (let y = 0 ; y <= area.height  ; ) {
+    ctx.moveTo(area.move_point, y);
+    ctx.lineTo(area.width + area.move_point, y);
+    y = y + 100 * percent;
+  }
+  ctx.stroke();
+  ctx.restore();
 };
 
 export function useCanvas(devices, area) {
+  percent = area.height / 1000;
+
   const [height, setHeight] = useState();
   const [width, setWidth] = useState();
-
 
   const canvasRef = useRef(null);
   const canvasRefBackground = useRef(null);
@@ -74,7 +121,7 @@ export function useCanvas(devices, area) {
   useEffect(() => {
     const canvasObj = canvasRef.current;
     const ctx = canvasObj.getContext("2d");
-  
+
     const backgroundCanvasObj = canvasRefBackground.current;
     const backgroundCtx = backgroundCanvasObj.getContext("2d");
 
@@ -100,10 +147,5 @@ export function useCanvas(devices, area) {
     };
   }, [devices, area]);
 
-  return [
-    canvasRefBackground,
-    canvasRef,
-    width,
-    height,
-  ];
+  return [canvasRefBackground, canvasRef, width, height];
 }

@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchTaskDetailById } from "../../lib/Store";
 
-const draw = (ctx, status, tasksDetail) => {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+let percent = 1;
+const font_coordinate = "18px georgia";
+const font_vehicle = "12px georgia";
 
-  ctx.fillStyle = "#f00";
+const draw = (ctx, status, tasksDetail, area) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   ctx.beginPath();
 
@@ -18,25 +20,53 @@ const draw = (ctx, status, tasksDetail) => {
   }
 
   ctx.strokeStyle = statusStyle;
+  ctx.fillStyle = "#68A691"; //color point
 
   tasksDetail.forEach((detail, index) => {
     let shape = new Path2D();
-    let x = detail.location_x
-    let y = detail.location_y
+    let x = detail.location_x * percent + area.move_point;
+    let y = area.height - detail.location_y * percent;
     if (index === 0) {
       ctx.moveTo(x, y);
       shape.arc(x, y, 8, 0, Math.PI * 2);
       ctx.fill(shape);
+
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.font = font_vehicle;
+      ctx.fillText("Start", x - 10, y + 20);
+      ctx.restore();
+    } else if (index === tasksDetail.length - 1) {
+      ctx.lineTo(x, y);
+
+      shape.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fill(shape);
+      ctx.moveTo(x, y);
+
+      ctx.fillStyle = "black";
+      ctx.fillText("End", x - 10, y + 20);
     } else {
       ctx.lineTo(x, y);
+
       shape.arc(x, y, 5, 0, Math.PI * 2);
       ctx.fill(shape);
       ctx.moveTo(x, y);
     }
   });
 
-  // ctx.fill();
   ctx.stroke();
+
+  ctx.save();
+
+  ctx.fillStyle = "black";
+  ctx.font = font_coordinate;
+  ctx.fillText("O", 0, area.height + area.move_point);
+
+  ctx.fillText("x", area.width, area.height + area.move_point);
+  ctx.fillText("y", 5, 15);
+  
+  ctx.restore();
+
 };
 
 const backgroundDraw = (ctx, area) => {
@@ -45,10 +75,31 @@ const backgroundDraw = (ctx, area) => {
   // ctx.drawImage(city, 0, 0);
 
   ctx.fillStyle = "#bfbfbf";
-  ctx.fillRect(0, 0, area.width, area.height);
+  ctx.fillRect(area.move_point, 0, area.width + area.move_point, area.height);
+
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#8c8c8c";
+
+  for (let x = 0 + area.move_point; x <= area.width; ) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, area.height);
+    x = x + 100 * percent;
+  }
+
+  for (let y = 0; y <= area.height; ) {
+    ctx.moveTo(area.move_point, y);
+    ctx.lineTo(area.width + area.move_point, y);
+    y = y + 100 * percent;
+  }
+  ctx.stroke();
+  ctx.restore();
 };
 
 export function useCanvas(id, status, area) {
+  percent = area.height / 1000;
+
   const canvasRef = useRef(null);
   const canvasRefBackground = useRef(null);
 
@@ -90,7 +141,7 @@ export function useCanvas(id, status, area) {
       //Our draw came here
       function render() {
         // frameCount++;
-        draw(ctx, status, tasksDetail);
+        draw(ctx, status, tasksDetail, area);
         // animationFrameId = window.requestAnimationFrame(render);
       }
 

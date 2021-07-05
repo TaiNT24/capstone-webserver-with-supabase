@@ -1,5 +1,6 @@
 import { Layout } from "antd";
 import { useLocation, useParams } from "react-router-dom";
+import { MainTitle } from "../../utils/Text";
 import { useCanvas } from "./useCanvas";
 
 export default function TaskDetail(props) {
@@ -7,38 +8,45 @@ export default function TaskDetail(props) {
   const location = useLocation();
 
   const area = {
-    height: 1000,
+    height: 500,
     width: 1000,
+    move_point: 20,
   };
 
-  const [canvasRefBackground, canvasRef] = useCanvas(id, location.state.status, area);
+  const [canvasRefBackground, canvasRef] = useCanvas(
+    id,
+    location.state.status,
+    area
+  );
 
   return (
-    <Layout
-      style={{ position: "relative", height: area.height, width: area.width }}
-    >
-      <canvas
-        id="layer1"
-        ref={canvasRefBackground}
-        style={{ zIndex: "1", position: "absolute", left: "0px", top: "0px" }}
-        height={area.height}
-        width={area.width}
-      >
-        This text is displayed if your browser does not support HTML5 Canvas.
-      </canvas>
+    <div style={{ position: "relative", height: "100vh", width: "77vw" }}>
+      <MainTitle value="History Map" />
 
-      <canvas
-        id="layer2"
-        ref={canvasRef}
-        width={area.width}
-        height={area.height}
-        style={{
-          zIndex: "2",
-          position: "absolute",
-          left: "0px",
-          top: "0px",
-        }}
-      />
-    </Layout>
+      <div >
+        <canvas
+          id="layer1"
+          ref={canvasRefBackground}
+          style={{ zIndex: "1", position: "absolute", left: "0px", top: "12vh" }}
+          height={area.height}
+          width={area.width + area.move_point}
+        >
+          This text is displayed if your browser does not support HTML5 Canvas.
+        </canvas>
+
+        <canvas
+          id="layer2"
+          ref={canvasRef}
+          width={area.width + area.move_point}
+          height={area.height + area.move_point}
+          style={{
+            zIndex: "2",
+            position: "absolute",
+            left: "0px",
+            top: "12vh",
+          }}
+        />
+      </div>
+    </div>
   );
 }
