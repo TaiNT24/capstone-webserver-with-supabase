@@ -74,13 +74,13 @@ const backgroundDraw = (ctx, area) => {
 
   // ctx.drawImage(city, 0, 0);
 
-  ctx.fillStyle = "#bfbfbf";
+  ctx.fillStyle = "#ededed"; //color background
   ctx.fillRect(area.move_point, 0, area.width + area.move_point, area.height);
 
   ctx.save();
 
   ctx.beginPath();
-  ctx.strokeStyle = "#8c8c8c";
+  ctx.strokeStyle = "#d9d9d9"; // color grid
 
   for (let x = 0 + area.move_point; x <= area.width; ) {
     ctx.moveTo(x, 0);
