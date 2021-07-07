@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
-import axios from "axios";
+// import axios from "axios";
+import moment from "moment";
 
-axios.defaults.headers.common["apikey"] =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
-
-// export const supabase = createClient(
-//   process.env.PUBLIC_SUPABASE_URL,
-//   process.env.PUBLIC_SUPABASE_KEY
-// );
+// axios.defaults.headers.common["apikey"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
 export const supabase = createClient(
-  "https://ngbkythjduonfnmwrasm.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E"
+  process.env.REACT_APP_PUBLIC_SUPABASE_URL,
+  process.env.REACT_APP_PUBLIC_SUPABASE_KEY
 );
 
 export const useStoreGetDevice = (props) => {
@@ -25,7 +20,7 @@ export const useStoreGetDevice = (props) => {
     const deviceListener = supabase
       .from("devices")
       .on("INSERT", (payload) => {
-        setDevices((devices) => [...devices, payload.new]);
+        setDevices((devices) => [payload.new, ...devices]);
       })
       .on("UPDATE", (payload) => {
         console.log(payload);
@@ -88,7 +83,8 @@ export const useStoreGetDevice = (props) => {
     let { data: devices, error } = await supabase
       .from("devices")
       .select("*")
-      .order("last_connection", { ascending: false });
+      .order("date_create", { ascending: false });
+      // .order("last_connection", { ascending: false });
 
     if (error) throw error;
 
@@ -425,7 +421,7 @@ export const fetchTaskByVehicleId = async (id, row) => {
       .select("*")
       .eq("device_id", id)
       .order("date_create", { ascending: false })
-      .range(row , row + 2);
+      .range(row, row + 2);
 
     if (error) {
       console.log("error_fetchTaskByVehicleId", error);
@@ -435,6 +431,60 @@ export const fetchTaskByVehicleId = async (id, row) => {
     return tasks;
   } catch (error) {
     console.log("error_fetchTaskByVehicleId", error);
+    return error;
+  }
+};
+
+// export const loadAvatar = async () => {
+//   try {
+//     const { data, error } = await supabase.storage.from("avatars").list();
+
+//     if (error) {
+//       console.log("error_fetchTaskByVehicleId", error);
+//       return error;
+//     }
+
+//     console.log("data avatar: " + data);
+
+//     const { signedURL, error2 } = await supabase.storage
+//       .from("avatars")
+//       .createSignedUrl(data[0].name);
+
+//     return data;
+//   } catch (error) {
+//     console.log("error_fetchTaskByVehicleId", error);
+//     return error;
+//   }
+// };
+
+export const onCreateNewDevice = async (bodyData) => {
+  try {
+    let currentTimeStamp = moment().format();
+
+    const { data, error } = await supabase
+      .from("devices")
+      .insert([
+        { 
+          code: bodyData.code, 
+          mac_address: bodyData.mac_address,
+          date_create: currentTimeStamp,
+          status: 0,
+          battery: 100,
+          last_x: 10,
+          last_y: 10,
+          direction: 1,
+          last_connection: null
+        }
+      ]);
+
+    if (error) {
+      console.log("error_onCreateNewDevice", error);
+      return error;
+    }
+
+    return data;
+  } catch (error) {
+    console.log("error_onCreateNewDevice", error);
     return error;
   }
 };

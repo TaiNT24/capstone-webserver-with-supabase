@@ -1,4 +1,4 @@
-import { Card, Col, Row, Layout, Tag, Spin, Typography } from "antd";
+import { Card, Col, Row, Layout, Tag, Spin, Typography, Button  } from "antd";
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -8,6 +8,7 @@ import {
 import { useState, useEffect } from "react";
 import { MainTitle } from "../../utils/Text";
 import { Link } from "react-router-dom";
+import NewVehicle from "./NewVehicle";
 
 const { Title } = Typography;
 
@@ -28,6 +29,8 @@ export default function Vehicles(props) {
   const [loading, setLoading] = useState();
 
   const [devices, setDevices] = useState();
+
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const render = [];
@@ -139,6 +142,13 @@ export default function Vehicles(props) {
   return (
     <Layout className="ant-layout-inside">
       <MainTitle value="Vehicle List" />
+
+      <Row justify="end">
+        <Button type="primary" onClick={() => setOpenModal(true)} style={{marginRight: "2em"}}>
+          Create vehicle
+        </Button>
+        <NewVehicle openModal={openModal} closeModal={() => setOpenModal(false)} {...props}/>
+      </Row>
 
       <Row justify="center">
         <Spin size="large" spinning={loading} />
