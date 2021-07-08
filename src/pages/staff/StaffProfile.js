@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Drawer, Row, Col, Avatar, Button, Typography } from "antd";
+import { Drawer, Row, Col, Avatar, Button, Typography, Divider } from "antd";
 import { MainTitle } from "../../utils/Text";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import moment from "moment";
@@ -143,7 +143,7 @@ export default function StaffProfile(props) {
         </Col>
       </Row>
 
-      {/* <Divider /> */}
+      <Divider />
 
       <Row>
         <Col span={5} offset={1}>

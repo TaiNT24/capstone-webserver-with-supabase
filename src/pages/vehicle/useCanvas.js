@@ -27,13 +27,21 @@ const draw = (ctx, devices, area) => {
     let statusStyle = "#f00"; //red
 
     if (device.status === 0) {
-      // device is active
+      // device is DISCONNECTED
+      statusStyle = "#f00"; //green #389e0d
+    } else if (device.status === 1) {
+      // device is AVAILABLE
       statusStyle = "#389e0d"; //green
-    } else if (device.status === 2) {
+    }
+    else if (device.status === 2) {
       // device is running
       // statusFrame = Math.sin(frameCount * 0.08) ** 2;
       statusStyle = "#096dd9"; //blue
+    }else if (device.status === 3) {
+      // device is STOP
+      statusStyle = "#ff5500"; // orange
     }
+    
 
     ctx.fillStyle = statusStyle;
 

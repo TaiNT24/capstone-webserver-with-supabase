@@ -1,9 +1,10 @@
-import { Table, Layout, Button } from "antd";
+import { Table, Layout, Button, Row } from "antd";
 import { fetchStaff, fetchStaffCount } from "../../lib/Store";
 import { useState, useEffect } from "react";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import StaffProfile from "./StaffProfile";
 import { MainTitle } from "../../utils/Text";
+import NewStaff from "./NewStaff";
 
 export default function Staff(props) {
   const [data, setData] = useState(null);
@@ -13,6 +14,8 @@ export default function Staff(props) {
 
   const [showProfile, setShowProfile] = useState(false);
   const [idProfile, setIdProfile] = useState();
+
+  const [showNewStaff, setShowNewStaff] = useState(false);
 
   const onOpenProfile = (id) => {
     setIdProfile(id);
@@ -54,14 +57,18 @@ export default function Staff(props) {
       title: "Action",
       key: "operation",
       dataIndex: "operation",
-      fixed: "right",
+      // fixed: "right",
       width: 100,
       render: (id) => {
         return (
           // <a href="#" onClick={() => onOpenProfile(id)} key={id}>
           //   View Profile
           // </a>
-          <Button type="link" onClick={() => onOpenProfile(id)}>
+          <Button
+            type="link"
+            onClick={() => onOpenProfile(id)}
+            style={{ paddingLeft: "0" }}
+          >
             View Profile
           </Button>
         );
@@ -108,7 +115,13 @@ export default function Staff(props) {
 
   return (
     <Layout className="ant-layout-inside">
-      <MainTitle value="Staffs" />
+      <MainTitle value="Staffs" style={{marginBottom: "0"}} />
+
+      <Row justify="end" style={{marginBottom: "2em"}}>
+        <Button type="primary" onClick={() => setShowNewStaff(true)}>
+          New Staff
+        </Button>
+      </Row>
 
       <Table
         columns={columns}
@@ -128,6 +141,14 @@ export default function Staff(props) {
           showProfile={showProfile}
           id={idProfile}
           onCloseProfile={onCloseProfile}
+          {...props}
+        />
+      ) : null}
+
+      {showNewStaff ? (
+        <NewStaff
+          showNewStaff={showNewStaff}
+          onCloseNewStaff={() => setShowNewStaff(false)}
           {...props}
         />
       ) : null}

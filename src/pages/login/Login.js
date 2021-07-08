@@ -3,12 +3,14 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAuth } from "../../lib/use-auth";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
-import img from '../../lib/img/background_login_min.jpeg';
+import img from "../../lib/img/background_login_min.jpeg";
 
 const { Title } = Typography;
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState("");
+  const actionButton = "Login";
+  const textTitle = "Login";
 
   const auth = useAuth();
 
@@ -38,7 +40,10 @@ export default function LoginForm() {
       style={{ backgroundImage: `url(${img})`, height: "100vh" }}
     >
       <Row justify="center">
-        <Col className="form-outside-login"  style={{boxShadow: "rgb(171 171 171 / 62%) 0px 0px 10px 6px"}}>
+        <Col
+          className="form-outside-login"
+          style={{ boxShadow: "rgb(171 171 171 / 62%) 0px 0px 10px 6px" }}
+        >
           <Row justify="center">
             <Title
               className="text-login"
@@ -48,7 +53,7 @@ export default function LoginForm() {
               }}
               level={1}
             >
-              Login
+              {textTitle}
             </Title>
 
             <Title
@@ -125,7 +130,7 @@ export default function LoginForm() {
                   htmlType="submit"
                   className="login-form-button"
                 >
-                  Log in
+                  {actionButton}
                 </Button>
               </Form.Item>
 

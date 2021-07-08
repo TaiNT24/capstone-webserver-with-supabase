@@ -77,9 +77,9 @@ export default function Tasks(props) {
       dataIndex: "detail",
       width: 100,
       fixed: "right",
-      render: ({ id, status }) => (
+      render: ({ id, status, type }) => (
         <Link
-          to={{ pathname: `/tasks/${id}`, state: { status: status } }}
+          to={{ pathname: `/tasks/${id}`, state: { status: status, type: type } }}
           key={id}
         >
           View map
@@ -191,7 +191,7 @@ export default function Tasks(props) {
             type: typeText,
             device: device,
             create_by: createByEmail,
-            detail: { id: task.id, status: task.status },
+            detail: { id: task.id, status: task.status, type: task.status },
           });
         });
 

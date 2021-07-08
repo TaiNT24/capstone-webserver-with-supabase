@@ -26,30 +26,37 @@ function useProvideAuth() {
   useEffect(() => {
     const session = supabase.auth.session();
 
-    setUser(session?.user ?? null);
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        const currentUser = session?.user;
-        console.log("onAuthStateChange: " + session);
-
-        if (currentUser) {
-          let isValidRole = await validRole(currentUser.id);
-          if (isValidRole) {
-            setUser(currentUser);
-          }
-        } else {
-          setUser(null);
-        }
+    if (session) {
+      if (session?.user !== null) {
+        setUser(session?.user ?? null);
       }
-    );
+    }
 
-    return () => {
-      authListener.unsubscribe();
-    };
+    // const { data: authListener } = supabase.auth.onAuthStateChange(
+    //   async (event, session) => {
+    //     const currentUser = session?.user;
+    //     console.log("onAuthStateChange: " + session);
+
+    //     debugger
+    //     if (currentUser) {
+    //       let isValidRole = await validRole(currentUser.id);
+    //       if (isValidRole) {
+    //         setUser(currentUser);
+    //       } else {
+    //         setUser(null);
+    //       }
+    //     } else {
+    //       setUser(null);
+    //     }
+    //   }
+    // );
+
+    // return () => {
+    //   authListener.unsubscribe();
+    // };
   }, [user]);
 
-  const isLogin = () => {
+  function isLogin() {
     let session = supabase.auth.session();
 
     if (session) {
@@ -58,7 +65,7 @@ function useProvideAuth() {
       }
     }
     return false;
-  };
+  }
 
   const validRole = async (id) => {
     let { data: accounts, error: error_validRole } = await supabase
@@ -70,6 +77,12 @@ function useProvideAuth() {
       console.log("validRole_use-auth error: " + error_validRole);
     }
 
+    if (accounts === null) {
+      return false;
+    }
+    if (accounts[0].role === null) {
+      return false;
+    }
     return accounts[0].role === "manager";
   };
 
@@ -83,7 +96,7 @@ function useProvideAuth() {
       console.log("fetchUser_use-auth error: " + error_fetchUser);
       return null;
     }
-    if(accounts){
+    if (accounts) {
       return accounts;
     }
   };

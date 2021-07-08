@@ -5,7 +5,7 @@ let percent = 1;
 const font_coordinate = "18px georgia";
 const font_vehicle = "12px georgia";
 
-const draw = (ctx, status, tasksDetail, area) => {
+const draw = (ctx, status, type, tasksDetail, area) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   ctx.beginPath();
@@ -64,9 +64,11 @@ const draw = (ctx, status, tasksDetail, area) => {
 
   ctx.fillText("x", area.width, area.height + area.move_point);
   ctx.fillText("y", 5, 15);
-  
+
   ctx.restore();
 
+  if (type === 2) {
+  }
 };
 
 const backgroundDraw = (ctx, area) => {
@@ -97,7 +99,7 @@ const backgroundDraw = (ctx, area) => {
   ctx.restore();
 };
 
-export function useCanvas(id, status, area) {
+export function useCanvas(id, status, type, area) {
   percent = area.height / 1000;
 
   const canvasRef = useRef(null);
@@ -141,7 +143,7 @@ export function useCanvas(id, status, area) {
       //Our draw came here
       function render() {
         // frameCount++;
-        draw(ctx, status, tasksDetail, area);
+        draw(ctx, status, type, tasksDetail, area);
         // animationFrameId = window.requestAnimationFrame(render);
       }
 

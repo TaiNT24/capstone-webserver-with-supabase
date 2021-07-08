@@ -151,50 +151,66 @@ export default function TaskRecentByVehicle(props) {
       <List
         style={{ overflow: "auto", height: "36em" }}
         className="demo-loadmore-list"
-        header={<Title level={5} style={{textAlign: "center"}}>Quick Recent Task</Title>}
+        header={
+          <Title level={5} style={{ textAlign: "center" }}>
+            Quick Recent Task
+          </Title>
+        }
         bordered
         loading={initLoading}
         itemLayout="horizontal"
         // loadMore={loadMore}
         dataSource={list}
-        renderItem={(item) => (
-          <List.Item
-            actions={[
-              <Link
-                to={{
-                  pathname: `/tasks/${item.id}`,
-                  state: { status: item.status },
-                }}
-              >
-                View map
-              </Link>,
-            ]}
-          >
-            <Skeleton avatar title={false} loading={item.loading} active>
-              <Descriptions size="small" bordered style={{ width: "100vw" }} >
-                <Descriptions.Item>
-                  <span style={{ fontWeight: "bold" }}>Name: </span> {item.name}
-                </Descriptions.Item>
-                <Descriptions.Item>
-                  <span style={{ fontWeight: "bold" }}>Type: </span>
-                  {item.type === 0 ? "Task" : "Solve Maze"}
-                </Descriptions.Item>
-                <Descriptions.Item>
-                  <span style={{ fontWeight: "bold" }}>Create by: </span>
-                  {item.emailStaff}
-                </Descriptions.Item>
-                <Descriptions.Item>
-                  <span style={{ fontWeight: "bold" }}>Status: </span>
-                  {item.statusTag}
-                </Descriptions.Item>
-                <Descriptions.Item>
-                  <span style={{ fontWeight: "bold" }}>Date create: </span>
-                  {moment(item.date_create).format("YYYY-MM-DD hh:mm:ss A")}
-                </Descriptions.Item>
-              </Descriptions>
-            </Skeleton>
-          </List.Item>
-        )}
+        renderItem={(item) => {
+          let typeText = "";
+          if (item.type === 0) {
+            typeText = "Task";
+          } else if (item.type === 1) {
+            typeText = "Follow Path";
+          } else if (item.type === 2) {
+            typeText = "Solve Maze";
+          }
+
+          return (
+            <List.Item
+              actions={[
+                <Link
+                  to={{
+                    pathname: `/tasks/${item.id}`,
+                    state: { status: item.status },
+                  }}
+                >
+                  View map
+                </Link>,
+              ]}
+            >
+              <Skeleton avatar title={false} loading={item.loading} active>
+                <Descriptions size="small" bordered style={{ width: "100vw" }}>
+                  <Descriptions.Item>
+                    <span style={{ fontWeight: "bold" }}>Name: </span>{" "}
+                    {item.name}
+                  </Descriptions.Item>
+                  <Descriptions.Item>
+                    <span style={{ fontWeight: "bold" }}>Type: </span>
+                    {typeText}
+                  </Descriptions.Item>
+                  <Descriptions.Item>
+                    <span style={{ fontWeight: "bold" }}>Create by: </span>
+                    {item.emailStaff}
+                  </Descriptions.Item>
+                  <Descriptions.Item>
+                    <span style={{ fontWeight: "bold" }}>Status: </span>
+                    {item.statusTag}
+                  </Descriptions.Item>
+                  <Descriptions.Item>
+                    <span style={{ fontWeight: "bold" }}>Date create: </span>
+                    {moment(item.date_create).format("YYYY-MM-DD hh:mm:ss A")}
+                  </Descriptions.Item>
+                </Descriptions>
+              </Skeleton>
+            </List.Item>
+          );
+        }}
       />
 
       {!initLoading && !loading ? (

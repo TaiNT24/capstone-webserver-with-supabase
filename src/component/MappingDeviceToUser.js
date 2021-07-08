@@ -14,7 +14,7 @@ const NoDevice = () => {
       color="warning"
       className="no-device-is-map-to-staff"
     >
-      Staff can control no device
+      Staff can control no vehicle
     </Tag>
   );
 };
@@ -29,6 +29,9 @@ export default function MappingDeviceToUser(props) {
 
   function handleChange(value) {
     setSelectedList(value);
+    if(props.getSelectedList) {
+      props.getSelectedList(value);
+    }
   }
 
   useEffect(() => {
@@ -110,7 +113,7 @@ export default function MappingDeviceToUser(props) {
           mode="multiple"
           allowClear
           style={{ width: "100%" }}
-          placeholder="There is no device"
+          placeholder="Select vehicles"
           defaultValue={props.defaultChildrenDevice}
           onChange={handleChange}
           // disabled={isDisable}

@@ -15,6 +15,7 @@ export default function TaskDetail(props) {
   const [canvasRefBackground, canvasRef] = useCanvas(
     id,
     location.state.status,
+    location.state.type,
     area
   );
 

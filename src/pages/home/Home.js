@@ -12,9 +12,9 @@ export default function Home(props) {
   let authed = auth.isLogin();
 
   if(auth.user){
-    auth.fetchUser(auth.user.id).then((data) => {
-      account = data[0];
-    });
+    // auth.fetchUser(auth.user.id).then((data) => {
+    //   account = data[0];
+    // });
   }
 
   const { devices } = useStoreGetDevice();
