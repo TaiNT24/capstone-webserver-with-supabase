@@ -101,8 +101,9 @@ export default function NewStaff(props) {
                   user={dataStaff}
                   selectedListDevice={selectedListDevice}
                 />
+              </Spin>
 
-                <Row
+              <Row
                   justify="center"
                   style={{ position: "absolute", bottom: "5em", left: "9em" }}
                 >
@@ -172,7 +173,6 @@ export default function NewStaff(props) {
                     Create staff
                   </Button>
                 </Row>
-              </Spin>
             </>
           ) : (
             <>
@@ -190,6 +190,7 @@ export default function NewStaff(props) {
                   style={{ width: "8em" }}
                   onClick={() => {
                     props.onCloseNewStaff();
+                    props.onReloadStaff();
                   }}
                 >
                   Done

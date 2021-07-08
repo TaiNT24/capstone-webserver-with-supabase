@@ -115,9 +115,9 @@ export default function Staff(props) {
 
   return (
     <Layout className="ant-layout-inside">
-      <MainTitle value="Staffs" style={{marginBottom: "0"}} />
+      <MainTitle value="Staffs" style={{ marginBottom: "0" }} />
 
-      <Row justify="end" style={{marginBottom: "2em"}}>
+      <Row justify="end" style={{ marginBottom: "2em" }}>
         <Button type="primary" onClick={() => setShowNewStaff(true)}>
           New Staff
         </Button>
@@ -149,6 +149,12 @@ export default function Staff(props) {
         <NewStaff
           showNewStaff={showNewStaff}
           onCloseNewStaff={() => setShowNewStaff(false)}
+          onReloadStaff={() => {
+            setLoading(true);
+            fetchStaff(0).then((staffs) => {
+              mapStaffToData(staffs);
+            });
+          }}
           {...props}
         />
       ) : null}
