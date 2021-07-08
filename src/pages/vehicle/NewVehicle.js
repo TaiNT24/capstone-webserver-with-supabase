@@ -1,4 +1,4 @@
-import { Modal, message, Form, Input } from "antd";
+import { Modal, message, Form, Input, InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { onCreateNewDevice } from "../../lib/Store";
 
@@ -66,7 +66,8 @@ export default function NewVehicle(props) {
     <>
       <Modal
         title="Create new vehicle"
-        style={{ top: 20 }}
+        // style={{ top: 150 }}
+        // centered
         visible={onOpen}
         okText="Create"
         cancelText="Cancel"
@@ -97,6 +98,16 @@ export default function NewVehicle(props) {
                 message: "Please input code!",
               },
               {
+                pattern: /^(?:\d*)$/,
+                message: "Code has to be contains digits",
+                validateTrigger: "onSubmit",
+              },
+              {
+                len: 4,
+                message: "Code has to be 4 digits",
+                validateTrigger: "onSubmit",
+              },
+              {
                 validateTrigger: "onSubmit",
                 validator: (_, value) => {
                   let arr = props.devices.filter(
@@ -113,7 +124,7 @@ export default function NewVehicle(props) {
               },
             ]}
           >
-            <Input />
+            <Input type="text" />
           </Form.Item>
 
           <Form.Item
@@ -123,6 +134,27 @@ export default function NewVehicle(props) {
               {
                 required: true,
                 message: "Please input mac address!",
+              },
+              {
+                validateTrigger: "onSubmit",
+                validator: (_, value) => {
+                  let arr = props.devices.filter(
+                    (device) => device.mac_address === value
+                  );
+
+                  if (arr.length > 0 && arr[0].mac_address === value) {
+                    setLoading(false);
+                    return Promise.reject("Dupplicate mac address");
+                  } else {
+                    return Promise.resolve();
+                  }
+                },
+              },
+              {
+                pattern:
+                  /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$/,
+                message: "Please input valid mac address's vehicle",
+                validateTrigger: "onSubmit",
               },
             ]}
           >

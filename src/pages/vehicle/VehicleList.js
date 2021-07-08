@@ -1,28 +1,32 @@
-import { Card, Col, Row, Layout, Tag, Spin, Typography, Button  } from "antd";
+import { Card, Col, Row, Layout, Tag, Spin, Typography, Button } from "antd";
 import {
   CheckCircleOutlined,
   SyncOutlined,
   CloseCircleOutlined,
   WarningOutlined,
+  StopOutlined
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { MainTitle } from "../../utils/Text";
 import { Link } from "react-router-dom";
 import NewVehicle from "./NewVehicle";
+import moment from "moment";
 
 const { Title } = Typography;
 
-const DescriptionItem = ({ title, content }) => (
-  <Row>
-    <Col>
-      <Title style={{}} level={5}>
-        {title}:
-      </Title>
-    </Col>
+function DescriptionItem(props) {
+  return (
+    <Row>
+      <Col>
+        <Title style={{}} level={5}>
+          {props.title}:
+        </Title>
+      </Col>
 
-    <Col offset={1}>{content}</Col>
-  </Row>
-);
+      <Col offset={1}>{props.content}</Col>
+    </Row>
+  );
+}
 
 export default function Vehicles(props) {
   const [columnsRender, setColumnsRender] = useState();
@@ -62,21 +66,20 @@ export default function Vehicles(props) {
           </Tag>
         );
         let mac_add = device.mac_address;
-        let last_connection = device.last_connection;
 
-        code = "Vehicle code: " + code;
+        code = "Code: " + code;
         switch (device.status) {
           case 0:
             status = (
-              <Tag color="#87d068" icon={<CheckCircleOutlined />}>
-                ACTIVE
+              <Tag icon={<CloseCircleOutlined />} color="#cd201f">
+                DISCONNECTED
               </Tag>
             );
             break;
           case 1:
             status = (
-              <Tag icon={<CloseCircleOutlined />} color="#cd201f">
-                INACTIVE
+              <Tag color="#87d068" icon={<CheckCircleOutlined />}>
+              AVAILABLE
               </Tag>
             );
             break;
@@ -84,6 +87,13 @@ export default function Vehicles(props) {
             status = (
               <Tag icon={<SyncOutlined spin />} color="#108ee9">
                 RUNNING
+              </Tag>
+            );
+            break;
+          case 3:
+            status = (
+              <Tag icon={<StopOutlined />} color="#f50">
+                STOP
               </Tag>
             );
             break;
@@ -115,10 +125,11 @@ export default function Vehicles(props) {
               >
                 <DescriptionItem title="Battery" content={battery} />
                 <DescriptionItem title="Mac Address" content={mac_add} />
-                <DescriptionItem
+                {/* <DescriptionItem
                   title="Last Connect"
-                  content={last_connection ?? "None"}
-                />
+                  content={lastConnection ?? "None"}
+                /> */}
+                <LastConnectionTime time={device.last_connection} />
               </Card>
             </Link>
           </Col>
@@ -144,10 +155,18 @@ export default function Vehicles(props) {
       <MainTitle value="Vehicle List" />
 
       <Row justify="end">
-        <Button type="primary" onClick={() => setOpenModal(true)} style={{marginRight: "2em"}}>
+        <Button
+          type="primary"
+          onClick={() => setOpenModal(true)}
+          style={{ marginRight: "2em" }}
+        >
           Create vehicle
         </Button>
-        <NewVehicle openModal={openModal} closeModal={() => setOpenModal(false)} {...props}/>
+        <NewVehicle
+          openModal={openModal}
+          closeModal={() => setOpenModal(false)}
+          {...props}
+        />
       </Row>
 
       <Row justify="center">
@@ -161,4 +180,21 @@ export default function Vehicles(props) {
       ) : null}
     </Layout>
   );
+}
+
+function LastConnectionTime(props) {
+  const [timeaa, setTimeaa] = useState();
+
+  useEffect(() => {
+    setTimeaa(moment(props.time).startOf("minutes").fromNow());
+
+    let prevNowPlaying = setInterval(() => {
+      let last_connection = moment(props.time).startOf("minutes").fromNow();
+      setTimeaa(last_connection);
+    }, 10000);
+
+    return () => clearInterval(prevNowPlaying);
+  }, [props.time]);
+
+  return <DescriptionItem title="Last Connect" content={timeaa ?? "None"} />;
 }

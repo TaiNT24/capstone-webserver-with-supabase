@@ -51,6 +51,11 @@ export const useStoreGetDevice = (props) => {
         setDevices((devices) =>
           devices.map((e) => {
             if (e.id === updateDevice.id) {
+              updateDevice.last_connection = moment(
+                updateDevice.last_connection
+              )
+                .utcOffset(+14, true)
+                .format();
               e = updateDevice;
             }
             return e;
@@ -84,7 +89,7 @@ export const useStoreGetDevice = (props) => {
       .from("devices")
       .select("*")
       .order("date_create", { ascending: false });
-      // .order("last_connection", { ascending: false });
+    // .order("last_connection", { ascending: false });
 
     if (error) throw error;
 

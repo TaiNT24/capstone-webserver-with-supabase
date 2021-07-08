@@ -10,24 +10,38 @@ import {
   Button,
   Form,
   message,
-  Divider
+  Divider,
 } from "antd";
 import { MainTitle } from "../../utils/Text";
 import { CloseCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import { updateVehicle } from "../../lib/Store";
 import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
+import moment from "moment";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 const RowInline = ({ title, children, marginBottom }) => {
   return (
-    <Row align="middle" style={{ marginBottom: marginBottom ?? "0.7em" }}>
+    <Row
+      align="middle"
+      type="flex"
+      style={{ marginBottom: marginBottom ?? "0.7em" }}
+    >
       <Col span={9} offset={1}>
-        <Title style={{}} level={5}>
-          {title}
+        <Title style={{marginBottom: "0"}} level={5}>
+          <div
+            style={{
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {title}
+          </div>
         </Title>
       </Col>
+
       <Col span={12} offset={2}>
         {children}
       </Col>
@@ -68,11 +82,13 @@ export default function VehicleDetails(props) {
           setBatteryColor(colorBattery);
 
           //default status
-          let defaultStatusX = "0";
+          let defaultStatusX = "DISCONNECTED";
           if (element.status === 1) {
-            defaultStatusX = "1";
+            defaultStatusX = "AVAILABLE";
           } else if (element.status === 2) {
-            defaultStatusX = "2";
+            defaultStatusX = "RUNNING";
+          } else if (element.status === 3) {
+            defaultStatusX = "STOP";
           }
           setDefaultStatus(defaultStatusX);
         }
@@ -119,158 +135,164 @@ export default function VehicleDetails(props) {
       <Row>
         {device ? (
           <Col span={9}>
-              <Form
-                id="myForm"
-                form={form}
-                onFinish={onFinish}
-                style={{
-                  padding: "1em",
-                  borderRadius: "1em",
-                  marginLeft: "1em",
-                  // boxShadow: "0 0 10px 0 rgb(0 0 0 / 15%)",
-                  boxShadow: "rgb(29 165 122 / 45%) 0px 0px 10px 0px",
-                }}
-              >
-                <Title level={5} style={{textAlign: "center"}}>Vehicle Information</Title>
+            <Form
+              id="myForm"
+              form={form}
+              onFinish={onFinish}
+              style={{
+                padding: "1em",
+                borderRadius: "1em",
+                marginLeft: "1em",
+                // boxShadow: "0 0 10px 0 rgb(0 0 0 / 15%)",
+                boxShadow: "rgb(29 165 122 / 45%) 0px 0px 10px 0px",
+              }}
+            >
+              <Title level={5} style={{ textAlign: "center" }}>
+                Vehicle Information
+              </Title>
 
-                <Divider style={{margin: "1em"}} />
+              <Divider style={{ margin: "1em" }} />
 
-                <RowInline title="Code:">
-                  <Form.Item
-                    name="code"
-                    initialValue={device?.code}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Code is required",
+              <RowInline title="Code:">
+                <Form.Item
+                  name="code"
+                  initialValue={device?.code}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Code is required",
+                    },
+                    {
+                      validateTrigger: "onSubmit",
+                      validator: (_, value) => {
+                        let arr = props.devices.filter(
+                          (device) => device.code === value
+                        );
+
+                        if (arr.length > 0 && arr[0].code !== device?.code) {
+                          return Promise.reject("Dupplicate code");
+                        } else {
+                          return Promise.resolve();
+                        }
                       },
-                      {
-                        validateTrigger: "onSubmit",
-                        validator: (_, value) => {
-                          let arr = props.devices.filter(
-                            (device) => device.code === value
-                          );
+                    },
+                  ]}
+                >
+                  <Input
+                    style={{ marginBottom: "0" }}
+                    size="large"
+                    type="text"
+                    disabled={!isSaved}
+                  />
+                </Form.Item>
+              </RowInline>
 
-                          if (arr.length > 0 && arr[0].code !== device?.code) {
-                            return Promise.reject("Dupplicate code");
-                          } else {
-                            return Promise.resolve();
-                          }
-                        },
-                      },
-                    ]}
-                  >
-                    <Input
-                      style={{}}
-                      size="large"
-                      type="text"
-                      disabled={!isSaved}
-                    />
-                  </Form.Item>
-                </RowInline>
+              <RowInline title="Mac Address:">
+                <Form.Item
+                  name="mac_address"
+                  initialValue={device?.mac_address}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input
+                    style={{ marginBottom: "0" }}
+                    size="large"
+                    disabled={!isSaved}
+                  />
+                </Form.Item>
+              </RowInline>
 
-                <RowInline title="Mac Address:">
-                  <Form.Item
-                    name="mac_address"
-                    initialValue={device?.mac_address}
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input style={{}} size="large" disabled={!isSaved} />
-                  </Form.Item>
-                </RowInline>
-
-                <RowInline title="Date Create:" marginBottom="2em">
-                  {/* <Input
+              <RowInline title="Date Create:" marginBottom="2em">
+                {/* <Input
                   style={{}}
                   size="large"
                   value=
                   readOnly
                 /> */}
-                  <span style={{ fontSize: "1.15em" }}>
-                    {device?.date_create}
-                  </span>
-                </RowInline>
+                <span style={{ fontSize: "1.1em" }}>
+                  {device?.date_create}
+                </span>
+              </RowInline>
 
-                <RowInline title="Battery:" marginBottom="2em">
-                  <Tag
-                    style={{
-                      width: "4em",
-                      height: "2.5em",
-                      lineHeight: "2.5em",
-                      textAlign: "center",
-                    }}
-                    color={batteryColor}
-                  >
-                    {device?.battery} %
-                  </Tag>
-                </RowInline>
+              <RowInline title="Battery:" marginBottom="2em">
+                <Tag
+                  style={{
+                    width: "4em",
+                    height: "2.5em",
+                    lineHeight: "2.5em",
+                    textAlign: "center",
+                  }}
+                  color={batteryColor}
+                >
+                  {device?.battery} %
+                </Tag>
+              </RowInline>
 
-                {defaultStatus ? (
-                  <RowInline title="Status:">
-                    <Form.Item
-                      name="status"
-                      initialValue={defaultStatus}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <Select
-                        style={{ width: 120 }}
-                        disabled={isDisableChangeStatus || !isSaved}
-                        //   onChange={handleChange}
-                      >
-                        <Option value="0">Active</Option>
-                        <Option value="1">Inactive</Option>
-                        <Option value="2" disabled>
-                          Running
-                        </Option>
-                      </Select>
-                    </Form.Item>
-                  </RowInline>
-                ) : null}
-
-                <RowInline title="Last Connection:" marginBottom="2em">
-                  {/* <Input
-                  style={{}}
-                  size="large"
-                  value={device?.last_connection}
-                  readOnly
-                /> */}
-                  <span style={{ fontSize: "1.15em" }}>
-                    {device?.last_connection}
-                  </span>
+              {defaultStatus ? (
+                // <RowInline title="Status:">
+                //   <Form.Item
+                //     name="status"
+                //     initialValue={defaultStatus}
+                //     rules={[
+                //       {
+                //         required: true,
+                //       },
+                //     ]}
+                //   >
+                //     <Select
+                //       style={{ width: 120 }}
+                //       disabled={isDisableChangeStatus || !isSaved}
+                //       //   onChange={handleChange}
+                //     >
+                //       <Option value="0">Active</Option>
+                //       <Option value="1">Inactive</Option>
+                //       <Option value="2" disabled>
+                //         Running
+                //       </Option>
+                //     </Select>
+                //   </Form.Item>
+                // </RowInline>
+                <RowInline title="Status:" marginBottom="2em">
+                  <span style={{ fontSize: "1.1em" }}>{defaultStatus}</span>
                 </RowInline>
-                <Row justify="center">
+              ) : null}
+
+              {/* <RowInline title="Last Connection:" marginBottom="2em">
+                <span style={{ fontSize: "1.1em" }}>
+                  {device?.last_connection}
+                </span>
+              </RowInline> */}
+
+              <LastConnectionTime time={device?.last_connection} />
+
+              <Row justify="center">
+                <Button
+                  form="myForm"
+                  type="primary"
+                  htmlType="submit"
+                  style={{ width: "6em" }}
+                  icon={<SaveOutlined />}
+                  // onClick={() => setIsSaved(!isSaved)}
+                >
+                  {isSaved ? "Save" : "Edit"}
+                </Button>
+
+                {isSaved ? (
                   <Button
-                    form="myForm"
-                    type="primary"
-                    htmlType="submit"
-                    style={{ width: "6em" }}
-                    icon={<SaveOutlined />}
-                    // onClick={() => setIsSaved(!isSaved)}
+                    htmlType="button"
+                    style={{ width: "7em", marginLeft: "2em" }}
+                    danger
+                    icon={<CloseCircleOutlined />}
+                    onClick={onReset}
                   >
-                    {isSaved ? "Save" : "Edit"}
+                    Cancel
                   </Button>
-
-                  {isSaved ? (
-                    <Button
-                      htmlType="button"
-                      style={{ width: "6em", marginLeft: "2em" }}
-                      danger
-                      icon={<CloseCircleOutlined />}
-                      onClick={onReset}
-                    >
-                      Cancel
-                    </Button>
-                  ) : null}
-                </Row>
-              </Form>
+                ) : null}
+              </Row>
+            </Form>
           </Col>
         ) : null}
 
@@ -279,5 +301,26 @@ export default function VehicleDetails(props) {
         </Col>
       </Row>
     </div>
+  );
+}
+
+function LastConnectionTime(props) {
+  const [timeaa, setTimeaa] = useState();
+
+  useEffect(() => {
+    setTimeaa(moment(props.time).startOf("minutes").fromNow());
+
+    let prevNowPlaying = setInterval(() => {
+      let last_connection = moment(props.time).startOf("minutes").fromNow();
+      setTimeaa(last_connection);
+    }, 10000);
+
+    return () => clearInterval(prevNowPlaying);
+  }, [props.time]);
+
+  return (
+    <RowInline title="Last Connection:" marginBottom="2em">
+      <span style={{ fontSize: "1.1em" }}>{timeaa ?? "None"}</span>
+    </RowInline>
   );
 }

@@ -123,7 +123,14 @@ export default function Tasks(props) {
     fetchAllStaff().then((dataStaff) => {
       if (dataStaff.length >= 0) {
         dataTask.forEach((task) => {
-          let typeText = task.type === 0 ? "Task" : "Solve Maze";
+          let typeText = "";
+          if(task.type === 0){
+            typeText = "Task";
+          } else if(task.type === 1){
+            typeText = "Follow Path";
+          } else if(task.type === 2){
+            typeText = "Solve Maze";
+          }
 
           let status;
           switch (task.status) {
