@@ -1,4 +1,4 @@
-import { Modal, message, Form, Input, InputNumber } from "antd";
+import { Modal, message, Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import { onCreateNewDevice } from "../../lib/Store";
 

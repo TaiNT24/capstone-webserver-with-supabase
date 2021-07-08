@@ -19,7 +19,6 @@ import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
 import moment from "moment";
 
 const { Title } = Typography;
-const { Option } = Select;
 
 const RowInline = ({ title, children, marginBottom }) => {
   return (
@@ -59,18 +58,12 @@ export default function VehicleDetails(props) {
   const [batteryColor, setBatteryColor] = useState();
   const [defaultStatus, setDefaultStatus] = useState();
   const [isSaved, setIsSaved] = useState(false);
-  const [isDisableChangeStatus, setIsDisableChangeStatus] = useState(false);
 
   useEffect(() => {
     if (props.devices) {
       props.devices.forEach((element) => {
         if (element.id === Number(id)) {
           setDevice(element);
-
-          // diff active or inactive => disable change
-          if (element.status !== 0 && element.status !== 1) {
-            setIsDisableChangeStatus(true);
-          }
 
           //battery
           let colorBattery = "green";
