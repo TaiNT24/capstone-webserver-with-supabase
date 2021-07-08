@@ -104,7 +104,7 @@ export default function NewStaffInfo(props) {
               message: "Email is required",
             },
             {
-              pattern: /(^[\w]+(\.|\-)?([\w]{2,5})+$)/,
+              pattern: /(^[\w]+(\.|-)?([\w]{2,5})+$)/,
               message: "Please input valid email!",
               validateTrigger: "onSubmit",
             },

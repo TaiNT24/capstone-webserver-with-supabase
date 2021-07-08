@@ -124,6 +124,7 @@ export default function NewStaff(props) {
                       onCreateNewStaff(dataStaff).then((res) => {
                         if (res.error) {
                           let message = res.error.message;
+                          console.log("error_onCreateNewStaff_response: ", message);
                           setLoading(false);
                         } else {
                           let staff = {

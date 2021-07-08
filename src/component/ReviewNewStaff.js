@@ -1,4 +1,4 @@
-import { Row, Col, Typography, Divider, Avatar, Tag } from "antd";
+import { Row, Col, Typography, Avatar, Tag } from "antd";
 import { MainTitle } from "../utils/Text";
 import { ExclamationCircleOutlined, UserOutlined } from "@ant-design/icons";
 import moment from "moment";
