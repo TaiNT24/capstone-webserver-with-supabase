@@ -191,7 +191,7 @@ export default function Tasks(props) {
             type: typeText,
             device: device,
             create_by: createByEmail,
-            detail: { id: task.id, status: task.status, type: task.status },
+            detail: { id: task.id, status: task.status, type: task.type },
           });
         });
 

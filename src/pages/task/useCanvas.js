@@ -54,6 +54,48 @@ const draw = (ctx, status, type, tasksDetail, area) => {
     }
   });
 
+  // if (type === 2) {
+  //   let arr_x = [];
+  //   let arr_y = [];
+
+  //   ctx.save();
+  //   ctx.strokeStyle = "#8c8c8c";
+
+  //   for (let index = 0; index < tasksDetail.length; index++) {
+  //     let x = tasksDetail[index].location_x * percent + area.move_point;
+  //     let y = area.height - tasksDetail[index].location_y * percent;
+
+  //     if (index === 0) {
+  //       ctx.moveTo(x - 10, y - 10);
+
+  //       arr_x.push(x);
+  //       arr_y.push(y);
+  //     } else if (index === tasksDetail.length - 1) {
+
+  //       arr_x.push(x);
+  //       arr_y.push(y);
+  //     } else {
+  //       arr_x.push(x);
+  //       arr_y.push(y);
+
+  //       let x_pre =
+  //         tasksDetail[index - 1].location_x * percent + area.move_point;
+  //       let y_pre = area.height - tasksDetail[index - 1].location_y * percent;
+
+  //       let x_next =
+  //         tasksDetail[index + 1].location_x * percent + area.move_point;
+  //       let y_next = area.height - tasksDetail[index + 1].location_y * percent;
+
+  //       // ctx.moveTo(x_pre - 10, y_pre - 10);
+  //       ctx.lineTo(x - 10, y - 10);
+  //     }
+  //   }
+
+  //   // ctx.clearRect(490,240 ,490,260);
+
+  //   ctx.restore();
+  // }
+
   ctx.stroke();
 
   ctx.save();
@@ -66,9 +108,6 @@ const draw = (ctx, status, type, tasksDetail, area) => {
   ctx.fillText("y", 5, 15);
 
   ctx.restore();
-
-  if (type === 2) {
-  }
 };
 
 const backgroundDraw = (ctx, area) => {

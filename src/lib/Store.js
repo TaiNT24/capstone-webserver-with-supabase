@@ -154,14 +154,14 @@ export const useStoreGetLog = (props) => {
 export const fetchStaff = async (page) => {
   try {
     if (!page) page = 0;
-    page = page * 8;
+    page = page * 50;
 
     let { data: staffs, error } = await supabase
       .from("accounts")
       .select("id, email, full_name, date_create, status")
       .eq("role", "staff")
       .order("date_create", { ascending: false })
-      .range(page, page + 7);
+      .range(page, page + 49);
 
     if (error) {
       console.log("error_fetchStaff", error);
@@ -241,7 +241,7 @@ export const fetchDevice = async () => {
     let { data: devices, error } = await supabase
       .from("devices")
       .select("id, name, code")
-      .neq("status", 1); // 0: active, 1: inactive
+      // .neq("status", 1);
 
     if (error) {
       console.log("error_fetchDevice", error);
@@ -320,7 +320,7 @@ export const updateVehicle = async (id, dataUpdate) => {
       .update({
         code: dataUpdate.code,
         mac_address: dataUpdate.mac_address,
-        status: dataUpdate.status,
+        // status: dataUpdate.status,
       })
       .eq("id", id);
 

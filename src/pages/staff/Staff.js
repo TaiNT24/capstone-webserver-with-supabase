@@ -129,7 +129,7 @@ export default function Staff(props) {
         scroll={{ y: 460 }}
         loading={loading}
         pagination={{
-          pageSize: 8,
+          pageSize: 50,
           total: totalPage,
           onChange: (page) => setCurrentPage(page),
           // position: ['topRight']

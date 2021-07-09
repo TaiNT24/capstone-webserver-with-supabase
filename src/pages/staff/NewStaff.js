@@ -183,9 +183,9 @@ export default function NewStaff(props) {
 
               <Row
                 justify="center"
-                style={{ position: "absolute", bottom: "5em", left: "5em" }}
+                style={{ position: "absolute", bottom: "3em", left: "10em" }}
               >
-                <Button
+                {/* <Button
                   type="primary"
                   style={{ width: "8em" }}
                   onClick={() => {
@@ -194,13 +194,15 @@ export default function NewStaff(props) {
                   }}
                 >
                   Done
-                </Button>
+                </Button> */}
 
                 <Button
                   type="primary"
                   style={{ width: "12em", marginLeft: "2em" }}
                   onClick={() => {
                     props.onCloseNewStaff();
+                    props.onReloadStaff();
+
                     //send mail
                   }}
                 >

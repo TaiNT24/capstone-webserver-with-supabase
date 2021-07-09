@@ -37,11 +37,17 @@ export default function ReviewNewStaff(props) {
       </Row>
 
       <Row className="row-center-ele">
-        <Avatar size={128} icon={<UserOutlined />} src={props.newStaff?.avatar} />
+        <Avatar
+          size={128}
+          icon={<UserOutlined />}
+          src={props.newStaff?.avatar}
+        />
       </Row>
 
       <Row className="row-center-ele">
-          <span  style={{fontSize: "1.1em", color: "green"}}>Create staff successful!</span>
+        <span style={{ fontSize: "1.1em", color: "green" }}>
+          Create staff successful!
+        </span>
       </Row>
 
       <RowInfo title="Email" content={props.newStaff?.email} />
@@ -66,7 +72,7 @@ export default function ReviewNewStaff(props) {
               {props.selectedListDevice.length > 0 ? (
                 props.selectedListDevice.map((e) => e + " ")
               ) : (
-                <Tag 
+                <Tag
                   icon={<ExclamationCircleOutlined />}
                   color="warning"
                   className="no-device-is-map-to-staff"
@@ -78,7 +84,13 @@ export default function ReviewNewStaff(props) {
           </Row>
         </Col>
       </Row>
-      <Row></Row>
+
+      <Row className="row-center-ele">
+        <span style={{ fontSize: "1em", color: "red" }}>
+          The login information is only displayed once when the account is
+          created, please save the information before close.
+        </span>
+      </Row>
     </>
   );
 }
