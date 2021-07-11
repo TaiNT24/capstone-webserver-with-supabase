@@ -4,15 +4,13 @@ import {
   SyncOutlined,
   CloseCircleOutlined,
   WarningOutlined,
-  StopOutlined,
+  StopOutlined
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { MainTitle } from "../../utils/Text";
 import { Link } from "react-router-dom";
 import NewVehicle from "./NewVehicle";
 import moment from "moment";
-import sgMail from "@sendgrid/mail";
-// const sgMail = require("@sendgrid/mail");
 
 const { Title } = Typography;
 
@@ -81,7 +79,7 @@ export default function Vehicles(props) {
           case 1:
             status = (
               <Tag color="#87d068" icon={<CheckCircleOutlined />}>
-                AVAILABLE
+              AVAILABLE
               </Tag>
             );
             break;
@@ -155,34 +153,6 @@ export default function Vehicles(props) {
   return (
     <Layout className="ant-layout-inside">
       <MainTitle value="Vehicle List" />
-
-      <Row justify="end">
-        <Button
-          type="primary"
-          style={{ marginRight: "2em" }}
-          onClick={() => {
-            sgMail.setApiKey('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');
-            const msg = {
-              to: "test1@amr-system.me", // Change to your recipient
-              from: "admin@amr-system.me", // Change to your verified sender
-              subject: "Sending with SendGrid is Fun",
-              text: "and easy to do anywhere, even with Node.js",
-              html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-            };
-
-            sgMail
-              .send(msg)
-              .then(() => {
-                console.log("Email sent");
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }}
-        >
-          Sendmail
-        </Button>
-      </Row>
 
       <Row justify="end">
         <Button
