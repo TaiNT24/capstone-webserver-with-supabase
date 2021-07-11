@@ -240,7 +240,7 @@ export const fetchDevice = async () => {
   try {
     let { data: devices, error } = await supabase
       .from("devices")
-      .select("id, name, code")
+      .select("id, code")
       // .neq("status", 1);
 
     if (error) {
