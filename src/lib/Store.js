@@ -511,7 +511,7 @@ export const onCreateNewStaff = async (bodyData) => {
       let token = supabase.auth.currentSession.access_token;
 
       let res = await axios.post(
-        "http://localhost:3000/users/create-new-user",
+        process.env.REACT_APP_URL_AVS_SERVER + process.env.REACT_APP_PATH_CREATE_NEW_STAFF,
         data,
         {
           headers: {
