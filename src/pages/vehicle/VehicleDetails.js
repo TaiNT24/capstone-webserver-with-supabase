@@ -27,7 +27,7 @@ const RowInline = ({ title, children, marginBottom }) => {
       style={{ marginBottom: marginBottom ?? "0.7em" }}
     >
       <Col span={9} offset={1}>
-        <Title style={{marginBottom: "0"}} level={5}>
+        <Title style={{ marginBottom: "0" }} level={5}>
           <div
             style={{
               display: "inline-flex",
@@ -95,9 +95,6 @@ export default function VehicleDetails(props) {
       message.loading({ content: "Updating...", key });
 
       updateVehicle(device.id, values).then((res) => {
-        // if (res.code === "23505") {
-        //   // trùng code
-        // }
         if (res[0]?.id === device.id) {
           //success
           setIsSaved(!isSaved);
@@ -155,6 +152,16 @@ export default function VehicleDetails(props) {
                       message: "Code is required",
                     },
                     {
+                      pattern: /^(?:\d*)$/,
+                      message: "Code is only contains digits",
+                      validateTrigger: "onSubmit",
+                    },
+                    {
+                      len: 4,
+                      message: "Code has to be 4 digits",
+                      validateTrigger: "onSubmit",
+                    },
+                    {
                       validateTrigger: "onSubmit",
                       validator: (_, value) => {
                         let arr = props.devices.filter(
@@ -186,6 +193,33 @@ export default function VehicleDetails(props) {
                   rules={[
                     {
                       required: true,
+                      message: "Please input mac address!",
+                    },
+                    {
+                      validateTrigger: "onSubmit",
+                      validator: (_, value) => {
+                        value = value.toUpperCase();
+                        let arr = props.devices.filter(
+                          (device) => device.mac_address === value
+                        );
+
+                        if (
+                          arr.length > 0 &&
+                          arr[0].mac_address === value &&
+                          isSaved &&
+                          device?.mac_address !== value
+                        ) {
+                          return Promise.reject("Dupplicate mac address");
+                        } else {
+                          return Promise.resolve();
+                        }
+                      },
+                    },
+                    {
+                      pattern:
+                      '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$',
+                      message: "Please input valid mac address's vehicle",
+                      validateTrigger: "onSubmit",
                     },
                   ]}
                 >
@@ -204,9 +238,7 @@ export default function VehicleDetails(props) {
                   value=
                   readOnly
                 /> */}
-                <span style={{ fontSize: "1.1em" }}>
-                  {device?.date_create}
-                </span>
+                <span style={{ fontSize: "1.1em" }}>{device?.date_create}</span>
               </RowInline>
 
               <RowInline title="Battery:" marginBottom="2em">

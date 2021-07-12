@@ -240,8 +240,8 @@ export const fetchDevice = async () => {
   try {
     let { data: devices, error } = await supabase
       .from("devices")
-      .select("id, code")
-      // .neq("status", 1);
+      .select("id, code");
+    // .neq("status", 1);
 
     if (error) {
       console.log("error_fetchDevice", error);
@@ -319,7 +319,7 @@ export const updateVehicle = async (id, dataUpdate) => {
       .from("devices")
       .update({
         code: dataUpdate.code,
-        mac_address: dataUpdate.mac_address,
+        mac_address: dataUpdate.mac_address.toUpperCase(),
         // status: dataUpdate.status,
       })
       .eq("id", id);
@@ -470,7 +470,7 @@ export const onCreateNewDevice = async (bodyData) => {
     const { data, error } = await supabase.from("devices").insert([
       {
         code: bodyData.code,
-        mac_address: bodyData.mac_address,
+        mac_address: bodyData.mac_address.toUpperCase(),
         date_create: currentTimeStamp,
         status: 0,
         battery: 100,
@@ -495,35 +495,41 @@ export const onCreateNewDevice = async (bodyData) => {
 
 export const onCreateNewStaff = async (bodyData) => {
   try {
-    let data = {
-      email: bodyData.email,
-      // password: "123456",
-      // role: "staff",
-      full_name: bodyData.fullname,
-      birthday: moment(bodyData.birthday),
-      // avatar: "avatar_123",
-      // status: 0,
-    };
+    let isTrue = await checkExpired();
 
-    let token = supabase.auth.currentSession.access_token;
+    if (isTrue) {
+      let data = {
+        email: bodyData.email,
+        // password: "123456",
+        // role: "staff",
+        full_name: bodyData.fullname,
+        birthday: moment(bodyData.birthday),
+        // avatar: "avatar_123",
+        // status: 0,
+      };
 
-    let res = await axios.post(
-      "http://localhost:5000/accounts/create-new-user",
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      let token = supabase.auth.currentSession.access_token;
+
+      let res = await axios.post(
+        "http://localhost:3000/users/create-new-user",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.error) {
+        console.log("error_onCreateNewDevice: ", res.error);
+        return res;
       }
-    );
+      console.log("data: ", res);
 
-    if (res.error) {
-      console.log("error_onCreateNewDevice: ", res.error);
       return res;
+    } else {
+      //push login page
     }
-    console.log("data: ", res);
-
-    return res;
   } catch (error) {
     console.log("error_onCreateNewDevice", error);
     return error;
@@ -548,12 +554,33 @@ export const onInsertMappingDevice = async (id, devices) => {
     if (error) {
       console.log("error_onInsertMappingDevice", error);
       return error;
-    }else{
+    } else {
       return true;
     }
-
   } catch (error) {
     console.log("error_onInsertMappingDevice", error);
     return error;
   }
 };
+
+async function checkExpired() {
+  let now = Math.floor(new Date().getTime() / 1000);
+
+  let session = supabase.auth.session(); // refresh_token, expires_at
+  let expires_at = session.expires_at;
+
+  if (expires_at < now) {
+    let refresh_token = session.refresh_token;
+    const { error, data } = await supabase.auth.api.refreshAccessToken(
+      refresh_token
+    );
+
+    if (error) {
+      console.log("error_checkExpired: ", error);
+      return false;
+    }
+    supabase.auth.setSession(data);
+    return true;
+  }
+  return true;
+}

@@ -148,8 +148,9 @@ export default function Staff(props) {
       {showNewStaff ? (
         <NewStaff
           showNewStaff={showNewStaff}
-          onCloseNewStaff={() => setShowNewStaff(false)}
-          onReloadStaff={() => {
+          onCloseNewStaff={() => {
+            setShowNewStaff(false);
+            
             setLoading(true);
             fetchStaff(0).then((staffs) => {
               mapStaffToData(staffs);

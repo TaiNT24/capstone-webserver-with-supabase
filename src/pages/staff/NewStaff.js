@@ -190,7 +190,6 @@ export default function NewStaff(props) {
                   style={{ width: "8em" }}
                   onClick={() => {
                     props.onCloseNewStaff();
-                    props.onReloadStaff();
                   }}
                 >
                   Done
@@ -201,12 +200,10 @@ export default function NewStaff(props) {
                   style={{ width: "12em", marginLeft: "2em" }}
                   onClick={() => {
                     props.onCloseNewStaff();
-                    props.onReloadStaff();
-
                     //send mail
                   }}
                 >
-                  Send email to staff
+                  Close
                 </Button>
               </Row>
             </>

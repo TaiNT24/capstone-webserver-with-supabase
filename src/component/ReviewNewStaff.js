@@ -87,8 +87,9 @@ export default function ReviewNewStaff(props) {
 
       <Row className="row-center-ele">
         <span style={{ fontSize: "1em", color: "red" }}>
-          The login information is only displayed once when the account is
-          created, please save the information before close.
+          The account information have been send to staff's email.
+          {/* The login information is only displayed once when the account is
+          created. Please save the information before close! */}
         </span>
       </Row>
     </>

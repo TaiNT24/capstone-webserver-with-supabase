@@ -99,7 +99,7 @@ export default function NewVehicle(props) {
               },
               {
                 pattern: /^(?:\d*)$/,
-                message: "Code has to be contains digits",
+                message: "Code is only contains digits",
                 validateTrigger: "onSubmit",
               },
               {
@@ -152,7 +152,7 @@ export default function NewVehicle(props) {
               },
               {
                 pattern:
-                  /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$/,
+                  '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$',
                 message: "Please input valid mac address's vehicle",
                 validateTrigger: "onSubmit",
               },
