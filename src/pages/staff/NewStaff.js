@@ -18,7 +18,8 @@ export default function NewStaff(props) {
   const [selectedListDevice, setSelectedListDevice] = useState([]);
   const [defaultChildrenDevice, setDefaultChildrenDevice] = useState([]);
   const [dataStaffResponse, setDataStaffResponse] = useState(null);
-
+  const [isCreateFail, setIsCreateFail] = useState(false);
+  
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -104,81 +105,89 @@ export default function NewStaff(props) {
               </Spin>
 
               <Row
-                  justify="center"
-                  style={{ position: "absolute", bottom: "5em", left: "9em" }}
+                justify="center"
+                style={{ position: "absolute", bottom: "5em", left: "9em" }}
+              >
+                <Button
+                  style={{ width: "8em" }}
+                  onClick={() => {
+                    setCurrent(1);
+                  }}
                 >
-                  <Button
-                    style={{ width: "8em" }}
-                    onClick={() => {
-                      setCurrent(1);
-                    }}
-                  >
-                    Previous
-                  </Button>
+                  Previous
+                </Button>
 
-                  <Button
-                    style={{ marginLeft: "2em", width: "8em" }}
-                    type="primary"
-                    onClick={() => {
-                      setLoading(true);
+                <Button
+                  style={{ marginLeft: "2em", width: "8em" }}
+                  type="primary"
+                  onClick={() => {
+                    setLoading(true);
 
-                      onCreateNewStaff(dataStaff).then((res) => {
-                        if (res.error) {
-                          let message = res.error.message;
-                          console.log("error_onCreateNewStaff_response: ", message);
-                          setLoading(false);
-                        } else {
-                          let staff = {
-                            id: res.data.data[0].id,
-                            email: res.data.data[0].email,
-                            password: res.data.data[0].origin_password,
-                            birthday: res.data.data[0].birthday,
-                            fullname: res.data.data[0].full_name,
-                            role: res.data.data[0].role,
-                          };
-                          setDataStaffResponse(staff);
+                    onCreateNewStaff(dataStaff).then((res) => {
+                      if (res.error) {
+                        let message = res.error.message;
+                        console.log(
+                          "error_onCreateNewStaff_response: ",
+                          message
+                        );
+                        setLoading(false);
+                        setCurrent(3);
+                        setIsCreateFail(true);
+                      } else if (res.data !== null) {
+                        let staff = {
+                          id: res.data.data[0].id,
+                          email: res.data.data[0].email,
+                          password: res.data.data[0].origin_password,
+                          birthday: res.data.data[0].birthday,
+                          fullname: res.data.data[0].full_name,
+                          role: res.data.data[0].role,
+                        };
+                        setDataStaffResponse(staff);
 
-                          let devices = [];
-                          if (props.devices && selectedListDevice.length > 0) {
-                            selectedListDevice.map((deviceSelected) => {
-                              let id = props.devices.filter(
-                                (device) => device.code === deviceSelected
-                              )[0].id;
+                        let devices = [];
+                        if (props.devices && selectedListDevice.length > 0) {
+                          selectedListDevice.map((deviceSelected) => {
+                            let id = props.devices.filter(
+                              (device) => device.code === deviceSelected
+                            )[0].id;
 
-                              devices.push({
-                                id: id,
-                              });
-                              return null;
+                            devices.push({
+                              id: id,
                             });
+                            return null;
+                          });
 
-                            onInsertMappingDevice(staff.id, devices).then(
-                              (res) => {
-                                setLoading(false);
+                          onInsertMappingDevice(staff.id, devices).then(
+                            (res) => {
+                              setLoading(false);
 
-                                if (res) {
-                                  // debugger
-                                  setCurrent(3);
-                                }
+                              if (res) {
+                                // debugger
+                                setCurrent(3);
                               }
-                            );
-                          }else if(selectedListDevice.length === 0){
-                            setLoading(false);
-                            setCurrent(3);
-
-                          }
+                            }
+                          );
+                        } else if (selectedListDevice.length === 0) {
+                          setLoading(false);
+                          setCurrent(3);
                         }
-                      });
-                    }}
-                  >
-                    Create staff
-                  </Button>
-                </Row>
+                      } else {
+                        setLoading(false);
+                        setIsCreateFail(true);
+                      }
+                    });
+                  }}
+                >
+                  Create staff
+                </Button>
+              </Row>
             </>
           ) : (
             <>
               <ReviewNewStaff
                 newStaff={dataStaffResponse}
                 selectedListDevice={selectedListDevice}
+                isCreateFail={isCreateFail}
               />
 
               <Row

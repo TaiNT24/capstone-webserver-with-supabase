@@ -45,53 +45,70 @@ export default function ReviewNewStaff(props) {
       </Row>
 
       <Row className="row-center-ele">
-        <span style={{ fontSize: "1.1em", color: "green" }}>
-          Create staff successful!
+        <span
+          style={{
+            fontSize: "1.1em",
+            color: props.isCreateFail ? "red" : "green",
+          }}
+        >
+          {props.isCreateFail
+            ? "Create staff fail!"
+            : "Create staff successful!"}
+        </span>
+      </Row>
+      <Row className="row-center-ele">
+        <span style={{ color: props.isCreateFail ? "red" : "green" }}>
+          {props.isCreateFail
+            ? "Please try it later!"
+            : "The account information have been send to staff's email."}
         </span>
       </Row>
 
-      <RowInfo title="Email" content={props.newStaff?.email} />
-      <RowInfo title="Password" content={props.newStaff?.password} />
-      <RowInfo title="Full name" content={props.newStaff?.fullname} />
-      <RowInfo
-        title="Birthday"
-        content={moment(props.newStaff?.birthday).format("MM/DD/YYYY")}
-      />
-      <RowInfo title="Role" content={props.newStaff?.role.toUpperCase()} />
+      {props.isCreateFail ? null : (
+        <div>
+          <RowInfo title="Email" content={props.newStaff?.email} />
+          <RowInfo title="Password" content={props.newStaff?.password} />
+          <RowInfo title="Full name" content={props.newStaff?.fullname} />
+          <RowInfo
+            title="Birthday"
+            content={moment(props.newStaff?.birthday).format("MM/DD/YYYY")}
+          />
+          <RowInfo title="Role" content={props.newStaff?.role.toUpperCase()} />
 
-      <Row style={{ marginBottom: "1em" }}>
-        <Col span={22} offset={2}>
-          <Row>
-            <Col span={8}>
-              <Title style={{}} level={5}>
-                Control Vehicle:
-              </Title>
-            </Col>
+          <Row style={{ marginBottom: "1em" }}>
+            <Col span={22} offset={2}>
+              <Row>
+                <Col span={8}>
+                  <Title style={{}} level={5}>
+                    Control Vehicle:
+                  </Title>
+                </Col>
 
-            <Col span={13} offset={2}>
-              {props.selectedListDevice.length > 0 ? (
-                props.selectedListDevice.map((e) => e + " ")
-              ) : (
-                <Tag
-                  icon={<ExclamationCircleOutlined />}
-                  color="warning"
-                  className="no-device-is-map-to-staff"
-                >
-                  Staff can control no vehicle
-                </Tag>
-              )}
+                <Col span={13} offset={2}>
+                  {props.selectedListDevice.length > 0 ? (
+                    props.selectedListDevice.map((e) => e + " ")
+                  ) : (
+                    <Tag
+                      icon={<ExclamationCircleOutlined />}
+                      color="warning"
+                      className="no-device-is-map-to-staff"
+                    >
+                      Staff can control no vehicle
+                    </Tag>
+                  )}
+                </Col>
+              </Row>
             </Col>
           </Row>
-        </Col>
-      </Row>
+        </div>
+      )}
 
-      <Row className="row-center-ele">
+      {/* <Row className="row-center-ele">
         <span style={{ fontSize: "1em", color: "red" }}>
-          The account information have been send to staff's email.
-          {/* The login information is only displayed once when the account is
-          created. Please save the information before close! */}
+          The login information is only displayed once when the account is
+          created. Please save the information before close!
         </span>
-      </Row>
+      </Row> */}
     </>
   );
 }
