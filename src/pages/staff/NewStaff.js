@@ -133,7 +133,8 @@ export default function NewStaff(props) {
                         setLoading(false);
                         setCurrent(3);
                         setIsCreateFail(true);
-                      } else if (res.data !== null) {
+                        // eslint-disable-next-line
+                      } else if (res.data != null ) {
                         let staff = {
                           id: res.data.data[0].id,
                           email: res.data.data[0].email,
@@ -173,6 +174,7 @@ export default function NewStaff(props) {
                         }
                       } else {
                         setLoading(false);
+                        setCurrent(3);
                         setIsCreateFail(true);
                       }
                     });
