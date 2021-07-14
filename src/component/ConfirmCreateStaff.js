@@ -40,7 +40,7 @@ export default function ConfirmCreateStaff(props) {
         <Avatar size={128} icon={<UserOutlined />} src={props.user?.avatar} />
       </Row>
 
-      <RowInfo title="Email" content={props.user?.email} />
+      <RowInfo title="Email" content={props.user?.email + "@amr-system.me"} />
       <RowInfo title="Full name" content={props.user?.fullname} />
       <RowInfo
         title="Birthday"
