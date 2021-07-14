@@ -174,6 +174,42 @@ export const fetchStaff = async (page) => {
   return null;
 };
 
+export const searchStaffLikeEmail = async (page, email) => {
+  try {
+    if (!page) page = 0;
+    page = page * 50;
+
+    let { error: error1, count } = await supabase
+      .from("accounts")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "staff")
+      .like("email", `%${email}%`)
+
+      let { data, error: error2 } = await supabase
+      .from("accounts")
+      .select("id, email, full_name, date_create, status")
+      .eq("role", "staff")
+      .like("email", `%${email}%`)
+      .order("date_create", { ascending: false })
+      .range(page, page + 49);
+
+
+    if (error1 || error2) {
+      console.log("error_fetchStaff", error1, error2);
+    }
+
+    console.log("staff: ", data);
+    console.log("count: ", count);
+    return {
+      staffs: data,
+      count: count
+    };
+  } catch (error) {
+    console.log("error_fetchStaff", error);
+  }
+  return null;
+};
+
 export const fetchStaffById = async (id) => {
   try {
     let { data: staffs, error } = await supabase

@@ -1,10 +1,16 @@
-import { Table, Layout, Button, Row } from "antd";
-import { fetchStaff, fetchStaffCount } from "../../lib/Store";
+import { Table, Layout, Button, Row, Col, Input } from "antd";
+import {
+  fetchStaff,
+  fetchStaffCount,
+  searchStaffLikeEmail,
+} from "../../lib/Store";
 import { useState, useEffect } from "react";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import StaffProfile from "./StaffProfile";
 import { MainTitle } from "../../utils/Text";
 import NewStaff from "./NewStaff";
+
+const { Search } = Input;
 
 export default function Staff(props) {
   const [data, setData] = useState(null);
@@ -16,6 +22,7 @@ export default function Staff(props) {
   const [idProfile, setIdProfile] = useState();
 
   const [showNewStaff, setShowNewStaff] = useState(false);
+  const [txtSearch, setTxtSearch] = useState("");
 
   const onOpenProfile = (id) => {
     setIdProfile(id);
@@ -77,17 +84,27 @@ export default function Staff(props) {
   ];
 
   useEffect(() => {
-    fetchStaffCount().then((count) => {
-      setTotalPage(count);
-    });
-  }, []);
+    if (txtSearch === "") {
+      fetchStaffCount().then((count) => {
+        setTotalPage(count);
+      });
+    }
+  }, [txtSearch]);
 
   useEffect(() => {
-    setLoading(true);
-    fetchStaff(currentPage - 1).then((staffs) => {
-      mapStaffToData(staffs);
-    });
-  }, [currentPage]);
+    if (txtSearch === "") {
+      setLoading(true);
+      fetchStaff(currentPage - 1).then((staffs) => {
+        mapStaffToData(staffs);
+      });
+    } else {
+      setLoading(true);
+      searchStaffLikeEmail(currentPage - 1, txtSearch).then((res) => {
+        mapStaffToData(res.staffs);
+        setTotalPage(res.count);
+      });
+    }
+  }, [currentPage, txtSearch]);
 
   function mapStaffToData(staffs) {
     let dataTable = [];
@@ -113,24 +130,45 @@ export default function Staff(props) {
     setLoading(false);
   }
 
+  function onSearchStaff(value) {
+    if(value!==""){
+      console.log(value);
+      setTxtSearch(value);
+      setCurrentPage(1);
+    }else{
+      setTxtSearch("");
+    }
+    
+  }
   return (
-    <Layout className="ant-layout-inside">
+    <Layout className="ant-layout-inside" style={{paddingBottom: "0.5em"}}>
       <MainTitle value="Staffs" style={{ marginBottom: "0" }} />
 
-      <Row justify="end" style={{ marginBottom: "2em" }}>
-        <Button type="primary" onClick={() => setShowNewStaff(true)}>
-          New Staff
-        </Button>
+      <Row justify="space-between" style={{ marginBottom: "2em" }}>
+        <Col span={9}>
+          <Search
+            placeholder="Search staff by email"
+            allowClear
+            onSearch={onSearchStaff}
+            enterButton
+          />
+        </Col>
+        <Col>
+          <Button type="primary" onClick={() => setShowNewStaff(true)}>
+            Create New Staff
+          </Button>
+        </Col>
       </Row>
 
       <Table
         columns={columns}
         dataSource={data}
-        scroll={{ y: 460 }}
+        scroll={{ y: 400 }}
         loading={loading}
         pagination={{
           pageSize: 50,
           total: totalPage,
+          current: currentPage,
           onChange: (page) => setCurrentPage(page),
           // position: ['topRight']
         }}
@@ -150,7 +188,7 @@ export default function Staff(props) {
           showNewStaff={showNewStaff}
           onCloseNewStaff={() => {
             setShowNewStaff(false);
-            
+
             setLoading(true);
             fetchStaff(0).then((staffs) => {
               mapStaffToData(staffs);
