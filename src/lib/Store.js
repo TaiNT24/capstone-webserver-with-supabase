@@ -552,7 +552,7 @@ export const onCreateNewStaff = async (bodyData) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Access-Control-Allow-Origin': process.env.REACT_APP_URL_AVS_SERVER + "/*"
+            // 'Access-Control-Allow-Origin': "/*"
           },
         }
       );
