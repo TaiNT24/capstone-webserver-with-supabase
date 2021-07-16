@@ -53,50 +53,89 @@ const draw = (ctx, status, type, tasksDetail, area) => {
       ctx.moveTo(x, y);
     }
   });
-
-  // if (type === 2) {
-  //   let arr_x = [];
-  //   let arr_y = [];
-
-  //   ctx.save();
-  //   ctx.strokeStyle = "#8c8c8c";
-
-  //   for (let index = 0; index < tasksDetail.length; index++) {
-  //     let x = tasksDetail[index].location_x * percent + area.move_point;
-  //     let y = area.height - tasksDetail[index].location_y * percent;
-
-  //     if (index === 0) {
-  //       ctx.moveTo(x - 10, y - 10);
-
-  //       arr_x.push(x);
-  //       arr_y.push(y);
-  //     } else if (index === tasksDetail.length - 1) {
-
-  //       arr_x.push(x);
-  //       arr_y.push(y);
-  //     } else {
-  //       arr_x.push(x);
-  //       arr_y.push(y);
-
-  //       let x_pre =
-  //         tasksDetail[index - 1].location_x * percent + area.move_point;
-  //       let y_pre = area.height - tasksDetail[index - 1].location_y * percent;
-
-  //       let x_next =
-  //         tasksDetail[index + 1].location_x * percent + area.move_point;
-  //       let y_next = area.height - tasksDetail[index + 1].location_y * percent;
-
-  //       // ctx.moveTo(x_pre - 10, y_pre - 10);
-  //       ctx.lineTo(x - 10, y - 10);
-  //     }
-  //   }
-
-  //   // ctx.clearRect(490,240 ,490,260);
-
-  //   ctx.restore();
-  // }
-
   ctx.stroke();
+
+  if (type === 2) {
+    ctx.beginPath();
+    ctx.save();
+    ctx.strokeStyle = "gray";
+    let path1 = new Path2D();
+    let path2 = new Path2D();
+
+    for (let i = 0; i < tasksDetail.length - 1; i++) {
+
+      let x = tasksDetail[i].location_x * percent + area.move_point;
+      let y = area.height - tasksDetail[i].location_y * percent;
+
+      let x_next = tasksDetail[i + 1].location_x * percent + area.move_point;
+      let y_next = area.height - tasksDetail[i + 1].location_y * percent;
+
+      let x_prev;
+      // let y_prev;
+
+      if (i > 0) {
+        x_prev = tasksDetail[i - 1].location_x * percent + area.move_point;
+        // y_prev = area.height - tasksDetail[i - 1].location_y * percent;
+      }
+
+      if (i === 0) {
+        if (x === x_next) {
+          path1.moveTo(x + 10, y);
+          path2.moveTo(x - 10, y);
+        } else {
+          path1.moveTo(x, y + 10);
+          path2.moveTo(x, y - 10);
+
+        }
+      } else if (i === tasksDetail.length - 2) {
+        if (x === x_prev) {
+          path1.lineTo(x + 10, y);
+          path2.lineTo(x - 10, y);
+
+        } else {
+          path1.lineTo(x, y + 10);
+          path2.lineTo(x, y - 10);
+
+        }
+        if (x === x_next) {
+          path1.moveTo(x + 10, y);
+          path2.moveTo(x - 10, y);
+        } else {
+          path1.moveTo(x, y + 10);
+          path2.moveTo(x, y - 10);
+        }
+
+        if (x === x_next) {
+          path1.lineTo(x_next + 10, y_next);
+          path2.lineTo(x_next - 10, y_next);
+        } else {
+          path1.lineTo(x_next, y_next + 10);
+          path2.lineTo(x_next, y_next - 10);
+        }
+
+      } else {
+        if (x === x_prev) {
+          path1.lineTo(x + 10, y);
+          path2.lineTo(x - 10, y);
+        } else {
+          path1.lineTo(x, y + 10);
+          path2.lineTo(x, y - 10);
+        }
+
+        if (x === x_next) {
+          path1.moveTo(x + 10, y);
+          path2.moveTo(x - 10, y);
+        } else {
+          path1.moveTo(x, y + 10);
+          path2.moveTo(x, y - 10);
+        }
+      }
+    }
+    
+    ctx.stroke(path1);
+    ctx.stroke(path2);
+    ctx.restore();
+  }
 
   ctx.save();
 
@@ -146,17 +185,8 @@ export function useCanvas(id, status, type, area) {
 
   const [tasksDetail, setTasksDetail] = useState();
 
-  // const [height, setHeight] = useState();
-  // const [width, setWidth] = useState();
-
   useEffect(() => {
-    // let element = document.getElementsByTagName("BODY")[0];
-    // let positionInfo = element.getBoundingClientRect();
-    // let height1 = positionInfo.height;
-    // let width1 = positionInfo.width - 250; // nav side bar
-
-    // setHeight(height1);
-    // setWidth(width1);
+    
     fetchTaskDetailById(id).then((data) => {
       if (data.length > 0) {
         setTasksDetail(data);
