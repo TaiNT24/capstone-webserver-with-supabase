@@ -10,24 +10,31 @@ const draw = (ctx, status, type, tasksDetail, area) => {
 
   ctx.beginPath();
 
-  let statusStyle = "#f00"; //red ->  detail is error
-  if (status === 0) {
-    // detail is done
-    statusStyle = "#389e0d"; //green
-  } else if (status === 2) {
-    // detail is running
-    statusStyle = "#096dd9"; //blue
-  }
+  // let statusStyle = "#f00"; //red ->  detail is error
+  // if (status === 0) {
+  //   // detail is done
+  //   statusStyle = "#389e0d"; //green
+  // } else if (status === 2) {
+  //   // detail is running
+  //   statusStyle = "#096dd9"; //blue
+  // }
+
+  let statusStyle = "#096dd9";
 
   ctx.strokeStyle = statusStyle;
   ctx.fillStyle = "#68A691"; //color point
 
-  tasksDetail.forEach((detail, index) => {
+  let path = new Path2D();
+  let points = [];
+
+  for (let i = 0; i < tasksDetail.length; i++) {
     let shape = new Path2D();
-    let x = detail.location_x * percent + area.move_point;
-    let y = area.height - detail.location_y * percent;
-    if (index === 0) {
-      ctx.moveTo(x, y);
+
+    let x = tasksDetail[i].location_x * percent + area.move_point;
+    let y = area.height - tasksDetail[i].location_y * percent;
+    if (i === 0) {
+      path.moveTo(x, y);
+      points.push({ x: x, y: y });
       shape.arc(x, y, 8, 0, Math.PI * 2);
       ctx.fill(shape);
 
@@ -36,24 +43,121 @@ const draw = (ctx, status, type, tasksDetail, area) => {
       ctx.font = font_vehicle;
       ctx.fillText("Start", x - 10, y + 20);
       ctx.restore();
-    } else if (index === tasksDetail.length - 1) {
-      ctx.lineTo(x, y);
+    } else if (i === tasksDetail.length - 1) {
+      path.lineTo(x, y);
+      points.push({ x: x, y: y });
 
       shape.arc(x, y, 8, 0, Math.PI * 2);
       ctx.fill(shape);
-      ctx.moveTo(x, y);
+      path.moveTo(x, y);
 
       ctx.fillStyle = "black";
       ctx.fillText("End", x - 10, y + 20);
     } else {
-      ctx.lineTo(x, y);
+      // if (type === 2) {
+      //   let path_dup = new Path2D();
 
+      //   let x_next = tasksDetail[i + 1].location_x * percent + area.move_point;
+      //   let y_next = area.height - tasksDetail[i + 1].location_y * percent;
+      //   let id_next = tasksDetail[i + 1].id;
+
+      //   let x_prev = tasksDetail[i - 1].location_x * percent + area.move_point;
+      //   let y_prev = area.height - tasksDetail[i - 1].location_y * percent;
+      //   let id_prev = tasksDetail[i - 1].id;
+
+      //   if (x_next === x_prev && y_next === y_prev) {
+      //     console.log(
+      //       "id_next: " +
+      //         id_next +
+      //         ", x_next: " +
+      //         x_next +
+      //         ", y_next: " +
+      //         y_next
+      //     );
+      //     console.log(
+      //       "id_prev: " +
+      //         id_prev +
+      //         ", x_prev: " +
+      //         x_prev +
+      //         ", y_prev: " +
+      //         y_prev
+      //     );
+
+      //     // ctx.beginPath();
+      //     ctx.save();
+      //     ctx.strokeStyle = "red";
+      //     path_dup.moveTo(x, y);
+      //     path_dup.lineTo(x_next, y_next);
+      //     ctx.stroke(path_dup);
+
+      //     ctx.restore();
+
+      //     path.moveTo(x_next, y_next);
+
+      //   } else {
+      //     path.lineTo(x, y);
+
+      //     path.moveTo(x, y);
+      //   }
+      // } else {
+      //   path.lineTo(x, y);
+
+      //   path.moveTo(x, y);
+      // }
+      path.lineTo(x, y);
+
+      let isDup = false;
+      for (let i = 0; i < points.length; i++) {
+        let p = points[i];
+        if (p.x === x && p.y === y) {
+          points.splice(i, points.length);
+          isDup = true;
+          break;
+        }
+      }
+
+      // points.forEach((p, index) => {
+      //   if(p.x === x && p.y === y){
+      //     // points.pop();
+      //     list.splice(index, points.length);
+      //     isDup = true;
+      //     break;
+      //   }
+      // });
+
+      if (!isDup) {
+        points.push({ x: x, y: y });
+      }
+
+      path.moveTo(x, y);
       shape.arc(x, y, 5, 0, Math.PI * 2);
       ctx.fill(shape);
-      ctx.moveTo(x, y);
     }
-  });
-  ctx.stroke();
+  }
+  ctx.stroke(path);
+
+  ctx.beginPath();
+  let path2 = new Path2D();
+  ctx.strokeStyle = "#389e0d"; //green: shortest path
+  for (let i = 0; i < points.length; i++) {
+
+    let x = points[i].x;
+    let y = points[i].y;
+    if (i === 0) {
+      path2.moveTo(x, y);
+    } else if (i === points.length - 1) {
+      path2.lineTo(x, y);
+
+      path2.moveTo(x, y);
+    } else {
+      path2.lineTo(x, y);
+
+      path2.moveTo(x, y);
+    }
+  }
+  ctx.stroke(path2);
+
+  console.log("point: ", points);
 
   if (type === 2) {
     ctx.beginPath();
@@ -63,7 +167,6 @@ const draw = (ctx, status, type, tasksDetail, area) => {
     let path2 = new Path2D();
 
     for (let i = 0; i < tasksDetail.length - 1; i++) {
-
       let x = tasksDetail[i].location_x * percent + area.move_point;
       let y = area.height - tasksDetail[i].location_y * percent;
 
@@ -85,17 +188,14 @@ const draw = (ctx, status, type, tasksDetail, area) => {
         } else {
           path1.moveTo(x, y + 10);
           path2.moveTo(x, y - 10);
-
         }
       } else if (i === tasksDetail.length - 2) {
         if (x === x_prev) {
           path1.lineTo(x + 10, y);
           path2.lineTo(x - 10, y);
-
         } else {
           path1.lineTo(x, y + 10);
           path2.lineTo(x, y - 10);
-
         }
         if (x === x_next) {
           path1.moveTo(x + 10, y);
@@ -112,7 +212,6 @@ const draw = (ctx, status, type, tasksDetail, area) => {
           path1.lineTo(x_next, y_next + 10);
           path2.lineTo(x_next, y_next - 10);
         }
-
       } else {
         if (x === x_prev) {
           path1.lineTo(x + 10, y);
@@ -131,7 +230,7 @@ const draw = (ctx, status, type, tasksDetail, area) => {
         }
       }
     }
-    
+
     ctx.stroke(path1);
     ctx.stroke(path2);
     ctx.restore();
@@ -186,7 +285,6 @@ export function useCanvas(id, status, type, area) {
   const [tasksDetail, setTasksDetail] = useState();
 
   useEffect(() => {
-    
     fetchTaskDetailById(id).then((data) => {
       if (data.length > 0) {
         setTasksDetail(data);
