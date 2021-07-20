@@ -4,7 +4,7 @@ import NewStaffInfo from "../../component/NewStaffInfo";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import { MainTitle } from "../../utils/Text";
 import ConfirmCreateStaff from "../../component/ConfirmCreateStaff";
-import { onCreateNewStaff, onInsertMappingDevice } from "../../lib/Store";
+import { onCreateNewStaff, onInsertMappingDevice, checkServer } from "../../lib/Store";
 import ReviewNewStaff from "../../component/ReviewNewStaff";
 
 const { Step } = Steps;
@@ -19,12 +19,23 @@ export default function NewStaff(props) {
   const [defaultChildrenDevice, setDefaultChildrenDevice] = useState([]);
   const [dataStaffResponse, setDataStaffResponse] = useState(null);
   const [isCreateFail, setIsCreateFail] = useState(false);
-  
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setVisible(props.showNewStaff);
   }, [props.showNewStaff]);
+
+  useEffect(() => {
+    checkServer().then((res) => {
+      if(res){
+        console.log("res server", res);
+      }else{
+        console.log("res server", res);
+
+      }
+    })
+  }, []);
 
   function onNextStep(dataStaffInput) {
     setDataStaff(dataStaffInput);
@@ -134,7 +145,7 @@ export default function NewStaff(props) {
                         setCurrent(3);
                         setIsCreateFail(true);
                         // eslint-disable-next-line
-                      } else if (res.data != null ) {
+                      } else if (res.data != null) {
                         let staff = {
                           id: res.data.data[0].id,
                           email: res.data.data[0].email,

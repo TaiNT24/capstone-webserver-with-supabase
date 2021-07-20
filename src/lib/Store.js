@@ -183,16 +183,15 @@ export const searchStaffLikeEmail = async (page, email) => {
       .from("accounts")
       .select("id", { count: "exact", head: true })
       .eq("role", "staff")
-      .like("email", `%${email}%`)
+      .like("email", `%${email}%`);
 
-      let { data, error: error2 } = await supabase
+    let { data, error: error2 } = await supabase
       .from("accounts")
       .select("id, email, full_name, date_create, status")
       .eq("role", "staff")
       .like("email", `%${email}%`)
       .order("date_create", { ascending: false })
       .range(page, page + 49);
-
 
     if (error1 || error2) {
       console.log("error_fetchStaff", error1, error2);
@@ -202,7 +201,7 @@ export const searchStaffLikeEmail = async (page, email) => {
     console.log("count: ", count);
     return {
       staffs: data,
-      count: count
+      count: count,
     };
   } catch (error) {
     console.log("error_fetchStaff", error);
@@ -547,7 +546,8 @@ export const onCreateNewStaff = async (bodyData) => {
       let token = supabase.auth.currentSession.access_token;
 
       let res = await axios.post(
-        process.env.REACT_APP_URL_AVS_SERVER + process.env.REACT_APP_PATH_CREATE_NEW_STAFF,
+        process.env.REACT_APP_URL_AVS_SERVER +
+          process.env.REACT_APP_PATH_CREATE_NEW_STAFF,
         data,
         {
           headers: {
@@ -620,4 +620,16 @@ async function checkExpired() {
     return true;
   }
   return true;
+}
+
+async export function checkServer() {
+  let res = await axios.get(
+    process.env.REACT_APP_URL_AVS_SERVER +
+      process.env.REACT_APP_PATH_CREATE_NEW_STAFF
+  );
+    console.log("res: ", res);
+
+  if(res !== null){
+    return true;
+  }
 }
