@@ -625,7 +625,7 @@ async function checkExpired() {
 export async function checkServer() {
   let res = await axios.get(
     process.env.REACT_APP_URL_AVS_SERVER +
-      process.env.REACT_APP_PATH_CREATE_NEW_STAFF
+     '/ping'
   );
   console.log("res: ", res);
 
