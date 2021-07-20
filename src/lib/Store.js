@@ -622,14 +622,14 @@ async function checkExpired() {
   return true;
 }
 
-async export function checkServer() {
+export async function checkServer() {
   let res = await axios.get(
     process.env.REACT_APP_URL_AVS_SERVER +
       process.env.REACT_APP_PATH_CREATE_NEW_STAFF
   );
-    console.log("res: ", res);
+  console.log("res: ", res);
 
-  if(res !== null){
+  if (res !== null) {
     return true;
   }
 }
