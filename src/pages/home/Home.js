@@ -44,6 +44,7 @@ export default function Home(props) {
     notification[type]({
       message: msgTitle,
       icon: icon,
+      duration: 3
     });
   };
 
