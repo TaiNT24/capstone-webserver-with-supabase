@@ -1,10 +1,21 @@
 import { useState, useEffect } from "react";
-import { Drawer, Row, Col, Divider, Steps, Button, Spin } from "antd";
+import {
+  Drawer,
+  Row,
+  Col,
+  Divider,
+  Steps,
+  Button,
+  Spin,
+} from "antd";
 import NewStaffInfo from "../../component/NewStaffInfo";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import { MainTitle } from "../../utils/Text";
 import ConfirmCreateStaff from "../../component/ConfirmCreateStaff";
-import { onCreateNewStaff, onInsertMappingDevice, checkServer } from "../../lib/Store";
+import {
+  onCreateNewStaff,
+  onInsertMappingDevice,
+} from "../../lib/Store";
 import ReviewNewStaff from "../../component/ReviewNewStaff";
 
 const { Step } = Steps;
@@ -25,17 +36,6 @@ export default function NewStaff(props) {
   useEffect(() => {
     setVisible(props.showNewStaff);
   }, [props.showNewStaff]);
-
-  useEffect(() => {
-    checkServer().then((res) => {
-      if(res){
-        console.log("res server", res);
-      }else{
-        console.log("res server", res);
-
-      }
-    })
-  }, []);
 
   function onNextStep(dataStaffInput) {
     setDataStaff(dataStaffInput);

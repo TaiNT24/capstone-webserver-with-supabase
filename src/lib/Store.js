@@ -5,10 +5,13 @@ import moment from "moment";
 
 // axios.defaults.headers.common["apikey"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
+const url_avs_server = 'https://api.amr-system.me';
+const api_create_new_staff = '/users/create-new-user';
+
 export const supabase = createClient(
   process.env.REACT_APP_PUBLIC_SUPABASE_URL,
-  // process.env.REACT_APP_PUBLIC_SUPABASE_KEY
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjIyNjA3MTA1LCJleHAiOjE5MzgxODMxMDV9.cyBPtsY2EBcRLWPHEmL9nSdUqglFzPv4tZlmPaF3sEw"
+  process.env.REACT_APP_PUBLIC_SUPABASE_KEY
+  // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjIyNjA3MTA1LCJleHAiOjE5MzgxODMxMDV9.cyBPtsY2EBcRLWPHEmL9nSdUqglFzPv4tZlmPaF3sEw"
 );
 
 export const useStoreGetDevice = (props) => {
@@ -546,8 +549,8 @@ export const onCreateNewStaff = async (bodyData) => {
       let token = supabase.auth.currentSession.access_token;
 
       let res = await axios.post(
-        process.env.REACT_APP_URL_AVS_SERVER +
-          process.env.REACT_APP_PATH_CREATE_NEW_STAFF,
+        url_avs_server +
+          api_create_new_staff,
         data,
         {
           headers: {
@@ -623,13 +626,18 @@ async function checkExpired() {
 }
 
 export async function checkServer() {
-  let res = await axios.get(
-    process.env.REACT_APP_URL_AVS_SERVER +
-     '/ping'
-  );
-  console.log("res: ", res);
-
-  if (res !== null) {
-    return true;
+  try{
+    let res = await axios.get(
+      url_avs_server +
+       '/ping'
+    );
+  
+    if (res !== null && res.status === 200) {
+      return true;
+    }
+  }catch(e){
+    console.log("error: ", e);
   }
+  
+  return false;
 }

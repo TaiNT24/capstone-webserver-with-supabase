@@ -1,14 +1,16 @@
-import { Table, Layout, Button, Row, Col, Input } from "antd";
+import { Table, Layout, Button, Row, Col, Input, notification } from "antd";
 import {
   fetchStaff,
   fetchStaffCount,
   searchStaffLikeEmail,
+  checkServer,
 } from "../../lib/Store";
 import { useState, useEffect } from "react";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import StaffProfile from "./StaffProfile";
 import { MainTitle } from "../../utils/Text";
 import NewStaff from "./NewStaff";
+import { CloseCircleOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 
@@ -131,17 +133,31 @@ export default function Staff(props) {
   }
 
   function onSearchStaff(value) {
-    if(value!==""){
+    if (value !== "") {
       console.log(value);
       setTxtSearch(value);
       setCurrentPage(1);
-    }else{
+    } else {
       setTxtSearch("");
     }
-    
   }
+
+  function onClickBtnCreateStaff() {
+    checkServer().then((res) => {
+      if (!res) {
+        console.log("res res: ", res);
+        notification["error"]({
+          message: "Server is error, please try again later",
+          icon: <CloseCircleOutlined style={{ color: "#cd201f" }} />,
+        });
+      } else {
+        setShowNewStaff(true);
+      }
+    });
+  }
+
   return (
-    <Layout className="ant-layout-inside" style={{paddingBottom: "0.5em"}}>
+    <Layout className="ant-layout-inside" style={{ paddingBottom: "0.5em" }}>
       <MainTitle value="Staffs" style={{ marginBottom: "0" }} />
 
       <Row justify="space-between" style={{ marginBottom: "2em" }}>
@@ -154,7 +170,7 @@ export default function Staff(props) {
           />
         </Col>
         <Col>
-          <Button type="primary" onClick={() => setShowNewStaff(true)}>
+          <Button type="primary" onClick={onClickBtnCreateStaff}>
             Create New Staff
           </Button>
         </Col>
