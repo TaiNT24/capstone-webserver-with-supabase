@@ -217,7 +217,7 @@ export default function VehicleDetails(props) {
                     },
                     {
                       pattern:
-                      '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$',
+                        "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$",
                       message: "Please input valid mac address's vehicle",
                       validateTrigger: "onSubmit",
                     },
@@ -238,7 +238,9 @@ export default function VehicleDetails(props) {
                   value=
                   readOnly
                 /> */}
-                <span style={{ fontSize: "1.1em" }}>{device?.date_create}</span>
+                <span style={{ fontSize: "1.1em" }}>
+                  {moment(device?.date_create).format("YYYY-MM-DD, hh:mm:ss")}
+                </span>
               </RowInline>
 
               <RowInline title="Battery:" marginBottom="2em">

@@ -204,7 +204,7 @@ export default function TaskRecentByVehicle(props) {
                   </Descriptions.Item>
                   <Descriptions.Item>
                     <span style={{ fontWeight: "bold" }}>Date create: </span>
-                    {moment(item.date_create).format("YYYY-MM-DD hh:mm:ss A")}
+                    {moment(item.date_create).format("YYYY-MM-DD, hh:mm:ss")}
                   </Descriptions.Item>
                 </Descriptions>
               </Skeleton>

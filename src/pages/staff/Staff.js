@@ -11,6 +11,7 @@ import StaffProfile from "./StaffProfile";
 import { MainTitle } from "../../utils/Text";
 import NewStaff from "./NewStaff";
 import { CloseCircleOutlined } from "@ant-design/icons";
+import moment from "moment";
 
 const { Search } = Input;
 
@@ -120,7 +121,9 @@ export default function Staff(props) {
             id: staff.id,
             status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
           },
-          date_create: staff.date_create,
+          date_create: moment(staff.date_create).format(
+            "YYYY-MM-DD, hh:mm:ss"
+          ),
           operation: staff.id,
         });
 

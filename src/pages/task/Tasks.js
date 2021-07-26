@@ -61,7 +61,7 @@ export default function Tasks(props) {
       title: "Date create",
       key: "date_create",
       dataIndex: "date_create",
-      width: 220,
+      width: 180,
       //   sorter: (a, b) =>
       //     moment(a.date_create).unix() - moment(b.date_create).unix(),
       //   defaultSortOrder: "descend",
@@ -185,7 +185,7 @@ export default function Tasks(props) {
             key: task.id,
             name: task.name,
             date_create: moment(task.date_create).format(
-              "YYYY-MM-DD, hh:mm:ss A"
+              "YYYY-MM-DD, hh:mm:ss"
             ),
             status: status,
             type: typeText,

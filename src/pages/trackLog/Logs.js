@@ -51,7 +51,9 @@ export default function Logs(props) {
         if (idDeviceFilter.length === 0) {
           dataX.push({
             key: index,
-            time: e.date_create,
+            time: moment(e.date_create).format(
+              "YYYY-MM-DD, hh:mm:ss"
+            ),
             idDevice: props.devices.filter((device) => device.id === e.device)[0]
               .code,
             content: e.content,
@@ -60,7 +62,9 @@ export default function Logs(props) {
           if (idDeviceFilter.includes(e.device)) {
             dataX.push({
               key: index,
-              time: e.date_create,
+              time: moment(e.date_create).format(
+                "YYYY-MM-DD, hh:mm:ss"
+              ),
               idDevice: props.devices.filter((device) => device.id === e.device)[0]
                 .code,
               content: e.content,

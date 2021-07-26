@@ -52,6 +52,7 @@ function ModalConfirmLogout(props) {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        okText="Yes"
       >
         <p>{modalText}</p>
       </Modal>
