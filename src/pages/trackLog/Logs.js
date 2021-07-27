@@ -52,7 +52,7 @@ export default function Logs(props) {
           dataX.push({
             key: index,
             time: moment(e.date_create).format(
-              "YYYY-MM-DD, hh:mm:ss"
+              "YYYY-MM-DD, HH:mm:ss"
             ),
             idDevice: props.devices.filter((device) => device.id === e.device)[0]
               .code,
@@ -63,7 +63,7 @@ export default function Logs(props) {
             dataX.push({
               key: index,
               time: moment(e.date_create).format(
-                "YYYY-MM-DD, hh:mm:ss"
+                "YYYY-MM-DD, HH:mm:ss"
               ),
               idDevice: props.devices.filter((device) => device.id === e.device)[0]
                 .code,

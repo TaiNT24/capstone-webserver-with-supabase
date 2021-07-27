@@ -239,7 +239,7 @@ export default function VehicleDetails(props) {
                   readOnly
                 /> */}
                 <span style={{ fontSize: "1.1em" }}>
-                  {moment(device?.date_create).format("YYYY-MM-DD, hh:mm:ss")}
+                  {moment(device?.date_create).format("YYYY-MM-DD, HH:mm:ss")}
                 </span>
               </RowInline>
 

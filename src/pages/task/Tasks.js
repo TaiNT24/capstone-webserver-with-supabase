@@ -185,7 +185,7 @@ export default function Tasks(props) {
             key: task.id,
             name: task.name,
             date_create: moment(task.date_create).format(
-              "YYYY-MM-DD, hh:mm:ss"
+              "YYYY-MM-DD, HH:mm:ss"
             ),
             status: status,
             type: typeText,

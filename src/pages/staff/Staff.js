@@ -122,7 +122,7 @@ export default function Staff(props) {
             status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
           },
           date_create: moment(staff.date_create).format(
-            "YYYY-MM-DD, hh:mm:ss"
+            "YYYY-MM-DD, HH:mm:ss"
           ),
           operation: staff.id,
         });
