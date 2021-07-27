@@ -4,7 +4,7 @@ import {
   SyncOutlined,
   CloseCircleOutlined,
   WarningOutlined,
-  StopOutlined
+  StopOutlined,
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { MainTitle } from "../../utils/Text";
@@ -79,7 +79,7 @@ export default function Vehicles(props) {
           case 1:
             status = (
               <Tag color="#87d068" icon={<CheckCircleOutlined />}>
-              AVAILABLE
+                AVAILABLE
               </Tag>
             );
             break;
@@ -187,21 +187,18 @@ function LastConnectionTime(props) {
 
   useEffect(() => {
     let last_connection_init = moment(props.time).startOf("minutes").fromNow();
-    
     let prevNowPlaying = null;
 
-    if(!last_connection_init){
+    if (last_connection_init !== "Invalid date") {
       setTimeaa(last_connection_init);
 
       prevNowPlaying = setInterval(() => {
         let last_connection = moment(props.time).startOf("minutes").fromNow();
-        if(!last_connection){
-          setTimeaa(last_connection);
-        }
+        setTimeaa(last_connection);
       }, 10000);
     }
-    
-    return () => clearInterval(prevNowPlaying??null);
+
+    return () => clearInterval(prevNowPlaying ?? null);
   }, [props.time]);
 
   return <DescriptionItem title="Last Connect" content={timeaa ?? "Never"} />;

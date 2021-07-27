@@ -334,19 +334,24 @@ function LastConnectionTime(props) {
   const [timeaa, setTimeaa] = useState();
 
   useEffect(() => {
-    setTimeaa(moment(props.time).startOf("minutes").fromNow());
+    let last_connection_init = moment(props.time).startOf("minutes").fromNow();
+    let prevNowPlaying = null;
 
-    let prevNowPlaying = setInterval(() => {
-      let last_connection = moment(props.time).startOf("minutes").fromNow();
-      setTimeaa(last_connection);
-    }, 10000);
+    if(last_connection_init !== "Invalid date"){
+      setTimeaa(moment(props.time).startOf("minutes").fromNow());
 
-    return () => clearInterval(prevNowPlaying);
+      prevNowPlaying = setInterval(() => {
+        let last_connection = moment(props.time).startOf("minutes").fromNow();
+        setTimeaa(last_connection);
+      }, 10000);
+    }
+
+    return () => clearInterval(prevNowPlaying ?? null);
   }, [props.time]);
 
   return (
     <RowInline title="Last Connection:" marginBottom="2em">
-      <span style={{ fontSize: "1.1em" }}>{timeaa ?? "None"}</span>
+      <span style={{ fontSize: "1.1em" }}>{timeaa ?? "Never"}</span>
     </RowInline>
   );
 }
