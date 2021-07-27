@@ -183,18 +183,26 @@ export default function Vehicles(props) {
 }
 
 function LastConnectionTime(props) {
-  const [timeaa, setTimeaa] = useState();
+  const [timeaa, setTimeaa] = useState(null);
 
   useEffect(() => {
-    setTimeaa(moment(props.time).startOf("minutes").fromNow());
+    let last_connection_init = moment(props.time).startOf("minutes").fromNow();
+    
+    let prevNowPlaying = null;
 
-    let prevNowPlaying = setInterval(() => {
-      let last_connection = moment(props.time).startOf("minutes").fromNow();
-      setTimeaa(last_connection);
-    }, 10000);
+    if(!last_connection_init){
+      setTimeaa(last_connection_init);
 
-    return () => clearInterval(prevNowPlaying);
+      prevNowPlaying = setInterval(() => {
+        let last_connection = moment(props.time).startOf("minutes").fromNow();
+        if(!last_connection){
+          setTimeaa(last_connection);
+        }
+      }, 10000);
+    }
+    
+    return () => clearInterval(prevNowPlaying??null);
   }, [props.time]);
 
-  return <DescriptionItem title="Last Connect" content={timeaa ?? "None"} />;
+  return <DescriptionItem title="Last Connect" content={timeaa ?? "Never"} />;
 }
