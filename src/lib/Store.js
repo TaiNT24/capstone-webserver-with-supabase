@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import moment from "moment";
-import { DEFAULT_AVATARS_BUCKET } from "./constants";
 
 // axios.defaults.headers.common["apikey"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
@@ -504,13 +503,17 @@ export const loadAvatar = async (path) => {
       .from("avatars")
       .createSignedUrl(path, 600);
 
+    if (error2) {
+      console.log("error_loadAvatar: ", error2);
+      return "";
+    }
     console.log("data avatar: " + signedURL);
 
     return signedURL;
   } catch (error) {
-    console.log("error_loadAvatar", error);
-    return error;
+    console.log("catch_error_loadAvatar: ", error);
   }
+  return "";
 };
 
 export const onCreateNewDevice = async (bodyData) => {
@@ -549,10 +552,13 @@ export const onCreateNewStaff = async (bodyData) => {
 
     if (isTrue) {
       let formData = new FormData();
-      
+
       formData.append("email", bodyData.email);
       formData.append("full_name", bodyData.fullname);
-      formData.append("birthday", moment(bodyData.birthday).format("YYYY-MM-DD").toString());
+      formData.append(
+        "birthday",
+        moment(bodyData.birthday).format("YYYY-MM-DD").toString()
+      );
 
       formData.append("avatar", bodyData.avatar_file);
 

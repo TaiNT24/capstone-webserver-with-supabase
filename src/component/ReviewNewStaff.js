@@ -2,7 +2,6 @@ import { Row, Col, Typography, Avatar, Tag } from "antd";
 import { MainTitle } from "../utils/Text";
 import { ExclamationCircleOutlined, UserOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { getBase64 } from "../lib/common_function";
 import { useEffect, useState } from "react";
 import { loadAvatar } from "../lib/Store";
 
@@ -42,7 +41,7 @@ export default function ReviewNewStaff(props) {
         setImageUrl(res);
       })
     }
-  }, [])
+  }, [props.newStaff.avatar])
 
   return (
     <>
