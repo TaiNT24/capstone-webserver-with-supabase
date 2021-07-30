@@ -9,11 +9,18 @@ import {
   Divider,
   Input,
   DatePicker,
+  Upload,
+  message,
+  Space,
 } from "antd";
 import { MainTitle } from "../utils/Text";
 import moment from "moment";
 import { fetchAllStaff } from "../lib/Store";
-import { UserOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import { getBase64 } from "../lib/common_function";
 
 const { Title } = Typography;
 
@@ -45,6 +52,7 @@ export default function NewStaffInfo(props) {
 
   //useState
   const [allStaff, setAllStaff] = useState();
+  const [imageUrl, setImageUrl] = useState();
 
   //useEffect
   useEffect(() => {
@@ -55,8 +63,17 @@ export default function NewStaffInfo(props) {
         console.log("error_fetchAllStaff: " + data);
       }
     });
+    if (props.initDataStaff?.avatar) {
+      initAvatar(props.initDataStaff.avatar[0]);
+    }
     // eslint-disable-next-line
   }, []);
+
+  function initAvatar(img) {
+    getBase64(img.originFileObj, (imageUrl) => {
+      setImageUrl(imageUrl);
+    });
+  }
 
   const onFinish = (values) => {
     console.log(values);
@@ -65,11 +82,52 @@ export default function NewStaffInfo(props) {
   };
 
   const onReset = () => {
+    props.onResetDataStaff();
     form.resetFields();
+    setImageUrl(null);
   };
 
   const onChangeBirthday = (_, dateString) => {
     console.log(dateString);
+  };
+
+  function beforeUpload(file) {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must smaller than 2MB!");
+    }
+    return isJpgOrPng && isLt2M;
+  }
+
+  function handleChange(info) {
+    if (info.file.status === "uploading") {
+      return;
+    }
+    if (info.file.status === "done") {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+      });
+    }
+  }
+
+  const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+    props.onUploadFile(file);
   };
 
   return (
@@ -79,7 +137,32 @@ export default function NewStaffInfo(props) {
       </Row>
 
       <Row className="row-center-ele">
-        <Avatar size={128} icon={<UserOutlined />} />
+        <Form.Item
+          name="avatar"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          initialValue={props.initDataStaff?.avatar}
+        >
+          <Upload
+            name="avatar"
+            // listType="picture-card"
+            // className="avatar-uploader"
+            showUploadList={false}
+            customRequest={dummyRequest}
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+          >
+            {/* {imageUrl ? (
+            <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+          ) : (
+            uploadButton
+          )} */}
+            <Space direction="vertical">
+              <Avatar size={128} icon={<UserOutlined />} src={imageUrl} />
+              <Button icon={<UploadOutlined />}>Upload avatar</Button>
+            </Space>
+          </Upload>
+        </Form.Item>
 
         {/* <Form.Item
             name="upload"

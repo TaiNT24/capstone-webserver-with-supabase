@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import moment from "moment";
+import { DEFAULT_AVATARS_BUCKET } from "./constants";
 
 // axios.defaults.headers.common["apikey"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
@@ -106,8 +107,9 @@ export const useStoreGetDevice = (props) => {
   };
 };
 
-export const useStoreGetLog = (props) => {
+export const useStoreGetLog = (defaultLoadPerTime) => {
   const [logs, setLogs] = useState();
+  const [countLog, setCountLog] = useState();
 
   // set up listeners
   useEffect(() => {
@@ -130,17 +132,32 @@ export const useStoreGetLog = (props) => {
     // eslint-disable-next-line
   }, []);
 
-  //Init with 50 rows first
-  async function fetchLogs() {
+  //Init with currentPageSize rows first
+  async function fetchLogs(row_number) {
+    if (!row_number) {
+      row_number = defaultLoadPerTime;
+    }
     let { data: log, error } = await supabase
       .from("logs")
       .select("*")
       .order("date_create", { ascending: false })
-      .limit(50);
+      .limit(row_number);
 
-    if (error) throw error;
+    if (error) {
+      console.log("error_fetchLogs: ", error);
+    } else {
+      setLogs(log);
+    }
 
-    setLogs(log);
+    let { error: errorCount, count } = await supabase
+      .from("logs")
+      .select("id", { count: "exact", head: true });
+
+    if (errorCount) {
+      console.log("error_errorCount: ", errorCount);
+    } else {
+      setCountLog(count);
+    }
   }
 
   function clearLogs() {
@@ -151,20 +168,22 @@ export const useStoreGetLog = (props) => {
     // We can export computed values here to map the authors to each message
     listLog: logs,
     clearLogs: clearLogs,
+    fetchLogs: fetchLogs,
+    countLog: countLog,
   };
 };
 
-export const fetchStaff = async (page) => {
+export const fetchStaff = async (page, currentPageSize) => {
   try {
     if (!page) page = 0;
-    page = page * 50;
+    page = page * currentPageSize;
 
     let { data: staffs, error } = await supabase
       .from("accounts")
       .select("id, email, full_name, date_create, status")
       .eq("role", "staff")
       .order("date_create", { ascending: false })
-      .range(page, page + 49);
+      .range(page, page + currentPageSize - 1);
 
     if (error) {
       console.log("error_fetchStaff", error);
@@ -177,10 +196,10 @@ export const fetchStaff = async (page) => {
   return null;
 };
 
-export const searchStaffLikeEmail = async (page, email) => {
+export const searchStaffLikeEmail = async (page, currentPageSize, email) => {
   try {
     if (!page) page = 0;
-    page = page * 50;
+    page = page * currentPageSize;
 
     let { error: error1, count } = await supabase
       .from("accounts")
@@ -194,7 +213,7 @@ export const searchStaffLikeEmail = async (page, email) => {
       .eq("role", "staff")
       .like("email", `%${email}%`)
       .order("date_create", { ascending: false })
-      .range(page, page + 49);
+      .range(page, page + currentPageSize - 1);
 
     if (error1 || error2) {
       console.log("error_fetchStaff", error1, error2);
@@ -479,27 +498,20 @@ export const fetchTaskByVehicleId = async (id, row) => {
   }
 };
 
-// export const loadAvatar = async () => {
-//   try {
-//     const { data, error } = await supabase.storage.from("avatars").list();
+export const loadAvatar = async (path) => {
+  try {
+    const { signedURL, error2 } = await supabase.storage
+      .from("avatars")
+      .createSignedUrl(path, 600);
 
-//     if (error) {
-//       console.log("error_fetchTaskByVehicleId", error);
-//       return error;
-//     }
+    console.log("data avatar: " + signedURL);
 
-//     console.log("data avatar: " + data);
-
-//     const { signedURL, error2 } = await supabase.storage
-//       .from("avatars")
-//       .createSignedUrl(data[0].name);
-
-//     return data;
-//   } catch (error) {
-//     console.log("error_fetchTaskByVehicleId", error);
-//     return error;
-//   }
-// };
+    return signedURL;
+  } catch (error) {
+    console.log("error_loadAvatar", error);
+    return error;
+  }
+};
 
 export const onCreateNewDevice = async (bodyData) => {
   try {
@@ -536,28 +548,26 @@ export const onCreateNewStaff = async (bodyData) => {
     let isTrue = await checkExpired();
 
     if (isTrue) {
-      let data = {
-        email: bodyData.email,
-        // password: "123456",
-        // role: "staff",
-        full_name: bodyData.fullname,
-        birthday: moment(bodyData.birthday),
-        // avatar: "avatar_123",
-        // status: 0,
-      };
+      let formData = new FormData();
+      
+      formData.append("email", bodyData.email);
+      formData.append("full_name", bodyData.fullname);
+      formData.append("birthday", moment(bodyData.birthday).format("YYYY-MM-DD").toString());
+
+      formData.append("avatar", bodyData.avatar_file);
 
       let token = supabase.auth.currentSession.access_token;
 
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
       let res = await axios.post(
-        url_avs_server +
-          api_create_new_staff,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // 'Access-Control-Allow-Origin': "/*"
-          },
-        }
+        url_avs_server + api_create_new_staff,
+        formData,
+        config
       );
 
       if (res.error) {
@@ -626,18 +636,15 @@ async function checkExpired() {
 }
 
 export async function checkServer() {
-  try{
-    let res = await axios.get(
-      url_avs_server +
-       '/ping'
-    );
-  
+  try {
+    let res = await axios.get(url_avs_server + "/ping");
+
     if (res !== null && res.status === 200) {
       return true;
     }
-  }catch(e){
+  } catch (e) {
     console.log("error: ", e);
   }
-  
+
   return false;
 }

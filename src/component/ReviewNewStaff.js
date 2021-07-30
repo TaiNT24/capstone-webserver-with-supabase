@@ -2,6 +2,9 @@ import { Row, Col, Typography, Avatar, Tag } from "antd";
 import { MainTitle } from "../utils/Text";
 import { ExclamationCircleOutlined, UserOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { getBase64 } from "../lib/common_function";
+import { useEffect, useState } from "react";
+import { loadAvatar } from "../lib/Store";
 
 const { Title } = Typography;
 
@@ -30,6 +33,17 @@ const RowInfo = ({ title, content }) => {
 };
 
 export default function ReviewNewStaff(props) {
+  const [imageUrl, setImageUrl] = useState();
+
+  useEffect(() => {
+    console.log("props.newStaff?.avatar: ", props.newStaff?.avatar);
+    if(props.newStaff?.avatar){
+      loadAvatar(props.newStaff.avatar).then(res => {
+        setImageUrl(res);
+      })
+    }
+  }, [])
+
   return (
     <>
       <Row justify="center">
@@ -40,7 +54,7 @@ export default function ReviewNewStaff(props) {
         <Avatar
           size={128}
           icon={<UserOutlined />}
-          src={props.newStaff?.avatar}
+          src={imageUrl}
         />
       </Row>
 

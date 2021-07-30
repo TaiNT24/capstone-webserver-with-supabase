@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Drawer,
-  Row,
-  Col,
-  Divider,
-  Steps,
-  Button,
-  Spin,
-} from "antd";
+import { Drawer, Row, Col, Divider, Steps, Button, Spin } from "antd";
 import NewStaffInfo from "../../component/NewStaffInfo";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import { MainTitle } from "../../utils/Text";
@@ -15,6 +7,7 @@ import ConfirmCreateStaff from "../../component/ConfirmCreateStaff";
 import {
   onCreateNewStaff,
   onInsertMappingDevice,
+  // uploadAvatar,
 } from "../../lib/Store";
 import ReviewNewStaff from "../../component/ReviewNewStaff";
 
@@ -32,6 +25,8 @@ export default function NewStaff(props) {
   const [isCreateFail, setIsCreateFail] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  const [avatarUploaded, setAvatarUploaded] = useState();
 
   useEffect(() => {
     setVisible(props.showNewStaff);
@@ -64,7 +59,15 @@ export default function NewStaff(props) {
 
         <Col span={16} offset={1}>
           {current === 0 ? (
-            <NewStaffInfo onNextStep={onNextStep} initDataStaff={dataStaff} />
+            <NewStaffInfo
+              onNextStep={onNextStep}
+              initDataStaff={dataStaff}
+              onResetDataStaff={() => setDataStaff(null)}
+              onUploadFile={(file) => {
+                console.log("file: ", file);
+                setAvatarUploaded(file);
+              }}
+            />
           ) : current === 1 ? (
             <>
               <MainTitle value="Vehicle Control Assignment" />
@@ -133,8 +136,9 @@ export default function NewStaff(props) {
                   type="primary"
                   onClick={() => {
                     setLoading(true);
+                    dataStaff.avatar_file = avatarUploaded;
 
-                    onCreateNewStaff(dataStaff).then((res) => {
+                    onCreateNewStaff(dataStaff).then(async (res) => {
                       if (res.error) {
                         let message = res.error.message;
                         console.log(
@@ -146,6 +150,11 @@ export default function NewStaff(props) {
                         setIsCreateFail(true);
                         // eslint-disable-next-line
                       } else if (res.data != null) {
+                        // let avatar_url = await uploadAvatar(
+                        //   avatarUploaded,
+                        //   res.data.data[0].id
+                        // );
+
                         let staff = {
                           id: res.data.data[0].id,
                           email: res.data.data[0].email,
@@ -153,6 +162,7 @@ export default function NewStaff(props) {
                           birthday: res.data.data[0].birthday,
                           fullname: res.data.data[0].full_name,
                           role: res.data.data[0].role,
+                          avatar: res.data.data[0].avatar,
                         };
                         setDataStaffResponse(staff);
 

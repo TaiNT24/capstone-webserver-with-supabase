@@ -7,6 +7,7 @@ import {
   fetchStaffById,
   fetchDevice,
   fetchMappingDevice,
+  loadAvatar,
 } from "../../lib/Store";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import {
@@ -55,7 +56,9 @@ export default function StaffProfile(props) {
   const [isCancel, setIsCancel] = useState(false);
 
   const [isSaveChanged, setIsSaveChanged] = useState(false);
-
+  
+  const [urlAvatar, setUrlAvatar] = useState();
+  
   //useEffect
   useEffect(() => {
     fetchStaffById(props.id).then((staff) => {
@@ -64,6 +67,11 @@ export default function StaffProfile(props) {
         id: staff.id,
         status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
       });
+      loadAvatar(staff.avatar).then(res => {
+        console.log("res loadAvatar: ", res);
+        setUrlAvatar(res);
+      })
+
     });
     loadMappingDevice(props.id);
     // eslint-disable-next-line
@@ -116,7 +124,7 @@ export default function StaffProfile(props) {
       </Row>
 
       <Row className="row-center-ele">
-        <Avatar size={128} icon={<UserOutlined />} src={user?.avatar} />
+        <Avatar size={128} icon={<UserOutlined />} src={urlAvatar} />
       </Row>
 
       <RowInfo title="Email" content={user?.email} />

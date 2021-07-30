@@ -2,6 +2,8 @@ import { Row, Col, Typography, Divider, Avatar, Tag } from "antd";
 import { MainTitle } from "../utils/Text";
 import { ExclamationCircleOutlined, UserOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { getBase64 } from "../lib/common_function";
+import { useEffect, useState } from "react";
 
 const { Title } = Typography;
 
@@ -30,6 +32,16 @@ const RowInfo = ({ title, content }) => {
 };
 
 export default function ConfirmCreateStaff(props) {
+  const [imageUrl, setImageUrl] = useState();
+
+  useEffect(() => {
+    if(props.user?.avatar){
+      getBase64(props.user?.avatar[0].originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+      });
+    }
+  })
+
   return (
     <>
       <Row justify="center">
@@ -37,7 +49,7 @@ export default function ConfirmCreateStaff(props) {
       </Row>
 
       <Row className="row-center-ele">
-        <Avatar size={128} icon={<UserOutlined />} src={props.user?.avatar} />
+        <Avatar size={128} icon={<UserOutlined />} src={imageUrl} />
       </Row>
 
       <RowInfo title="Email" content={props.user?.email + "@amr-system.me"} />

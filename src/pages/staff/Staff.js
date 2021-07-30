@@ -18,6 +18,7 @@ const { Search } = Input;
 export default function Staff(props) {
   const [data, setData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSize, setCurrentPageSize] = useState(10);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState();
 
@@ -97,17 +98,19 @@ export default function Staff(props) {
   useEffect(() => {
     if (txtSearch === "") {
       setLoading(true);
-      fetchStaff(currentPage - 1).then((staffs) => {
+      fetchStaff(currentPage - 1, currentPageSize).then((staffs) => {
         mapStaffToData(staffs);
       });
     } else {
       setLoading(true);
-      searchStaffLikeEmail(currentPage - 1, txtSearch).then((res) => {
-        mapStaffToData(res.staffs);
-        setTotalPage(res.count);
-      });
+      searchStaffLikeEmail(currentPage - 1, currentPageSize, txtSearch).then(
+        (res) => {
+          mapStaffToData(res.staffs);
+          setTotalPage(res.count);
+        }
+      );
     }
-  }, [currentPage, txtSearch]);
+  }, [currentPage, currentPageSize, txtSearch]);
 
   function mapStaffToData(staffs) {
     let dataTable = [];
@@ -121,9 +124,7 @@ export default function Staff(props) {
             id: staff.id,
             status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
           },
-          date_create: moment(staff.date_create).format(
-            "YYYY-MM-DD, HH:mm:ss"
-          ),
+          date_create: moment(staff.date_create).format("YYYY-MM-DD, HH:mm:ss"),
           operation: staff.id,
         });
 
@@ -137,7 +138,6 @@ export default function Staff(props) {
 
   function onSearchStaff(value) {
     if (value !== "") {
-      console.log(value);
       setTxtSearch(value);
       setCurrentPage(1);
     } else {
@@ -146,6 +146,8 @@ export default function Staff(props) {
   }
 
   function onClickBtnCreateStaff() {
+    // setShowNewStaff(true);
+
     checkServer().then((res) => {
       if (!res) {
         console.log("res res: ", res);
@@ -182,13 +184,21 @@ export default function Staff(props) {
       <Table
         columns={columns}
         dataSource={data}
-        scroll={{ y: 400 }}
+        // scroll={{ y: 500 }}
         loading={loading}
         pagination={{
-          pageSize: 50,
+          defaultPageSize: currentPageSize,
           total: totalPage,
+          showSizeChanger: true,
+          pageSizeOptions: [10, 20, 30, 50],
           current: currentPage,
-          onChange: (page) => setCurrentPage(page),
+          onChange: (page, pageSize) => {
+            setCurrentPage(page);
+            setCurrentPageSize(pageSize);
+          },
+          onShowSizeChange: () => {
+            document.documentElement.scrollTop = 0;
+          },
           // position: ['topRight']
         }}
       />
@@ -209,7 +219,7 @@ export default function Staff(props) {
             setShowNewStaff(false);
 
             setLoading(true);
-            fetchStaff(0).then((staffs) => {
+            fetchStaff(0, currentPageSize).then((staffs) => {
               mapStaffToData(staffs);
             });
           }}
