@@ -553,7 +553,7 @@ export const onCreateNewStaff = async (bodyData) => {
     if (isTrue) {
       let formData = new FormData();
 
-      formData.append("email", bodyData.email);
+      formData.append("email", bodyData.email.toLowerCase());
       formData.append("full_name", bodyData.fullname);
       formData.append(
         "birthday",

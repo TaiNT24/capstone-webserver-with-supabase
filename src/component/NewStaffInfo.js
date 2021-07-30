@@ -204,9 +204,11 @@ export default function NewStaffInfo(props) {
             {
               validateTrigger: "onSubmit",
               validator: (_, value) => {
+                value = value.toLowerCase();
+
                 if (allStaff) {
                   let arr = allStaff.filter(
-                    (staff) => staff.email.split("@")[0] === value
+                    (staff) => staff.email.split("@")[0].toLowerCase() === value
                   );
 
                   if (arr.length > 0 && arr[0].email.split("@")[0] === value) {
