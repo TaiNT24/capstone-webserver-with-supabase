@@ -322,11 +322,10 @@ export default function StaffProfile(props) {
                   ]}
                 >
                   <DatePicker
-                    style={{ width: "64%", textAlign: "center" }}
+                    style={{ width: "100%", textAlign: "center" }}
                     onChange={onChangeBirthday}
                     showToday={false}
                     disabledDate={disabledDate}
-                    style={{ width: "100%" }}
                   />
                 </Form.Item>
               </RowInfo>
