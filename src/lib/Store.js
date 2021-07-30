@@ -7,6 +7,7 @@ import moment from "moment";
 
 const url_avs_server = 'https://api.amr-system.me';
 const api_create_new_staff = '/users/create-new-user';
+const api_update_staff = "/users/update-user";
 
 export const supabase = createClient(
   process.env.REACT_APP_PUBLIC_SUPABASE_URL,
@@ -654,3 +655,50 @@ export async function checkServer() {
 
   return false;
 }
+
+export const onUpdateStaff = async (bodyData) => {
+  try {
+    let isTrue = await checkExpired();
+
+    if (isTrue) {
+      let formData = new FormData();
+
+      formData.append("id", bodyData.id);
+      formData.append("full_name", bodyData.fullname);
+      formData.append(
+        "birthday",
+        moment(bodyData.birthday).format("YYYY-MM-DD").toString()
+      );
+      formData.append("file_path", bodyData.file_path);
+
+      formData.append("avatar", bodyData.avatar_file);
+
+      let token = supabase.auth.currentSession.access_token;
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      let res = await axios.post(
+        url_avs_server + api_update_staff,
+        formData,
+        config
+      );
+
+      if (res.error) {
+        console.log("error_onCreateNewDevice: ", res.error);
+        return res;
+      }
+      console.log("data: ", res);
+
+      return res;
+    } else {
+      //push login page
+    }
+  } catch (error) {
+    console.log("error_onCreateNewDevice", error);
+    return error;
+  }
+};

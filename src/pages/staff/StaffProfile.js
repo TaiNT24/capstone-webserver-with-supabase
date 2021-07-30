@@ -1,5 +1,20 @@
 import { useState, useEffect } from "react";
-import { Drawer, Row, Col, Avatar, Button, Typography, Divider } from "antd";
+import {
+  Drawer,
+  Row,
+  Col,
+  Avatar,
+  Button,
+  Typography,
+  Divider,
+  Form,
+  Upload,
+  Input,
+  message,
+  Space,
+  Spin,
+  DatePicker,
+} from "antd";
 import { MainTitle } from "../../utils/Text";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import moment from "moment";
@@ -8,17 +23,23 @@ import {
   fetchDevice,
   fetchMappingDevice,
   loadAvatar,
+  onUpdateStaff,
 } from "../../lib/Store";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import {
   EditOutlined,
   CloseCircleOutlined,
   UserOutlined,
+  LoadingOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
+import { getBase64 } from "../../lib/common_function";
+
+const key_message = "updata_staff";
 
 const { Title } = Typography;
 
-const DescriptionItem = ({ title, content }) => (
+const DescriptionItem = ({ title, children }) => (
   <Row>
     <Col span={6}>
       <Title style={{}} level={5}>
@@ -27,22 +48,32 @@ const DescriptionItem = ({ title, content }) => (
     </Col>
 
     <Col span={11} offset={1}>
-      {content}
+      {children}
     </Col>
   </Row>
 );
 
-const RowInfo = ({ title, content }) => {
+const RowInfo = ({ title, children }) => {
   return (
     <Row style={{ marginBottom: "1em" }}>
-      <Col span={18} offset={7}>
-        <DescriptionItem title={title} content={content} />
+      <Col span={18} offset={5}>
+        <DescriptionItem title={title}>{children}</DescriptionItem>
       </Col>
     </Row>
   );
 };
+function disabledDate(current) {
+  // Can not select days after 2001-01-01
+  return moment("2001-01-01").isSameOrBefore(current);
+}
+const onChangeBirthday = (_, dateString) => {
+  console.log(dateString);
+};
+const iconLoading = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 export default function StaffProfile(props) {
+  const [form] = Form.useForm();
+
   //useState
   const [visible, setVisible] = useState(false);
 
@@ -56,9 +87,13 @@ export default function StaffProfile(props) {
   const [isCancel, setIsCancel] = useState(false);
 
   const [isSaveChanged, setIsSaveChanged] = useState(false);
-  
+
   const [urlAvatar, setUrlAvatar] = useState();
-  
+  const [oldUrlAvatar, setOldUrlAvatar] = useState();
+
+  const [avatarFile, setAvatarFile] = useState();
+  const [loading, setLoading] = useState(false);
+
   //useEffect
   useEffect(() => {
     fetchStaffById(props.id).then((staff) => {
@@ -67,11 +102,11 @@ export default function StaffProfile(props) {
         id: staff.id,
         status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
       });
-      loadAvatar(staff.avatar).then(res => {
+      loadAvatar(staff.avatar).then((res) => {
         console.log("res loadAvatar: ", res);
         setUrlAvatar(res);
-      })
-
+        setOldUrlAvatar(res);
+      });
     });
     loadMappingDevice(props.id);
     // eslint-disable-next-line
@@ -111,6 +146,92 @@ export default function StaffProfile(props) {
     });
   }
 
+  function beforeUpload(file) {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must smaller than 2MB!");
+    }
+    return isJpgOrPng && isLt2M;
+  }
+
+  function handleChange(info) {
+    if (info.file.status === "uploading") {
+      return;
+    }
+    if (info.file.status === "done") {
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        // setImageUrl(imageUrl);
+        setUrlAvatar(imageUrl);
+      });
+    }
+  }
+
+  const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+    setAvatarFile(file);
+  };
+
+  const onFinish = async (values) => {
+    setLoading(true);
+    values.id = user.id;
+    values.file_path = user.avatar;
+    console.log("user_avatar: ", user.avatar);
+    values.avatar_file = avatarFile;
+
+    console.log(values);
+    onUpdateStaff(values).then((res) => {
+      if (res.error) {
+        let message = res.error.message;
+        console.log("error_onUpdateStaff_response: ", message);
+
+        message.error({
+          content: `Update error! message: ${res}`,
+          key_message,
+          duration: 2,
+        });
+      } else if (res.data !== null) {
+        fetchStaffById(props.id).then((staff) => {
+          setUser(staff);
+          setTag({
+            id: staff.id,
+            status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
+          });
+          loadAvatar(staff.avatar).then((res) => {
+            console.log("res loadAvatar: ", res);
+            setUrlAvatar(res);
+            setOldUrlAvatar(res);
+          });
+        });
+        message.success({
+          content: "Update staff success!",
+          key_message,
+          duration: 2,
+        });
+      }
+      setLoading(false);
+    });
+  };
+
+  const onReset = () => {
+    // props.onResetDataStaff();
+    form.resetFields();
+    setUrlAvatar(oldUrlAvatar);
+  };
+
   return (
     <Drawer
       width={640}
@@ -119,38 +240,140 @@ export default function StaffProfile(props) {
       onClose={() => props.onCloseProfile()}
       visible={visible}
     >
-      <Row justify="center">
-        <MainTitle value="Staff Profile" />
-      </Row>
+      <Spin indicator={iconLoading} spinning={loading}>
+        <Form onFinish={onFinish} form={form}>
+          <Row justify="center">
+            <MainTitle value="Staff Profile" />
+          </Row>
 
-      <Row className="row-center-ele">
-        <Avatar size={128} icon={<UserOutlined />} src={urlAvatar} />
-      </Row>
+          {/* <Row className="row-center-ele">
+          <Avatar size={128} icon={<UserOutlined />} src={urlAvatar} />
+        </Row> */}
 
-      <RowInfo title="Email" content={user?.email} />
-      <RowInfo title="Full name" content={user?.full_name} />
-      <RowInfo
-        title="Birthday"
-        content={moment(user?.birthday).format("MM/DD/YYYY")}
-      />
-      <RowInfo title="Role" content={user?.role.toUpperCase()} />
+          <Row className="row-center-ele">
+            <Form.Item
+              name="avatar"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+              // initialValue={urlAvatar}
+            >
+              <Upload
+                name="avatar"
+                showUploadList={false}
+                customRequest={dummyRequest}
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+              >
+                <Space direction="vertical">
+                  <Avatar size={128} icon={<UserOutlined />} src={urlAvatar} />
+                  <Button icon={<UploadOutlined />}>Update avatar</Button>
+                </Space>
+              </Upload>
+            </Form.Item>
+          </Row>
 
-      <Row>
-        <Col span={18} offset={7}>
+          <RowInfo title="Email">{user?.email}</RowInfo>
+          {user ? (
+            <>
+              <RowInfo title="Full name">
+                <Form.Item
+                  name="fullname"
+                  initialValue={user?.full_name}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Full name is required",
+                    },
+                    {
+                      min: 3,
+                      message: "Full name must be at least 3 characters!",
+                      validateTrigger: "onSubmit",
+                    },
+                    {
+                      max: 30,
+                      message: "Please input maximum 30 characters!",
+                      validateTrigger: "onSubmit",
+                    },
+                    {
+                      pattern: /^([a-zA-Z\s]*)$/,
+                      message: "Please input valid full name!",
+                      validateTrigger: "onSubmit",
+                    },
+                  ]}
+                >
+                  <Input
+                    size="middle"
+                    type="text"
+                    allowClear
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </RowInfo>
+
+              <RowInfo title="Birthday">
+                <Form.Item
+                  name="birthday"
+                  initialValue={moment(user?.birthday)}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Birthday is required",
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    style={{ width: "64%", textAlign: "center" }}
+                    onChange={onChangeBirthday}
+                    showToday={false}
+                    disabledDate={disabledDate}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </RowInfo>
+            </>
+          ) : null}
+
+          <RowInfo title="Role">{user?.role.toUpperCase()}</RowInfo>
+
           <Row>
-            <Col span={6}>
-              <Title style={{}} level={5}>
-                Status:
-              </Title>
-            </Col>
+            <Col span={18} offset={5}>
+              <Row>
+                <Col span={6}>
+                  <Title style={{}} level={5}>
+                    Status:
+                  </Title>
+                </Col>
 
-            <Col span={11} offset={1}>
-              {tag ? <UpdateStatusButton tag={tag} /> : null}
+                <Col span={11} offset={1}>
+                  {tag ? <UpdateStatusButton tag={tag} /> : null}
+                </Col>
+              </Row>
             </Col>
           </Row>
-        </Col>
-      </Row>
 
+          <Row>
+            <Col span={18} offset={5}>
+              <Form.Item>
+                <Button
+                  htmlType="button"
+                  onClick={onReset}
+                  style={{ width: "8em" }}
+                >
+                  Reset
+                </Button>
+
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ marginLeft: "2em", width: "8em" }}
+                >
+                  Update
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Spin>
       <Divider />
 
       <Row>
@@ -172,7 +395,6 @@ export default function StaffProfile(props) {
                 setDefaultChildrenDevice(value);
                 setOldDefaultChildrenDevice(value);
               }}
-
               {...props}
             />
           ) : null}

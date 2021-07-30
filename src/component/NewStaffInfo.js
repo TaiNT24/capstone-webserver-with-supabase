@@ -284,7 +284,7 @@ export default function NewStaffInfo(props) {
         </Form.Item>
       </RowInfo>
 
-      <RowInfo title="Role">Staff</RowInfo>
+      <RowInfo title="Role">STAFF</RowInfo>
 
       <Divider />
       {/* //row here */}
