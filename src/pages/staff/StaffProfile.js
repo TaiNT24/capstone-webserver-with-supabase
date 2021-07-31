@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Drawer,
   Row,
@@ -14,6 +14,7 @@ import {
   Space,
   Spin,
   DatePicker,
+  notification,
 } from "antd";
 import { MainTitle } from "../../utils/Text";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
@@ -24,6 +25,7 @@ import {
   fetchMappingDevice,
   loadAvatar,
   onUpdateStaff,
+  checkServer,
 } from "../../lib/Store";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import {
@@ -66,9 +68,7 @@ function disabledDate(current) {
   // Can not select days after 2001-01-01
   return moment("2001-01-01").isSameOrBefore(current);
 }
-const onChangeBirthday = (_, dateString) => {
-  console.log(dateString);
-};
+
 const iconLoading = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 export default function StaffProfile(props) {
@@ -93,6 +93,12 @@ export default function StaffProfile(props) {
 
   const [avatarFile, setAvatarFile] = useState();
   const [loading, setLoading] = useState(false);
+
+  const [infoStaffIsChange, setInfoStaffIsChange] = useState(false);
+  const [onChangeData, setOnChangeData] = useState(0);
+
+  const fullnameRef = useRef();
+  const birthdayRef = useRef();
 
   //useEffect
   useEffect(() => {
@@ -123,6 +129,30 @@ export default function StaffProfile(props) {
   useEffect(() => {
     setVisible(props.showProfile);
   }, [props.showProfile]);
+
+  useEffect(() => {
+    if (onChangeData > 0) {
+      let birthday_data = moment(birthdayRef.current.props.value)
+        .format("YYYY-MM-DD")
+        .toString();
+
+      let fullname_data = fullnameRef.current.props.value;
+
+      if (birthday_data !== user.birthday || fullname_data !== user.full_name) {
+        setInfoStaffIsChange(true);
+      } else {
+        setInfoStaffIsChange(false);
+      }
+    }
+  }, [onChangeData]);
+
+  useEffect(() => {
+    if (urlAvatar && oldUrlAvatar) {
+      if (urlAvatar !== oldUrlAvatar) {
+        setInfoStaffIsChange(true);
+      } 
+    }
+  }, [urlAvatar, oldUrlAvatar]);
 
   function loadMappingDevice(userId) {
     fetchDevice().then((devices) => {
@@ -187,50 +217,67 @@ export default function StaffProfile(props) {
 
   const onFinish = async (values) => {
     setLoading(true);
-    values.id = user.id;
-    values.file_path = user.avatar;
-    console.log("user_avatar: ", user.avatar);
-    values.avatar_file = avatarFile;
-
-    console.log(values);
-    onUpdateStaff(values).then((res) => {
-      if (res.error) {
-        let message = res.error.message;
-        console.log("error_onUpdateStaff_response: ", message);
-
-        message.error({
-          content: `Update error! message: ${res}`,
-          key_message,
-          duration: 2,
+    checkServer().then((res) => {
+      if (!res) {
+        console.log("res res: ", res);
+        notification["error"]({
+          message: "Server is error, please try again later",
+          icon: <CloseCircleOutlined style={{ color: "#cd201f" }} />,
         });
-      } else if (res.data !== null) {
-        fetchStaffById(props.id).then((staff) => {
-          setUser(staff);
-          setTag({
-            id: staff.id,
-            status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
-          });
-          loadAvatar(staff.avatar).then((res) => {
-            console.log("res loadAvatar: ", res);
-            setUrlAvatar(res);
-            setOldUrlAvatar(res);
-          });
-        });
-        message.success({
-          content: "Update staff success!",
-          key_message,
-          duration: 2,
+        setLoading(false);
+      } else {
+        values.id = user.id;
+        values.file_path = user.avatar;
+        console.log("user_avatar: ", user.avatar);
+        values.avatar_file = avatarFile;
+
+        console.log(values);
+        onUpdateStaff(values).then((res) => {
+          if (res.error) {
+            let message = res.error.message;
+            console.log("error_onUpdateStaff_response: ", message);
+
+            message.error({
+              content: `Update error! message: ${res}`,
+              key_message,
+              duration: 2,
+            });
+          } else if (res.data !== null) {
+            fetchStaffById(props.id).then((staff) => {
+              setUser(staff);
+              setTag({
+                id: staff.id,
+                status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
+              });
+              loadAvatar(staff.avatar).then((res) => {
+                console.log("res loadAvatar: ", res);
+                setUrlAvatar(res);
+                setOldUrlAvatar(res);
+              });
+            });
+            message.success({
+              content: "Update staff success!",
+              key_message,
+              duration: 2,
+            });
+          }
+          setLoading(false);
         });
       }
-      setLoading(false);
     });
   };
 
   const onReset = () => {
-    // props.onResetDataStaff();
     form.resetFields();
     setUrlAvatar(oldUrlAvatar);
+    setInfoStaffIsChange(false);
   };
+
+  // const onChangeBirthday = (_, dateString) => {
+  //   if(dateString !== user.birthday) {
+  //     setInfoStaffIsChange(true);
+  //   }
+  // };
 
   return (
     <Drawer
@@ -250,7 +297,7 @@ export default function StaffProfile(props) {
           <Avatar size={128} icon={<UserOutlined />} src={urlAvatar} />
         </Row> */}
 
-          <Row className="row-center-ele">
+          <Row className="row-center-ele" style={{ marginBottom: "0" }}>
             <Form.Item
               name="avatar"
               valuePropName="fileList"
@@ -306,6 +353,8 @@ export default function StaffProfile(props) {
                     type="text"
                     allowClear
                     style={{ width: "100%" }}
+                    onChange={() => setOnChangeData(onChangeData + 1)}
+                    ref={fullnameRef}
                   />
                 </Form.Item>
               </RowInfo>
@@ -323,9 +372,10 @@ export default function StaffProfile(props) {
                 >
                   <DatePicker
                     style={{ width: "100%", textAlign: "center" }}
-                    onChange={onChangeBirthday}
+                    onChange={() => setOnChangeData(onChangeData + 1)}
                     showToday={false}
                     disabledDate={disabledDate}
+                    ref={birthdayRef}
                   />
                 </Form.Item>
               </RowInfo>
@@ -350,10 +400,11 @@ export default function StaffProfile(props) {
             </Col>
           </Row>
 
-          <Row>
-            <Col span={18} offset={5}>
+          <Row style={{ marginTop: "1em" }}>
+            <Col span={18} offset={7}>
               <Form.Item>
                 <Button
+                  disabled={!infoStaffIsChange}
                   htmlType="button"
                   onClick={onReset}
                   style={{ width: "8em" }}
@@ -362,6 +413,7 @@ export default function StaffProfile(props) {
                 </Button>
 
                 <Button
+                  disabled={!infoStaffIsChange}
                   type="primary"
                   htmlType="submit"
                   style={{ marginLeft: "2em", width: "8em" }}
@@ -373,7 +425,8 @@ export default function StaffProfile(props) {
           </Row>
         </Form>
       </Spin>
-      <Divider />
+
+      <Divider style={{ marginTop: "0" }} />
 
       <Row>
         <Col span={5} offset={1}>
