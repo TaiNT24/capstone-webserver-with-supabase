@@ -6,7 +6,7 @@ city.src = "/img/backgound_canvas.png";
 let percent = 1;
 const radius_point = 5;
 
-const font_coordinate = "18px georgia";
+const font_coordinate = "14px Arial";
 const font_vehicle = "12px georgia";
 
 const draw = (ctx, devices, area) => {
@@ -65,24 +65,25 @@ const draw = (ctx, devices, area) => {
   });
 
   //draw Coordinate
-  ctx.fillStyle = "black";
-  ctx.font = font_coordinate;
-  ctx.fillText("O", 0, area.height + area.move_point);
+  // ctx.fillStyle = "black";
+  // ctx.font = font_coordinate;
+  // ctx.fillText("O", 0, area.height + area.move_point);
 
-  ctx.fillText("x", area.width, area.height + area.move_point);
-  ctx.fillText("y", 5, 15);
+  // ctx.fillText("x", area.width, area.height + area.move_point);
+  // ctx.fillText("y", 5, 15);
 };
 
 const backgroundDraw = (ctx, area) => {
-  ctx.clearRect(0, 0, area.width, area.height);
+  ctx.clearRect(0, 0, area.width + 20 + area.move_point, area.height + area.move_point + 10);
 
   // ctx.drawImage(city, 0, 0);
 
+  ctx.font = font_coordinate;
   ctx.fillStyle = "#ededed"; //color background
   ctx.fillRect(
     area.move_point,
     0,
-    area.width + area.move_point,
+    area.width ,
     area.height
   );
 
@@ -92,19 +93,59 @@ const backgroundDraw = (ctx, area) => {
   ctx.beginPath();
   ctx.strokeStyle = "#d9d9d9"; // color grid
 
-  for (let x = 0 + area.move_point; x <= area.width ; ) {
+  let count_x = 0;
+  let x;
+  for (x = 0 + area.move_point; x <= area.width ; ) {
     ctx.moveTo(x, 0);
     ctx.lineTo(x, area.height);
+    
+    if (count_x > 0) {
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.fillText(`${100 * count_x}`, x - 15, area.height + 25);
+      ctx.restore();
+    }
+
     x = x + 100 * percent;
+    count_x++;
   }
+  ctx.save();
+  ctx.fillStyle = "black";
+  ctx.fillText(`${100 * count_x}`, x - 15, area.height + 25);
+  ctx.restore();
+
+  let count_y = 9;
+
+  ctx.save();
+  ctx.fillStyle = "black";
+  ctx.fillText(`${100 * 10}`, 0, 10);
+  ctx.restore();
 
   for (let y = 0 ; y <= area.height  ; ) {
     ctx.moveTo(area.move_point, y);
     ctx.lineTo(area.width + area.move_point, y);
+    
+    if (count_y > 0 && y !== 0) {
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.fillText(`${100 * count_y}`, 0, y + 5);
+      ctx.restore();
+      count_y--;
+    }
+
     y = y + 100 * percent;
   }
   ctx.stroke();
   ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = "black";
+  ctx.fillText("0", 10, area.height + 10);
+
+  // ctx.fillText("x", area.width, area.height + area.move_point);
+  // ctx.fillText("y", 5, 15);
+  ctx.restore();
+
 };
 
 export function useCanvas(devices, area) {

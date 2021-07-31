@@ -9,7 +9,7 @@ export default function TaskDetail(props) {
   const area = {
     height: 500,
     width: 1000,
-    move_point: 20,
+    move_point: 35,
   };
 
   const [canvasRefBackground, canvasRef] = useCanvas(
@@ -28,8 +28,8 @@ export default function TaskDetail(props) {
           id="layer1"
           ref={canvasRefBackground}
           style={{ zIndex: "1", position: "absolute", left: "0px", top: "12vh" }}
-          height={area.height}
-          width={area.width + area.move_point}
+          height={area.height + area.move_point + 10}
+          width={area.width + area.move_point + 20}
         >
           This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>

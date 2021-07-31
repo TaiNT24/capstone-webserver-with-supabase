@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { fetchTaskDetailById } from "../../lib/Store";
 
 let percent = 1;
-const font_coordinate = "18px georgia";
+const font_coordinate = "14px Arial";
 const font_vehicle = "12px georgia";
 
 const draw = (ctx, status, type, tasksDetail, area) => {
@@ -140,7 +140,6 @@ const draw = (ctx, status, type, tasksDetail, area) => {
   let path2 = new Path2D();
   ctx.strokeStyle = "#389e0d"; //green: shortest path
   for (let i = 0; i < points.length; i++) {
-
     let x = points[i].x;
     let y = points[i].y;
     if (i === 0) {
@@ -236,43 +235,88 @@ const draw = (ctx, status, type, tasksDetail, area) => {
     ctx.restore();
   }
 
-  ctx.save();
+  // ctx.save();
 
-  ctx.fillStyle = "black";
-  ctx.font = font_coordinate;
-  ctx.fillText("O", 0, area.height + area.move_point);
+  // ctx.fillStyle = "black";
+  // ctx.font = font_coordinate;
+  // ctx.fillText("0", 0, area.height + area.move_point);
 
-  ctx.fillText("x", area.width, area.height + area.move_point);
-  ctx.fillText("y", 5, 15);
+  // // ctx.fillText("x", area.width, area.height + area.move_point);
+  // // ctx.fillText("y", 5, 15);
 
-  ctx.restore();
+  // for(let i = 0; i < area.width; i++){
+  //   ctx.fillText("x", area.width, area.height + area.move_point);
+  // }
+
+  // ctx.restore();
 };
 
 const backgroundDraw = (ctx, area) => {
-  ctx.clearRect(0, 0, area.width, area.height);
+  ctx.clearRect(
+    0,
+    0,
+    area.width + area.move_point + 20,
+    area.height + area.move_point + 10
+  );
 
   // ctx.drawImage(city, 0, 0);
 
+  ctx.font = font_coordinate;
   ctx.fillStyle = "#ededed"; //color background
-  ctx.fillRect(area.move_point, 0, area.width + area.move_point, area.height);
+  ctx.fillRect(area.move_point, 0, area.width, area.height);
 
   ctx.save();
 
   ctx.beginPath();
   ctx.strokeStyle = "#d9d9d9"; // color grid
 
-  for (let x = 0 + area.move_point; x <= area.width; ) {
+  let count_x = 0;
+  let x;
+  for (x = 0 + area.move_point; x <= area.width; ) {
     ctx.moveTo(x, 0);
     ctx.lineTo(x, area.height);
+
+    if (count_x > 0) {
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.fillText(`${100 * count_x}`, x - 15, area.height + 25);
+      ctx.restore();
+    }
     x = x + 100 * percent;
+    count_x++;
   }
+
+  ctx.save();
+  ctx.fillStyle = "black";
+  ctx.fillText(`${100 * count_x}`, x - 15, area.height + 25);
+  ctx.restore();
+
+  let count_y = 9;
+
+  ctx.save();
+  ctx.fillStyle = "black";
+  ctx.fillText(`${100 * 10}`, 0, 10);
+  ctx.restore();
 
   for (let y = 0; y <= area.height; ) {
     ctx.moveTo(area.move_point, y);
     ctx.lineTo(area.width + area.move_point, y);
+
+    if (count_y > 0 && y !== 0) {
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.fillText(`${100 * count_y}`, 0, y + 5);
+      ctx.restore();
+      count_y--;
+    }
     y = y + 100 * percent;
   }
   ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = "black";
+  ctx.fillText("0", 10, area.height + 10);
   ctx.restore();
 };
 
