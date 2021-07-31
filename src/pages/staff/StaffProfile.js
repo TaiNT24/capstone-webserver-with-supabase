@@ -144,6 +144,7 @@ export default function StaffProfile(props) {
         setInfoStaffIsChange(false);
       }
     }
+    // eslint-disable-next-line
   }, [onChangeData]);
 
   useEffect(() => {
@@ -260,6 +261,7 @@ export default function StaffProfile(props) {
               key_message,
               duration: 2,
             });
+            setInfoStaffIsChange(false);
           }
           setLoading(false);
         });
