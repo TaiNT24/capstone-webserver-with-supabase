@@ -151,7 +151,9 @@ export default function StaffProfile(props) {
     if (urlAvatar && oldUrlAvatar) {
       if (urlAvatar !== oldUrlAvatar) {
         setInfoStaffIsChange(true);
-      } 
+      } else {
+        setInfoStaffIsChange(false);
+      }
     }
   }, [urlAvatar, oldUrlAvatar]);
 
@@ -261,7 +263,7 @@ export default function StaffProfile(props) {
               key_message,
               duration: 2,
             });
-            setInfoStaffIsChange(false);
+            setOnChangeData(0);
           }
           setLoading(false);
         });
