@@ -112,6 +112,9 @@ export default function Staff(props) {
         }
       );
     }
+    if(updateSuccess){
+      setUpdateSuccess(false);
+    }
   }, [currentPage, currentPageSize, txtSearch, updateSuccess]);
 
   function mapStaffToData(staffs) {
