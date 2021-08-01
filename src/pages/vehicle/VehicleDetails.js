@@ -295,21 +295,10 @@ export default function VehicleDetails(props) {
               <LastConnectionTime time={device?.last_connection} />
 
               <Row justify="center">
-                <Button
-                  form="myForm"
-                  type="primary"
-                  htmlType="submit"
-                  style={{ width: "6em" }}
-                  icon={<SaveOutlined />}
-                  // onClick={() => setIsSaved(!isSaved)}
-                >
-                  {isSaved ? "Save" : "Edit"}
-                </Button>
-
-                {isSaved ? (
+              {isSaved ? (
                   <Button
                     htmlType="button"
-                    style={{ width: "7em", marginLeft: "2em" }}
+                    style={{ width: "7em" }}
                     danger
                     icon={<CloseCircleOutlined />}
                     onClick={onReset}
@@ -317,6 +306,18 @@ export default function VehicleDetails(props) {
                     Cancel
                   </Button>
                 ) : null}
+
+                <Button
+                  form="myForm"
+                  type="primary"
+                  htmlType="submit"
+                  style={{ width: "7em" , marginLeft: "2em"}}
+                  icon={<SaveOutlined />}
+                  // onClick={() => setIsSaved(!isSaved)}
+                >
+                  {isSaved ? "Save" : "Edit"}
+                </Button>
+                
               </Row>
             </Form>
           </Col>

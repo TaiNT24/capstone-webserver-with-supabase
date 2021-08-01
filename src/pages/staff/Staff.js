@@ -27,6 +27,8 @@ export default function Staff(props) {
 
   const [showNewStaff, setShowNewStaff] = useState(false);
   const [txtSearch, setTxtSearch] = useState("");
+  
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const onOpenProfile = (id) => {
     setIdProfile(id);
@@ -110,7 +112,7 @@ export default function Staff(props) {
         }
       );
     }
-  }, [currentPage, currentPageSize, txtSearch]);
+  }, [currentPage, currentPageSize, txtSearch, updateSuccess]);
 
   function mapStaffToData(staffs) {
     let dataTable = [];
@@ -208,6 +210,7 @@ export default function Staff(props) {
           showProfile={showProfile}
           id={idProfile}
           onCloseProfile={onCloseProfile}
+          updateSuccess={() => setUpdateSuccess(true)}
           {...props}
         />
       ) : null}

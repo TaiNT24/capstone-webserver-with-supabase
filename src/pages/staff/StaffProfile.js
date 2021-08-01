@@ -264,6 +264,7 @@ export default function StaffProfile(props) {
               duration: 2,
             });
             setOnChangeData(0);
+            props.updateSuccess();
           }
           setLoading(false);
         });
@@ -398,7 +399,12 @@ export default function StaffProfile(props) {
                 </Col>
 
                 <Col span={11} offset={1}>
-                  {tag ? <UpdateStatusButton tag={tag} /> : null}
+                  {tag ? (
+                    <UpdateStatusButton
+                      tag={tag}
+                      updateSuccess={props.updateSuccess}
+                    />
+                  ) : null}
                 </Col>
               </Row>
             </Col>

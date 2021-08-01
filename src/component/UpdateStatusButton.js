@@ -34,6 +34,9 @@ export default function UpdateStatusButton(props) {
       setConfirmLoading(false);
       setLoadingUpdateStatus(false);
       setIsCheckItem(!isCheckItem);
+      if(props.updateSuccess) {
+        props.updateSuccess();
+      }
     });
   };
 
