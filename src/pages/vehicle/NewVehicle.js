@@ -128,7 +128,7 @@ export default function NewVehicle(props) {
           </Form.Item>
 
           <Form.Item
-            label="Mac Adress"
+            label="Mac Address"
             name="mac_address"
             rules={[
               {
