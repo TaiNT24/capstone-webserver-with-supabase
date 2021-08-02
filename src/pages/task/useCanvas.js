@@ -136,25 +136,28 @@ const draw = (ctx, status, type, tasksDetail, area) => {
   }
   ctx.stroke(path);
 
-  ctx.beginPath();
-  let path2 = new Path2D();
-  ctx.strokeStyle = "#389e0d"; //green: shortest path
-  for (let i = 0; i < points.length; i++) {
-    let x = points[i].x;
-    let y = points[i].y;
-    if (i === 0) {
-      path2.moveTo(x, y);
-    } else if (i === points.length - 1) {
-      path2.lineTo(x, y);
-
-      path2.moveTo(x, y);
-    } else {
-      path2.lineTo(x, y);
-
-      path2.moveTo(x, y);
+  if(type === 2){
+    ctx.beginPath();
+    let path2 = new Path2D();
+    ctx.strokeStyle = "#389e0d"; //green: shortest path
+    for (let i = 0; i < points.length; i++) {
+      let x = points[i].x;
+      let y = points[i].y;
+      if (i === 0) {
+        path2.moveTo(x, y);
+      } else if (i === points.length - 1) {
+        path2.lineTo(x, y);
+  
+        path2.moveTo(x, y);
+      } else {
+        path2.lineTo(x, y);
+  
+        path2.moveTo(x, y);
+      }
     }
+    ctx.stroke(path2);
   }
-  ctx.stroke(path2);
+  
 
   console.log("point: ", points);
 
