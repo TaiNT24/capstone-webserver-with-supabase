@@ -97,7 +97,13 @@ export default function Vehicles(props) {
               </Tag>
             );
             break;
-
+          case 4:
+            status = (
+              <Tag icon={<WarningOutlined />} color="#f50">
+                ERROR_STOP
+              </Tag>
+            );
+            break;
           default:
             status = (
               <Tag icon={<WarningOutlined />} color="#f50">

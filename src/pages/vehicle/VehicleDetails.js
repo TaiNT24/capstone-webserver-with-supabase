@@ -81,6 +81,10 @@ export default function VehicleDetails(props) {
             defaultStatusX = "RUNNING";
           } else if (element.status === 3) {
             defaultStatusX = "STOP";
+          } else if (element.status === 4) {
+            defaultStatusX = "ERROR_STOP";
+          } else {
+            defaultStatusX = "UN_SET_STATUS";
           }
           setDefaultStatus(defaultStatusX);
         }
