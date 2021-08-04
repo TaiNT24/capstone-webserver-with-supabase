@@ -109,6 +109,9 @@ export default function StaffProfile(props) {
         status: staff.status === 0 ? "ACTIVE" : "INACTIVE",
       });
       loadAvatar(staff.avatar).then((res) => {
+        if(res === null) {
+          res = '';
+        }
         console.log("res loadAvatar: ", res);
         setUrlAvatar(res);
         setOldUrlAvatar(res);
@@ -254,6 +257,9 @@ export default function StaffProfile(props) {
               });
               loadAvatar(staff.avatar).then((res) => {
                 console.log("res loadAvatar: ", res);
+                if(res === null) {
+                  res = '';
+                }
                 setUrlAvatar(res);
                 setOldUrlAvatar(res);
               });
