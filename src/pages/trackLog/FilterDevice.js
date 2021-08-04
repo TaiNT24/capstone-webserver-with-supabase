@@ -17,7 +17,7 @@ const FilterDevice = (props) => {
 
       props.idDeviceList.map((e) => {
         return children.push(
-          <Option key={e.id} value={e.id}>
+          <Option key={e.id} value={e.code}>
             {e.code}
           </Option>
         );
