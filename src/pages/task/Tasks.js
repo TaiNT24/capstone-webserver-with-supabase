@@ -261,7 +261,7 @@ export default function Tasks(props) {
         columns={columns}
         dataSource={data}
         pagination={false}
-        scroll={{ x: 1100, y: 460, scrollToFirstRowOnChange: false }}
+        scroll={{ y: 460, scrollToFirstRowOnChange: false }}
         loading={loading}
         // onChange={handleTableChange}
       />
