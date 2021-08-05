@@ -56,23 +56,23 @@ export default function Logs(props) {
       props.devices.length !== 0
     ) {
       listLog.map((e, index) => {
+        let codeDevice = props.devices.filter(
+          (device) => device.id === e.device
+        )[0].code;
+
         if (idDeviceFilter.length === 0) {
           dataX.push({
             key: index,
             time: moment(e.date_create).format("YYYY-MM-DD, HH:mm:ss"),
-            idDevice: props.devices.filter(
-              (device) => device.id === e.device
-            )[0].code,
+            idDevice: codeDevice,
             content: e.content,
           });
         } else {
-          if (idDeviceFilter.includes(e.device)) {
+          if (idDeviceFilter.includes(codeDevice)) {
             dataX.push({
               key: index,
               time: moment(e.date_create).format("YYYY-MM-DD, HH:mm:ss"),
-              idDevice: props.devices.filter(
-                (device) => device.id === e.device
-              )[0].code,
+              idDevice: codeDevice,
               content: e.content,
             });
           }
