@@ -447,7 +447,7 @@ export default function StaffProfile(props) {
       <Row>
         <Col span={5} offset={1}>
           <Title style={{}} level={5}>
-            Control Device:
+            Control Vehicle:
           </Title>
         </Col>
 
