@@ -33,7 +33,7 @@ const FilterDevice = (props) => {
         mode="multiple"
         allowClear
         style={{ width: "40%", alignSelf: "center", marginLeft: "1em" }}
-        placeholder="Choose Filter ID Device"
+        placeholder="Filter by vehicle's code"
         defaultValue={[]}
         onChange={handleChange}
       >
