@@ -30,7 +30,7 @@ export default function NewVehicle(props) {
             handleCloseModal();
 
             message.success({
-              content: "Create new vehicle successful!",
+              content: "Create new vehicle successfully!",
               key,
               duration: 2,
             });

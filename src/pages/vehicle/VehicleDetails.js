@@ -155,7 +155,7 @@ export default function VehicleDetails(props) {
                   rules={[
                     {
                       required: true,
-                      message: "Code is required",
+                      message: "Please input code!",
                     },
                     {
                       pattern: /^(?:\d*)$/,
