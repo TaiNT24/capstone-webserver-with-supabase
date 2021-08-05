@@ -20,7 +20,7 @@ const columns = [
     sortOrder: "descend",
   },
   {
-    title: "ID Device",
+    title: "Vehicle's Code",
     width: 200,
     dataIndex: "idDevice",
     key: "idDevice",
