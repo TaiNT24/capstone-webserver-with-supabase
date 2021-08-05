@@ -1,4 +1,4 @@
-import { MainTitle } from "../../utils/Text";
+// import { MainTitle } from "../../utils/Text";
 import { useCanvas } from "./useCanvas";
 
 export default function Canvas(props) {
@@ -15,7 +15,7 @@ export default function Canvas(props) {
   
   return (
       <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
-        <MainTitle value="Vehicle's Position" style={{ marginTop: '2em' }}/>
+        {/* <MainTitle value="Vehicle's Position" style={{ marginTop: '2em' }}/> */}
 
         <canvas
           id="layer1"
