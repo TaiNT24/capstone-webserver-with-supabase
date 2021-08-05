@@ -33,7 +33,7 @@ export default function Vehicles (props) {
         tab={
           <span>
             <EnvironmentOutlined />
-            Vehicle Position
+            Vehicle's Position
           </span>
         }
         key="Vehicle_Position"
