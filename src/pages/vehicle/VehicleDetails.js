@@ -75,7 +75,9 @@ export default function VehicleDetails(props) {
 
           //default status
           let defaultStatusX = "DISCONNECTED";
-          if (element.status === 1) {
+          if (element.status === 0) {
+            defaultStatusX = "DISCONNECTED";
+          } else if (element.status === 1) {
             defaultStatusX = "AVAILABLE";
           } else if (element.status === 2) {
             defaultStatusX = "RUNNING";
@@ -102,7 +104,7 @@ export default function VehicleDetails(props) {
         if (res[0]?.id === device.id) {
           //success
           setIsSaved(!isSaved);
-          message.success({ content: "Update success!", key, duration: 2 });
+          message.success({ content: "Update vehicle successfully!", key, duration: 2 });
         } else {
           message.error({
             content: `Update error! message: ${res}`,

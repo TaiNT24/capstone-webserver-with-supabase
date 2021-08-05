@@ -68,7 +68,7 @@ export default function MappingDeviceToUser(props) {
 
       updateMappingDevice(idStaff, devices).then((isDone) => {
         if (isDone) {
-          message.success({ content: "Update success!", key, duration: 2 });
+          message.success({ content: "Update successfully!", key, duration: 2 });
           props.savedSuccess();
           props.onUpdateDevices(selectedList);
 
