@@ -10,6 +10,28 @@ const draw = (ctx, status, type, tasksDetail, area) => {
 
   ctx.beginPath();
 
+  if (type === 2) {
+    ctx.beginPath();
+    ctx.save();
+    ctx.fillStyle = "#bfbfbf";
+
+    for (let i = 0; i < tasksDetail.length - 1; i++) {
+      let x = tasksDetail[i].location_x * percent + area.move_point;
+      let y = area.height - tasksDetail[i].location_y * percent;
+
+      let x_next = tasksDetail[i + 1].location_x * percent + area.move_point;
+      let y_next = area.height - tasksDetail[i + 1].location_y * percent;
+
+      if (x === x_next) {
+        ctx.fillRect(x - 10, y, x_next - x + 20, y_next - y);
+      } else {
+        ctx.fillRect(x, y - 10, x_next - x, y_next - y + 20);
+      }
+    }
+
+    ctx.restore();
+  }
+
   // let statusStyle = "#f00"; //red ->  detail is error
   // if (status === 0) {
   //   // detail is done
@@ -136,7 +158,7 @@ const draw = (ctx, status, type, tasksDetail, area) => {
   }
   ctx.stroke(path);
 
-  if(type === 2){
+  if (type === 2) {
     ctx.beginPath();
     let path2 = new Path2D();
     ctx.strokeStyle = "#389e0d"; //green: shortest path
@@ -147,96 +169,93 @@ const draw = (ctx, status, type, tasksDetail, area) => {
         path2.moveTo(x, y);
       } else if (i === points.length - 1) {
         path2.lineTo(x, y);
-  
+
         path2.moveTo(x, y);
       } else {
         path2.lineTo(x, y);
-  
+
         path2.moveTo(x, y);
       }
     }
     ctx.stroke(path2);
   }
-  
 
-  console.log("point: ", points);
+  // if (type === 2) {
+  //   ctx.beginPath();
+  //   ctx.save();
+  //   ctx.strokeStyle = "gray";
+  //   let path1 = new Path2D();
+  //   let path2 = new Path2D();
 
-  if (type === 2) {
-    ctx.beginPath();
-    ctx.save();
-    ctx.strokeStyle = "gray";
-    let path1 = new Path2D();
-    let path2 = new Path2D();
+  //   for (let i = 0; i < tasksDetail.length - 1; i++) {
+  //     let x = tasksDetail[i].location_x * percent + area.move_point;
+  //     let y = area.height - tasksDetail[i].location_y * percent;
 
-    for (let i = 0; i < tasksDetail.length - 1; i++) {
-      let x = tasksDetail[i].location_x * percent + area.move_point;
-      let y = area.height - tasksDetail[i].location_y * percent;
+  //     let x_next = tasksDetail[i + 1].location_x * percent + area.move_point;
+  //     let y_next = area.height - tasksDetail[i + 1].location_y * percent;
 
-      let x_next = tasksDetail[i + 1].location_x * percent + area.move_point;
-      let y_next = area.height - tasksDetail[i + 1].location_y * percent;
+  //     let x_prev;
+  //     // let y_prev;
 
-      let x_prev;
-      // let y_prev;
+  //     if (i > 0) {
+  //       x_prev = tasksDetail[i - 1].location_x * percent + area.move_point;
+  //       // y_prev = area.height - tasksDetail[i - 1].location_y * percent;
+  //     }
 
-      if (i > 0) {
-        x_prev = tasksDetail[i - 1].location_x * percent + area.move_point;
-        // y_prev = area.height - tasksDetail[i - 1].location_y * percent;
-      }
+  //     if (i === 0) {
+  //       if (x === x_next) {
+  //         path1.moveTo(x + 10, y);
+  //         path2.moveTo(x - 10, y);
+  //       } else {
+  //         path1.moveTo(x, y + 10);
+  //         path2.moveTo(x, y - 10);
+  //       }
+  //     } else if (i === tasksDetail.length - 2) {
+  //       if (x === x_prev) {
+  //         path1.lineTo(x + 10, y);
+  //         path2.lineTo(x - 10, y);
+  //       } else {
+  //         path1.lineTo(x, y + 10);
+  //         path2.lineTo(x, y - 10);
+  //       }
+  //       if (x === x_next) {
+  //         path1.moveTo(x + 10, y);
+  //         path2.moveTo(x - 10, y);
+  //       } else {
+  //         path1.moveTo(x, y + 10);
+  //         path2.moveTo(x, y - 10);
+  //       }
 
-      if (i === 0) {
-        if (x === x_next) {
-          path1.moveTo(x + 10, y);
-          path2.moveTo(x - 10, y);
-        } else {
-          path1.moveTo(x, y + 10);
-          path2.moveTo(x, y - 10);
-        }
-      } else if (i === tasksDetail.length - 2) {
-        if (x === x_prev) {
-          path1.lineTo(x + 10, y);
-          path2.lineTo(x - 10, y);
-        } else {
-          path1.lineTo(x, y + 10);
-          path2.lineTo(x, y - 10);
-        }
-        if (x === x_next) {
-          path1.moveTo(x + 10, y);
-          path2.moveTo(x - 10, y);
-        } else {
-          path1.moveTo(x, y + 10);
-          path2.moveTo(x, y - 10);
-        }
+  //       if (x === x_next) {
+  //         path1.lineTo(x_next + 10, y_next);
+  //         path2.lineTo(x_next - 10, y_next);
+  //       } else {
+  //         path1.lineTo(x_next, y_next + 10);
+  //         path2.lineTo(x_next, y_next - 10);
+  //       }
+  //     } else {
+  //       if (x === x_prev) {
+  //         path1.lineTo(x + 10, y);
+  //         path2.lineTo(x - 10, y);
+  //       } else {
+  //         path1.lineTo(x, y + 10);
+  //         path2.lineTo(x, y - 10);
+  //       }
 
-        if (x === x_next) {
-          path1.lineTo(x_next + 10, y_next);
-          path2.lineTo(x_next - 10, y_next);
-        } else {
-          path1.lineTo(x_next, y_next + 10);
-          path2.lineTo(x_next, y_next - 10);
-        }
-      } else {
-        if (x === x_prev) {
-          path1.lineTo(x + 10, y);
-          path2.lineTo(x - 10, y);
-        } else {
-          path1.lineTo(x, y + 10);
-          path2.lineTo(x, y - 10);
-        }
+  //       if (x === x_next) {
+  //         path1.moveTo(x + 10, y);
+  //         path2.moveTo(x - 10, y);
+  //       } else {
+  //         path1.moveTo(x, y + 10);
+  //         path2.moveTo(x, y - 10);
+  //       }
+  //     }
+  //   }
 
-        if (x === x_next) {
-          path1.moveTo(x + 10, y);
-          path2.moveTo(x - 10, y);
-        } else {
-          path1.moveTo(x, y + 10);
-          path2.moveTo(x, y - 10);
-        }
-      }
-    }
-
-    ctx.stroke(path1);
-    ctx.stroke(path2);
-    ctx.restore();
-  }
+  //   ctx.stroke(path1);
+  //   ctx.stroke(path2);
+  //   ctx.restore();
+  // }
 
   // ctx.save();
 
