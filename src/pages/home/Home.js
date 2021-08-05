@@ -44,7 +44,7 @@ export default function Home(props) {
     notification[type]({
       message: msgTitle,
       icon: icon,
-      duration: 3
+      duration: 3,
     });
   };
 
@@ -99,6 +99,16 @@ export default function Home(props) {
                 openNotification(
                   "warning",
                   `Status of vehicle ${codeVehicle} is stop`,
+                  icon
+                );
+
+                break;
+              case 4:
+                icon = <WarningOutlined style={{ color: "#f50" }} />;
+
+                openNotification(
+                  "warning",
+                  `Status of vehicle ${codeVehicle} is error stop`,
                   icon
                 );
 
