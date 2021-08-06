@@ -517,7 +517,7 @@ export const loadAvatar = async (path) => {
   return "";
 };
 
-export const onCreateNewDevice = async (bodyData) => {
+export const createVehicle = async (bodyData) => {
   try {
     let currentTimeStamp = moment().format();
 
@@ -536,13 +536,13 @@ export const onCreateNewDevice = async (bodyData) => {
     ]);
 
     if (error) {
-      console.log("error_onCreateNewDevice", error);
+      console.log("error_createVehicle", error);
       return error;
     }
 
     return data;
   } catch (error) {
-    console.log("error_onCreateNewDevice", error);
+    console.log("error_createVehicle", error);
     return error;
   }
 };
@@ -578,7 +578,7 @@ export const onCreateNewStaff = async (bodyData) => {
       );
 
       if (res.error) {
-        console.log("error_onCreateNewDevice: ", res.error);
+        console.log("error_createVehicle: ", res.error);
         return res;
       }
       console.log("data: ", res);
@@ -588,7 +588,7 @@ export const onCreateNewStaff = async (bodyData) => {
       //push login page
     }
   } catch (error) {
-    console.log("error_onCreateNewDevice", error);
+    console.log("error_createVehicle", error);
     return error;
   }
 };
@@ -688,7 +688,7 @@ export const onUpdateStaff = async (bodyData) => {
       );
 
       if (res.error) {
-        console.log("error_onCreateNewDevice: ", res.error);
+        console.log("error_createVehicle: ", res.error);
         return res;
       }
       console.log("data: ", res);
@@ -698,7 +698,7 @@ export const onUpdateStaff = async (bodyData) => {
       //push login page
     }
   } catch (error) {
-    console.log("error_onCreateNewDevice", error);
+    console.log("error_createVehicle", error);
     return error;
   }
 };

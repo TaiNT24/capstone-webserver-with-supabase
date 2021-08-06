@@ -1,6 +1,6 @@
 import { Modal, message, Form, Input } from "antd";
 import { useEffect, useState } from "react";
-import { onCreateNewDevice } from "../../lib/Store";
+import { createVehicle } from "../../lib/Store";
 
 const key = "insert_new_vehicle";
 
@@ -25,7 +25,7 @@ export default function NewVehicle(props) {
         console.log("Values on submit: " + values);
         message.loading({ content: "Creating new vehicle...", key });
 
-        onCreateNewDevice(values).then((dataRes) => {
+        createVehicle(values).then((dataRes) => {
           if (dataRes.length > 0) {
             handleCloseModal();
 
@@ -35,7 +35,7 @@ export default function NewVehicle(props) {
               duration: 2,
             });
           } else {
-            console.log("Error_onCreateNewDevice: " + onCreateNewDevice);
+            console.log("Error_createVehicle: " + createVehicle);
             message.error({
               content: `Create new vehicle error! message: ${dataRes}`,
               key,
