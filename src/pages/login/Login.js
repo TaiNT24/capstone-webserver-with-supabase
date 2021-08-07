@@ -160,6 +160,11 @@ export default function LoginForm() {
                           message: "Password at least 6 characters!",
                           validateTrigger: ["onFinish"],
                         },
+                        {
+                          max: 30,
+                          message: "Password maximum is 30 characters!",
+                          validateTrigger: ["onFinish"],
+                        },
                       ]}
                     >
                       <Input.Password
