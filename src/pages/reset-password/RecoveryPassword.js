@@ -136,13 +136,18 @@ export default function RecoveryPassword() {
                         message: "Password at least 6 characters!",
                         validateTrigger: ["onFinish"],
                       },
+                      {
+                        max: 30,
+                        message: "Password maximum is 30 characters!",
+                        validateTrigger: ["onFinish"],
+                      },
                     ]}
                   >
                     <Input.Password
                       className="item-input"
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="Confirm Password"
+                      placeholder="New Password"
                       iconRender={(visible) =>
                         visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                       }
@@ -159,7 +164,12 @@ export default function RecoveryPassword() {
                       },
                       {
                         min: 6,
-                        message: "Confirm Password at least 6 characters!",
+                        message: "Password at least 6 characters!",
+                        validateTrigger: ["onFinish"],
+                      },
+                      {
+                        max: 30,
+                        message: "Password maximum is 30 characters!",
                         validateTrigger: ["onFinish"],
                       },
                       {
@@ -181,7 +191,7 @@ export default function RecoveryPassword() {
                       className="item-input"
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="Password"
+                      placeholder="Confirm Password"
                       iconRender={(visible) =>
                         visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                       }
