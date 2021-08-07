@@ -7,6 +7,7 @@ import VehicleDetails from "./vehicle/VehicleDetails";
 import Vehicles from "./vehicle/Vehicles";
 import Tasks from "./task/Tasks";
 import TaskDetail from "./task/TaskDetail";
+import Profile from "./profile/Profile";
 
 const routes = [
   {
@@ -14,6 +15,12 @@ const routes = [
     exact: true,
     restricted: true, // <-- NEW
     component: Vehicles,
+  },
+  {
+    path: "/profile",
+    exact: true,
+    restricted: true, // <-- NEW
+    component: Profile,
   },
   {
     path: "/log",

@@ -3,7 +3,8 @@ import {
   UserOutlined,
   LaptopOutlined,
   LogoutOutlined,
-  HistoryOutlined
+  HistoryOutlined,
+  
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -58,7 +59,7 @@ export default function Siderbar(props) {
         width={250}
       >
         <div className="logo" />
-        <MainTitle value={"Welcome"} level={4} style={{color: "white"}}/>
+        <MainTitle value={"Welcome"} level={4} style={{ color: "white" }} />
         <Menu
           theme="dark"
           mode="inline"
@@ -84,14 +85,17 @@ export default function Siderbar(props) {
             </Menu.Item>
 
             <Menu.Item icon={<LaptopOutlined />} key="/log">
-            <Link to="/log">Track vehicle's log</Link>
-          </Menu.Item>
+              <Link to="/log">Track vehicle's log</Link>
+            </Menu.Item>
           </Menu.ItemGroup>
 
-          <Menu.ItemGroup title="My account" >
-            {/* <Menu.Item key="/about" icon={<UserOutlined />}>
-              <Link to="/about">My Profile</Link>
-            </Menu.Item> */}
+          <Menu.ItemGroup title="My account">
+            <Menu.Item
+              key="/profile"
+              icon={<UserOutlined />}
+            >
+              <Link to="/profile">My Profile</Link>
+            </Menu.Item>
 
             <Menu.Item
               key="/logout"

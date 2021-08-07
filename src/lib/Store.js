@@ -665,6 +665,7 @@ export const onUpdateStaff = async (bodyData) => {
 
       formData.append("id", bodyData.id);
       formData.append("full_name", bodyData.fullname);
+      formData.append("role", bodyData.role);
       formData.append(
         "birthday",
         moment(bodyData.birthday).format("YYYY-MM-DD").toString()
