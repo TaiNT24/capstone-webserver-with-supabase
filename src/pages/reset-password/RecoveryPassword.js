@@ -142,7 +142,7 @@ export default function RecoveryPassword() {
                       className="item-input"
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="Password"
+                      placeholder="Confirm Password"
                       iconRender={(visible) =>
                         visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                       }
@@ -168,7 +168,7 @@ export default function RecoveryPassword() {
                           let password = passwordRef.current.state.value;
                           if (value !== password) {
                             return Promise.reject(
-                              "Confirm password not match password!"
+                              "Confirm password does not match password!"
                             );
                           } else {
                             return Promise.resolve();
