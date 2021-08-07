@@ -265,7 +265,7 @@ export default function StaffProfile(props) {
               });
             });
             message.success({
-              content: "Update staff successfully!",
+              content: "Update information successfully!",
               key_message,
               duration: 2,
             });
