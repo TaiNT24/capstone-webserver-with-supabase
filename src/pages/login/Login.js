@@ -13,7 +13,7 @@ import {
 const { Title } = Typography;
 
 const login = "Login";
-const forget_password = "Reset Password";
+const forget_password = "Forgot Password";
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,7 +31,7 @@ export default function LoginForm() {
     if (linkButtonText === forget_password) {
       setLinkButtonText(login);
       setType(forget_password);
-      setActionButton(forget_password);
+      setActionButton("Send email");
       setTextTitle(forget_password);
     } else if (linkButtonText === login) {
       setLinkButtonText(forget_password);
