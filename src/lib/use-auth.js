@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { supabase } from "./Store";
+import axios from "axios";
+
+const url_avs_server = 'https://api.amr-system.me';
+const reset_password = "/users/recovery-password";
 
 const authContext = createContext();
 
@@ -147,12 +151,47 @@ function useProvideAuth() {
     };
   };
 
+  const recoveryPassword = async (email) => {
+    let res = await axios.post(url_avs_server + reset_password, {
+      email: email,
+    });
+
+    console.log("res: ", res);
+    console.log("error: ", res.error);
+
+    return {
+      data: res.data.data,
+      error: res.data.error,
+    };
+
+    // return res;
+
+    // let { data, error } = await supabase.auth.api.resetPasswordForEmail(email);
+    // console.log("data_recoveryPassword: " , data);
+    // console.log("error_recoveryPassword: ", error);
+
+    // return {
+    //   data: data,
+    //   error: error
+    // }
+  };
+
   const signout = async (callbackFunc) => {
     let { error } = await supabase.auth.signOut();
     if (error) throw error;
 
     setUser(null);
     if (callbackFunc) callbackFunc();
+  };
+
+  const updatePassword = async (access_token, new_password) => {
+    const { error, data } = await supabase.auth.api.updateUser(access_token, {
+      password: new_password,
+    });
+    return {
+      error: error,
+      data: data
+    }
   };
 
   // Return the user object and auth methods
@@ -162,5 +201,7 @@ function useProvideAuth() {
     signin,
     signout,
     isLogin,
+    recoveryPassword,
+    updatePassword,
   };
 }
