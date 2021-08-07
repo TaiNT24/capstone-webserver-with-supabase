@@ -46,6 +46,8 @@ export default function RecoveryPassword() {
       setAccessToken(token);
     }
     localStorage.clear();
+
+    // eslint-disable-next-line
   }, []);
 
   // useEffect(() => {
