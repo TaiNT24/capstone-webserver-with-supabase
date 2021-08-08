@@ -1,5 +1,5 @@
 import { Table, Layout, Tag } from "antd";
-import { fetchTask, fetchAllStaff } from "../../lib/Store";
+import { fetchTask, fetchAllStaff, fetchDevice } from "../../lib/Store";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -89,13 +89,13 @@ export default function Tasks(props) {
   ];
 
   useEffect(() => {
-    if (props.devices) {
+    fetchDevice().then((devices) => {
       if (!data) {
         setLoading(true);
 
         let deviceListFilter = [];
 
-        props.devices.forEach((device) => {
+        devices.forEach((device) => {
           deviceListFilter.push({
             key: device.id,
             text: device.code,
@@ -113,9 +113,9 @@ export default function Tasks(props) {
           }
         });
       }
-    }
+    })
     // eslint-disable-next-line
-  }, [props.devices]);
+  }, []);
 
   function setupData(dataTask) {
     const dataShow = [];
@@ -164,9 +164,9 @@ export default function Tasks(props) {
               );
           }
 
-          let deviceCode = props.devices.filter(
-            (device) => device.id === task.device_id
-          )[0].code;
+          let deviceCode = devicesFilter.filter(
+            (device) => device.key === task.device_id
+          )[0].text;
 
           let device = (
             <Link

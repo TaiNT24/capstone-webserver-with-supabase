@@ -12,10 +12,15 @@ import {
   Divider,
 } from "antd";
 import { MainTitle } from "../../utils/Text";
-import { CloseCircleOutlined, SaveOutlined } from "@ant-design/icons";
-import { updateVehicle } from "../../lib/Store";
+import {
+  CloseCircleOutlined,
+  SaveOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { fetchDevice, updateVehicle } from "../../lib/Store";
 import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
 import moment from "moment";
+import ConfirmDeleteVehicle from "../../component/ConfirmDeleteVehicle";
 
 const { Title } = Typography;
 
@@ -58,6 +63,10 @@ export default function VehicleDetails(props) {
   const [defaultStatus, setDefaultStatus] = useState();
   const [isSaved, setIsSaved] = useState(false);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [devicesInSystem, setDevicesInSystem] = useState();
+
   useEffect(() => {
     if (props.devices) {
       props.devices.forEach((element) => {
@@ -95,6 +104,11 @@ export default function VehicleDetails(props) {
     // eslint-disable-next-line
   }, [props.devices]);
 
+  useEffect(() => {
+    fetchDevice().then((devices) => {
+      setDevicesInSystem(devices);
+    });
+  }, []);
   const onFinish = (values) => {
     console.log(values);
     if (isSaved) {
@@ -104,7 +118,11 @@ export default function VehicleDetails(props) {
         if (res[0]?.id === device.id) {
           //success
           setIsSaved(!isSaved);
-          message.success({ content: "Update vehicle successfully!", key, duration: 2 });
+          message.success({
+            content: "Update vehicle successfully!",
+            key,
+            duration: 2,
+          });
         } else {
           message.error({
             content: `Update error! message: ${res}`,
@@ -170,7 +188,7 @@ export default function VehicleDetails(props) {
                     {
                       validateTrigger: "onSubmit",
                       validator: (_, value) => {
-                        let arr = props.devices.filter(
+                        let arr = devicesInSystem.filter(
                           (device) => device.code === value
                         );
 
@@ -205,7 +223,7 @@ export default function VehicleDetails(props) {
                       validateTrigger: "onSubmit",
                       validator: (_, value) => {
                         value = value.toUpperCase();
-                        let arr = props.devices.filter(
+                        let arr = devicesInSystem.filter(
                           (device) => device.mac_address === value
                         );
 
@@ -301,7 +319,7 @@ export default function VehicleDetails(props) {
               <LastConnectionTime time={device?.last_connection} />
 
               <Row justify="center">
-              {isSaved ? (
+                {isSaved ? (
                   <Button
                     htmlType="button"
                     style={{ width: "7em" }}
@@ -311,19 +329,28 @@ export default function VehicleDetails(props) {
                   >
                     Cancel
                   </Button>
-                ) : null}
+                ) : (
+                  <Button
+                    htmlType="button"
+                    style={{ width: "7em" }}
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={() => setShowConfirm(true)}
+                  >
+                    Delete
+                  </Button>
+                )}
 
                 <Button
                   form="myForm"
                   type="primary"
                   htmlType="submit"
-                  style={{ width: "7em" , marginLeft: "2em"}}
+                  style={{ width: "7em", marginLeft: "2em" }}
                   icon={<SaveOutlined />}
                   // onClick={() => setIsSaved(!isSaved)}
                 >
                   {isSaved ? "Save" : "Edit"}
                 </Button>
-                
               </Row>
             </Form>
           </Col>
@@ -333,6 +360,14 @@ export default function VehicleDetails(props) {
           <TaskRecentByVehicle idVehicle={id} />
         </Col>
       </Row>
+
+      <ConfirmDeleteVehicle
+        showConfirm={showConfirm}
+        cancleDelete={() => setShowConfirm(false)}
+        code={device?.code}
+        id={device?.id}
+        
+      />
     </div>
   );
 }
@@ -344,7 +379,7 @@ function LastConnectionTime(props) {
     let last_connection_init = moment(props.time).startOf("minutes").fromNow();
     let prevNowPlaying = null;
 
-    if(last_connection_init !== "Invalid date"){
+    if (last_connection_init !== "Invalid date") {
       setTimeaa(moment(props.time).startOf("minutes").fromNow());
 
       prevNowPlaying = setInterval(() => {

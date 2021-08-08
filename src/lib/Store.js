@@ -53,19 +53,23 @@ export const useStoreGetDevice = (props) => {
     if (updateDevice) {
       if (devices) {
         console.log("updateDevice: " + devices);
-        setDevices((devices) =>
-          devices.map((e) => {
-            if (e.id === updateDevice.id) {
-              updateDevice.last_connection = moment(
-                updateDevice.last_connection
-              )
-                .utcOffset(+14, true)
-                .format();
-              e = updateDevice;
-            }
-            return e;
-          })
-        );
+        if (updateDevice.is_delete) {
+          setDevices(devices.filter((device) => device.id !== updateDevice.id));
+        } else {
+          setDevices((devices) =>
+            devices.map((e) => {
+              if (e.id === updateDevice.id) {
+                updateDevice.last_connection = moment(
+                  updateDevice.last_connection
+                )
+                  .utcOffset(+14, true)
+                  .format();
+                e = updateDevice;
+              }
+              return e;
+            })
+          );
+        }
       }
     }
 
@@ -93,6 +97,7 @@ export const useStoreGetDevice = (props) => {
     let { data: devices, error } = await supabase
       .from("devices")
       .select("*")
+      .eq("is_delete", false)
       .order("date_create", { ascending: false });
     // .order("last_connection", { ascending: false });
 
@@ -297,8 +302,8 @@ export const fetchDevice = async () => {
   try {
     let { data: devices, error } = await supabase
       .from("devices")
-      .select("id, code");
-    // .neq("status", 1);
+      .select("id, code")
+      // .eq("is_delete", false);
 
     if (error) {
       console.log("error_fetchDevice", error);
@@ -388,6 +393,36 @@ export const updateVehicle = async (id, dataUpdate) => {
     return data;
   } catch (error) {
     console.log("error_updateVehicle", error);
+    return error;
+  }
+};
+
+export const deleteVehicle = async (id) => {
+  try {
+    const { error : error1 } = await supabase
+      .from("mapping_device")
+      .delete()
+      .eq('device_id', id);
+
+
+    if (error1) {
+      return error1;
+    }
+    
+    const { data, error } = await supabase
+      .from("devices")
+      .update({
+        is_delete: true,
+      })
+      .eq("id", id);
+
+    if (error) {
+      console.log("error_deleteVehicle", error);
+      return error;
+    }
+    return data;
+  } catch (error) {
+    console.log("error_deleteVehicle", error);
     return error;
   }
 };

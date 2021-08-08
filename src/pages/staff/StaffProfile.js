@@ -21,7 +21,6 @@ import UpdateStatusButton from "../../component/UpdateStatusButton";
 import moment from "moment";
 import {
   fetchStaffById,
-  fetchDevice,
   fetchMappingDevice,
   loadAvatar,
   onUpdateStaff,
@@ -161,13 +160,12 @@ export default function StaffProfile(props) {
   }, [urlAvatar, oldUrlAvatar]);
 
   function loadMappingDevice(userId) {
-    fetchDevice().then((devices) => {
       //
       fetchMappingDevice(userId).then((mapping_devices) => {
         const default_children = [];
 
         mapping_devices.map((device) => {
-          devices.map((child) => {
+          props.devices.map((child) => {
             if (device.device_id === child.id) {
               default_children.push(child.code);
             }
@@ -179,7 +177,6 @@ export default function StaffProfile(props) {
         setDefaultChildrenDevice(default_children);
         setOldDefaultChildrenDevice(default_children);
       });
-    });
   }
 
   function beforeUpload(file) {

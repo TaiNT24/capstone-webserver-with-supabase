@@ -1,5 +1,5 @@
 import { Select, message, Button, Row, Col, Tag } from "antd";
-import { fetchDevice, updateMappingDevice } from "../lib/Store";
+import { updateMappingDevice } from "../lib/Store";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -43,10 +43,9 @@ export default function MappingDeviceToUser(props) {
 
     if (!props.isDisable) {
       //Edit device that map to staff
-      fetchDevice().then((devices) => {
         const childrenX = [];
 
-        devices.map((device) => {
+        props.devices.map((device) => {
           childrenX.push(
             <Option key={device.id} value={device.code}>
               {device.code}
@@ -56,8 +55,7 @@ export default function MappingDeviceToUser(props) {
         });
 
         setChildren(childrenX);
-        setDevicesList(devices);
-      });
+        setDevicesList(props.devices);
     } else if (devicesList !== null && props.isSaved) {
       //Save
       message.loading({ content: "Updating...", key });
