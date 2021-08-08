@@ -10,9 +10,7 @@ function ConfirmDeleteVehicle(props) {
 
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState(
-    "This vehicle will be deleted and staffs who can control this vehicle cannot control anymore."
-  );
+  const modalText = "This vehicle will be deleted and staffs who can control this vehicle cannot control anymore.";
 
   const showModal = () => {
     setVisible(true);
