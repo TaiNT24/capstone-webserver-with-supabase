@@ -7,6 +7,7 @@ const key = "insert_new_vehicle";
 export default function NewVehicle(props) {
   const [onOpen, setOnOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [devicesInSystem, setDevicesInSystem] = useState();
 
   const [form] = Form.useForm();
 
@@ -15,6 +16,12 @@ export default function NewVehicle(props) {
       setOnOpen(props.openModal);
     }
   }, [props.openModal]);
+
+  useEffect(() => {
+    fetchDevice().then((devices) => {
+      setDevicesInSystem(devices);
+    });
+  }, []);
 
   function handleSubmit() {
     form
@@ -110,7 +117,7 @@ export default function NewVehicle(props) {
               {
                 validateTrigger: "onSubmit",
                 validator: (_, value) => {
-                  let arr = props.devices.filter(
+                  let arr = devicesInSystem.filter(
                     (device) => device.code === value
                   );
 
@@ -138,7 +145,7 @@ export default function NewVehicle(props) {
               {
                 validateTrigger: "onSubmit",
                 validator: (_, value) => {
-                  let arr = props.devices.filter(
+                  let arr = devicesInSystem.filter(
                     (device) => device.mac_address === value
                   );
 
