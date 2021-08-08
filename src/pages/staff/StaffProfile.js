@@ -236,6 +236,7 @@ export default function StaffProfile(props) {
         values.file_path = user.avatar;
         console.log("user_avatar: ", user.avatar);
         values.avatar_file = avatarFile;
+        values.role = user.role;
 
         console.log(values);
         onUpdateStaff(values).then((res) => {
