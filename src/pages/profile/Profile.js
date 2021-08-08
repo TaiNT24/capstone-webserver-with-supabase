@@ -189,11 +189,11 @@ export default function Profile(props) {
         values.role = user.role;
         onUpdateStaff(values).then((res) => {
           if (res.error) {
-            let message = res.error.message;
-            console.log("error_onUpdateStaff_response: ", message);
+            // let message = res.error.message;
+            // console.log("error_onUpdateStaff_response: ", message);
 
             message.error({
-              content: `Update error! message: ${res}`,
+              content: `Update error! message: ${res.message}`,
               key_message,
               duration: 2,
             });

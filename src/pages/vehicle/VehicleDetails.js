@@ -125,7 +125,7 @@ export default function VehicleDetails(props) {
           });
         } else {
           message.error({
-            content: `Update error! message: ${res}`,
+            content: `Update error! message: ${res.message}`,
             key,
             duration: 2,
           });
