@@ -302,7 +302,7 @@ export const fetchDevice = async () => {
   try {
     let { data: devices, error } = await supabase
       .from("devices")
-      .select("id, code")
+      .select("id, code, mac_address")
       // .eq("is_delete", false);
 
     if (error) {
