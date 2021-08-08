@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FilterDevice from "./FilterDevice";
 // import ClearLog from "./ClearLog";
-import { useStoreGetLog } from "../../lib/Store";
+import { fetchDevice, useStoreGetLog } from "../../lib/Store";
 import { MainTitle } from "../../utils/Text";
 
 // const { Sider, Content } = Layout;
@@ -45,18 +45,25 @@ export default function Logs(props) {
   const [idDeviceFilter, setIdDeviceFilter] = useState([]);
   const [data, setData] = useState();
 
+  const [devices, setDevices] = useState();
+
+  useEffect(() => {
+    fetchDevice().then((device) => {
+      setDevices(device);
+    })
+  }, [])
   useEffect(() => {
     const dataX = [];
     setLoading(true);
 
     if (
       listLog != null &&
-      props.devices != null &&
+      devices != null &&
       listLog.length !== 0 &&
-      props.devices.length !== 0
+      devices.length !== 0
     ) {
       listLog.map((e, index) => {
-        let codeDevice = props.devices.filter(
+        let codeDevice = devices.filter(
           (device) => device.id === e.device
         )[0].code;
 
@@ -86,7 +93,7 @@ export default function Logs(props) {
       setLoading(false);
     }
     // eslint-disable-next-line
-  }, [listLog, props.devices, idDeviceFilter]);
+  }, [listLog, devices, idDeviceFilter]);
 
   useEffect(() => {
     if (listLog) {
@@ -115,7 +122,7 @@ export default function Logs(props) {
       <Layout style={{}}>
         <Content style={{}}>
           <FilterDevice
-            idDeviceList={props.devices}
+            idDeviceList={devices}
             onChangeDeviceFilter={updateIdDeviceFilter}
           />
         </Content>
