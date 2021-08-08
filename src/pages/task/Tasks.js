@@ -107,7 +107,7 @@ export default function Tasks(props) {
 
         fetchTask().then((dataTask) => {
           if (dataTask.length >= 0) {
-            setupData(dataTask);
+            setupData(dataTask, deviceListFilter);
           } else {
             console.log("error_fetchTask: " + dataTask);
           }
@@ -117,7 +117,7 @@ export default function Tasks(props) {
     // eslint-disable-next-line
   }, []);
 
-  function setupData(dataTask) {
+  function setupData(dataTask, deviceListFilter) {
     const dataShow = [];
 
     fetchAllStaff().then((dataStaff) => {
@@ -163,8 +163,7 @@ export default function Tasks(props) {
                 </Tag>
               );
           }
-
-          let deviceCode = devicesFilter.filter(
+          let deviceCode = deviceListFilter.filter(
             (device) => device.key === task.device_id
           )[0].text;
 
