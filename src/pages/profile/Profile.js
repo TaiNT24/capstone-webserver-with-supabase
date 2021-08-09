@@ -238,7 +238,7 @@ export default function Profile(props) {
       <Spin indicator={iconLoading} spinning={loading}>
         <Form onFinish={onFinish} form={form}>
           <Row justify="center">
-            <MainTitle value="Staff Profile" />
+            <MainTitle value="My Profile" />
           </Row>
 
           <Row className="row-center-ele" style={{ marginBottom: "0" }}>
