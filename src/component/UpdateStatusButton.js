@@ -62,6 +62,7 @@ export default function UpdateStatusButton(props) {
         onConfirm={handleOk}
         okButtonProps={{ loading: confirmLoading }}
         onCancel={handleCancel}
+        okText="Yes"
       >
         <Switch
           loading={loadingUpdateStatus}
