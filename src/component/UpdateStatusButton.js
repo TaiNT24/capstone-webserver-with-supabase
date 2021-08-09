@@ -57,7 +57,7 @@ export default function UpdateStatusButton(props) {
   return (
     <>
       <Popconfirm
-        title="Are you sure"
+        title="Are you sure to deactivate this account"
         visible={visible}
         onConfirm={handleOk}
         okButtonProps={{ loading: confirmLoading }}
