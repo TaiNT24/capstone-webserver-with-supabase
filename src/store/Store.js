@@ -9,6 +9,7 @@ import {supabase} from "../utils/supabase";
 const url_avs_server = "https://api.amr-system.me";
 const api_create_new_staff = "/users/create-new-user";
 const api_update_staff = "/users/update-user";
+const api_create_new_vehicle = "/vehicles/vehicle";
 
 export const useStoreGetDevice = (props) => {
   const [devices, setDevices] = useState();
@@ -700,7 +701,7 @@ export const onUpdateStaff = async (bodyData) => {
         "birthday",
         moment(bodyData.birthday).format("YYYY-MM-DD").toString()
       );
-      formData.append("file_path", bodyData.file_path);
+      // formData.append("file_path", bodyData.file_path);
 
       formData.append("avatar", bodyData.avatar_file);
 
@@ -720,6 +721,110 @@ export const onUpdateStaff = async (bodyData) => {
 
       if (res.error) {
         console.log("error_createVehicle: ", res.error);
+        return res;
+      }
+      console.log("data: ", res);
+
+      return res;
+    } else {
+      //push login page
+    }
+  } catch (error) {
+    console.log("error_createVehicle", error);
+    return error;
+  }
+};
+
+export const onCreateNewVehicle = async (bodyData) => {
+  try {
+    let isTrue = await checkExpired();
+
+    if (isTrue) {
+      let formData = new FormData();
+
+      formData.append("code", bodyData.code.toLowerCase());
+      formData.append("mac_address", bodyData.mac_address);
+
+      formData.append("image", bodyData.avatar_file);
+
+      let token = supabase.auth.currentSession.access_token;
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      let res = await axios.post(
+        url_avs_server + api_create_new_vehicle,
+        formData,
+        config
+      );
+
+      if (res.error) {
+        console.log("error_createVehicle: ", res.error);
+        return res;
+      }
+      console.log("data: ", res);
+
+      return res;
+    } else {
+      //push login page
+    }
+  } catch (error) {
+    console.log("error_createVehicle", error);
+    return error;
+  }
+};
+
+export const loadImgVehicle = async (path) => {
+  try {
+    const { signedURL, error2 } = await supabase.storage
+      .from("vehicles")
+      .createSignedUrl(path, 3600);
+
+    if (error2) {
+      console.log("error_loadAvatar: ", error2);
+      return "";
+    }
+    console.log("data avatar: " + signedURL);
+
+    return signedURL;
+  } catch (error) {
+    console.log("catch_error_loadAvatar: ", error);
+  }
+  return "";
+};
+
+export const onUpdateVehicle = async (bodyData) => {
+  try {
+    let isTrue = await checkExpired();
+
+    if (isTrue) {
+      let formData = new FormData();
+
+      formData.append("code", bodyData.code.toLowerCase());
+      formData.append("mac_address", bodyData.mac_address);
+      formData.append("id", bodyData.id);
+
+      formData.append("image", bodyData.avatar_file);
+
+      let token = supabase.auth.currentSession.access_token;
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      let res = await axios.patch(
+        url_avs_server + api_create_new_vehicle,
+        formData,
+        config
+      );
+
+      if (res.error) {
+        console.log("error_updateVehicle: ", res.error);
         return res;
       }
       console.log("data: ", res);

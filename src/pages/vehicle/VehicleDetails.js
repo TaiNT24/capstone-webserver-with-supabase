@@ -9,18 +9,23 @@ import {
   Button,
   Form,
   message,
-  Divider,
+  Avatar,
+  Upload,
+  notification
 } from "antd";
 import { MainTitle } from "../../utils/Text";
 import {
   CloseCircleOutlined,
   SaveOutlined,
   DeleteOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
-import { fetchDevice, updateVehicle } from "../../store/Store";
+import { checkServer, fetchDevice, loadImgVehicle, onUpdateVehicle, updateVehicle } from "../../store/Store";
 import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
 import moment from "moment";
 import ConfirmDeleteVehicle from "../../component/ConfirmDeleteVehicle";
+import { getBase64 } from "../../lib/common_function";
+import VehicleIcon from "../../lib/custome-icon/VehicleIcon";
 
 const { Title } = Typography;
 
@@ -67,11 +72,21 @@ export default function VehicleDetails(props) {
 
   const [devicesInSystem, setDevicesInSystem] = useState();
 
+  const [urlAvatar, setUrlAvatar] = useState();
+  const [oldUrlAvatar, setOldUrlAvatar] = useState();
+  const [avatarFile, setAvatarFile] = useState();
+
   useEffect(() => {
     if (props.devices) {
       props.devices.forEach((element) => {
         if (element.id === Number(id)) {
           setDevice(element);
+
+          //img
+          loadImgVehicle(element.image).then((res) => {
+            setUrlAvatar(res);
+            setOldUrlAvatar(res);
+          });
 
           //battery
           let colorBattery = "green";
@@ -109,28 +124,43 @@ export default function VehicleDetails(props) {
       setDevicesInSystem(devices);
     });
   }, []);
+
   const onFinish = (values) => {
     console.log(values);
     if (isSaved) {
       message.loading({ content: "Updating...", key });
 
-      updateVehicle(device.id, values).then((res) => {
-        if (res[0]?.id === device.id) {
-          //success
-          setIsSaved(!isSaved);
-          message.success({
-            content: "Update vehicle successfully!",
-            key,
-            duration: 2,
+      checkServer().then((res) => {
+        if (!res) {
+          console.log("res res: ", res);
+          notification["error"]({
+            message: "Server is error, please try again later",
+            icon: <CloseCircleOutlined style={{ color: "#cd201f" }} />,
           });
+          // setLoading(false);
         } else {
-          message.error({
-            content: `Update error! message: ${res.message}`,
-            key,
-            duration: 2,
+          values.avatar_file = avatarFile;
+          values.id = device.id;
+
+          onUpdateVehicle(values).then((res) => {
+            if (res.status === 200) {
+              //success
+              setIsSaved(!isSaved);
+              message.success({
+                content: "Update vehicle successfully!",
+                key,
+                duration: 2,
+              });
+            } else {
+              message.error({
+                content: `Update error! message: ${res.message}`,
+                key,
+                duration: 2,
+              });
+            }
           });
         }
-      });
+      })
     } else {
       setIsSaved(!isSaved);
     }
@@ -139,7 +169,47 @@ export default function VehicleDetails(props) {
   const onReset = () => {
     form.resetFields();
     setIsSaved(false);
+    setUrlAvatar(oldUrlAvatar);
   };
+
+  const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+    setAvatarFile(file);
+  };
+
+  function beforeUpload(file) {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must smaller than 2MB!");
+    }
+    return isJpgOrPng && isLt2M;
+  }
+
+  function handleChange(info) {
+    if (info.file.status === "uploading") {
+      return;
+    }
+    if (info.file.status === "done") {
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        // setImageUrl(imageUrl);
+        setUrlAvatar(imageUrl);
+      });
+    }
+  }
 
   return (
     <div className="ant-layout-inside" height="100vh">
@@ -164,7 +234,35 @@ export default function VehicleDetails(props) {
                 Vehicle Information
               </Title>
 
-              <Divider style={{ margin: "1em" }} />
+              <Row className="row-center-ele">
+                <Col span={12}>
+                  {urlAvatar ? (
+                    <img src={urlAvatar} className="photo" />
+                  ) : (
+                    <Avatar size={128} icon={<VehicleIcon />} shape="square" />
+                  )}
+                </Col>
+                <Col span={12} style={{ marginTop: "4em" }}>
+                  <Form.Item
+                    name="image"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    // initialValue={urlAvatar}
+                  >
+                    <Upload
+                      name="avatar"
+                      showUploadList={false}
+                      customRequest={dummyRequest}
+                      beforeUpload={beforeUpload}
+                      onChange={handleChange}
+                    >
+                      <Button icon={<UploadOutlined />} disabled={!isSaved}>
+                        Update image
+                      </Button>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
 
               <RowInline title="Code:">
                 <Form.Item
@@ -255,17 +353,11 @@ export default function VehicleDetails(props) {
                 </Form.Item>
               </RowInline>
 
-              <RowInline title="Date Create:" marginBottom="2em">
-                {/* <Input
-                  style={{}}
-                  size="large"
-                  value=
-                  readOnly
-                /> */}
+              {/* <RowInline title="Date Create:" marginBottom="2em">
                 <span style={{ fontSize: "1.1em" }}>
                   {moment(device?.date_create).format("YYYY-MM-DD, HH:mm:ss")}
                 </span>
-              </RowInline>
+              </RowInline> */}
 
               <RowInline title="Battery:" marginBottom="2em">
                 <Tag
@@ -366,7 +458,6 @@ export default function VehicleDetails(props) {
         cancleDelete={() => setShowConfirm(false)}
         code={device?.code}
         id={device?.id}
-        
       />
     </div>
   );
