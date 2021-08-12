@@ -20,7 +20,7 @@ import {
   DeleteOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { checkServer, fetchDevice, loadImgVehicle, onUpdateVehicle, updateVehicle } from "../../store/Store";
+import { checkServer, fetchDevice, loadImgVehicle, onUpdateVehicle } from "../../store/Store";
 import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
 import moment from "moment";
 import ConfirmDeleteVehicle from "../../component/ConfirmDeleteVehicle";
@@ -237,7 +237,7 @@ export default function VehicleDetails(props) {
               <Row className="row-center-ele" align="middle">
                 <Col span={12}>
                   {urlAvatar ? (
-                    <img src={urlAvatar} className="photo" />
+                    <img src={urlAvatar} className="photo" alt="Image of vehicle"/>
                   ) : (
                     <Avatar size={128} icon={<VehicleIcon />} shape="square" />
                   )}
