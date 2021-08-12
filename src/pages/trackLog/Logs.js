@@ -13,7 +13,7 @@ const { Text } = Typography;
 const columns = [
   {
     title: "Time",
-    width: 250,
+    width: 300,
     dataIndex: "time",
     key: "time",
     sorter: (a, b) => moment(a.time).isAfter(b.time),
@@ -21,7 +21,7 @@ const columns = [
   },
   {
     title: "Vehicle's Code",
-    width: 200,
+    width: 150,
     dataIndex: "idDevice",
     key: "idDevice",
   },
@@ -105,6 +105,7 @@ export default function Logs(props) {
 
   function updateIdDeviceFilter(value) {
     setIdDeviceFilter(value);
+    setIsEndLog(false)
   }
 
   function handleLoadMore() {
