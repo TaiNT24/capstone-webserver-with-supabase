@@ -71,7 +71,7 @@ export default function RecoveryPassword() {
         .then(({ data, error }) => {
           if (error) {
             setErrorMessage(error.message);
-          }else {
+          } else {
             // setErrorMessage("Update password success!");
             setIsResetSuccess(true);
           }
@@ -207,6 +207,10 @@ export default function RecoveryPassword() {
                       {actionButton}
                     </Button>
                   </Form.Item>
+
+                  <Row justify="center">
+                    <Link to="/login">Login</Link>
+                  </Row>
 
                   <Title
                     style={{
