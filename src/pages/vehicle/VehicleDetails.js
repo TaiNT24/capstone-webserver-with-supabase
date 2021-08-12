@@ -237,7 +237,7 @@ export default function VehicleDetails(props) {
               <Row className="row-center-ele" align="middle">
                 <Col span={12}>
                   {urlAvatar ? (
-                    <img src={urlAvatar} className="photo" alt="Image of vehicle"/>
+                    <img src={urlAvatar} className="photo" alt="Vehicle"/>
                   ) : (
                     <Avatar size={128} icon={<VehicleIcon />} shape="square" />
                   )}

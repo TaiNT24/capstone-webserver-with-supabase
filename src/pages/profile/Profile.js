@@ -285,7 +285,7 @@ export default function Profile(props) {
                       validateTrigger: "onSubmit",
                     },
                     {
-                      pattern: /^([a-zA-Z\s]*)$/,
+                      pattern: /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$/,///^([a-zA-Z\s]*)$/,
                       message: "Please input valid full name!",
                       validateTrigger: "onSubmit",
                     },
