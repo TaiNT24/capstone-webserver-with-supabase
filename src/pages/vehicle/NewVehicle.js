@@ -127,8 +127,6 @@ export default function NewVehicle(props) {
 
     while (isDup) {
       code = Math.floor(Math.random() * 10000);
-      array;
-      debugger;
       if (code < 1000 || array.includes(code.toString())) {
         isDup = true;
       } else {
