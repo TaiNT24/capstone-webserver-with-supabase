@@ -219,6 +219,9 @@ export default function StaffProfile(props) {
   };
 
   const onFinish = async (values) => {
+    form.setFieldsValue({
+      fullname: values.fullname.trim(),
+    });
     setLoading(true);
     checkServer().then((res) => {
       if (!res) {

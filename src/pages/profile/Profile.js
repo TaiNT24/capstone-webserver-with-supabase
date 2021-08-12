@@ -170,6 +170,9 @@ export default function Profile(props) {
   };
 
   const onFinish = async (values) => {
+    form.setFieldsValue({
+      fullname: values.fullname.trim(),
+    });
     setLoading(true);
     checkServer().then((res) => {
       if (!res) {

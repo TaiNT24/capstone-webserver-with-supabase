@@ -76,6 +76,10 @@ export default function NewStaffInfo(props) {
   }
 
   const onFinish = (values) => {
+    form.setFieldsValue({
+      fullname: values.fullname.trim(),
+    });
+    
     console.log(values);
     values.role = "staff";
     props.onNextStep(values);
