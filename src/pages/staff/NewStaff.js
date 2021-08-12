@@ -8,7 +8,7 @@ import {
   onCreateNewStaff,
   onInsertMappingDevice,
   // uploadAvatar,
-} from "../../lib/Store";
+} from "../../store/Store";
 import ReviewNewStaff from "../../component/ReviewNewStaff";
 
 const { Step } = Steps;

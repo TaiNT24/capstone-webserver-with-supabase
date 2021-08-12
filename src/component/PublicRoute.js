@@ -2,7 +2,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { useAuth } from "../lib/use-auth";
+import { useAuth } from "../store/use-auth";
 
 
 export default function PublicRoute({ children, ...rest }) {

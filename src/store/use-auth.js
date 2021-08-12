@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
-import { supabase } from "./Store";
+// import { supabase } from "./Store";
 import axios from "axios";
+import {supabase} from "../utils/supabase";
 
+// const url_avs_server = "http://localhost:3001";
 const url_avs_server = 'https://api.amr-system.me';
 const reset_password = "/users/recovery-password";
 

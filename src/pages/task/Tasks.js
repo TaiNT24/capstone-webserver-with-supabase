@@ -1,5 +1,5 @@
 import { Table, Layout, Tag } from "antd";
-import { fetchTask, fetchAllStaff, fetchDevice } from "../../lib/Store";
+import { fetchTask, fetchAllStaff, fetchDevice } from "../../store/Store";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";

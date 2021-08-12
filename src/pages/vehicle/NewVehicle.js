@@ -1,6 +1,6 @@
 import { Modal, message, Form, Input } from "antd";
 import { useEffect, useState } from "react";
-import { createVehicle, fetchDevice } from "../../lib/Store";
+import { createVehicle, fetchDevice } from "../../store/Store";
 
 const key = "insert_new_vehicle";
 

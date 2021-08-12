@@ -1,5 +1,5 @@
 import { Select, message, Button, Row, Col, Tag } from "antd";
-import { updateMappingDevice } from "../lib/Store";
+import { updateMappingDevice } from "../store/Store";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ExclamationCircleOutlined } from "@ant-design/icons";

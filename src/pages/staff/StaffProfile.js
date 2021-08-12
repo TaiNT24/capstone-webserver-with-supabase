@@ -25,7 +25,7 @@ import {
   loadAvatar,
   onUpdateStaff,
   checkServer,
-} from "../../lib/Store";
+} from "../../store/Store";
 import MappingDeviceToUser from "../../component/MappingDeviceToUser";
 import {
   EditOutlined,

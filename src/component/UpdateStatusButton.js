@@ -1,6 +1,6 @@
 import { Switch, Popconfirm } from "antd";
 import { useState, useEffect } from "react";
-import { updateStatusStaff } from "../lib/Store";
+import { updateStatusStaff } from "../store/Store";
 
 export default function UpdateStatusButton(props) {
   const [visible, setVisible] = useState(false);

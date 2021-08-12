@@ -1,6 +1,6 @@
 import { Form, Input, Button, Row, Col, Typography, Spin } from "antd";
 import { LockOutlined } from "@ant-design/icons";
-import { useAuth } from "../../lib/use-auth";
+import { useAuth } from "../../store/use-auth";
 import { Link, useHistory } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import img from "../../lib/img/background_login_min.jpeg";

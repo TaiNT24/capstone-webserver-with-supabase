@@ -3,7 +3,7 @@ import { MainTitle } from "../utils/Text";
 import { ExclamationCircleOutlined, UserOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { loadAvatar } from "../lib/Store";
+import { loadAvatar } from "../store/Store";
 
 const { Title } = Typography;
 

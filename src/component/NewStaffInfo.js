@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { MainTitle } from "../utils/Text";
 import moment from "moment";
-import { fetchAllStaff } from "../lib/Store";
+import { fetchAllStaff } from "../store/Store";
 import {
   UserOutlined,
   UploadOutlined,

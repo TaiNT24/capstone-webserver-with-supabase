@@ -1,8 +1,8 @@
 import { Layout, notification } from "antd";
 import Sidebar from "../../component/Siderbar";
 import Content from "../../component/Content";
-import { useAuth } from "../../lib/use-auth";
-import { useStoreGetDevice } from "../../lib/Store";
+import { useAuth } from "../../store/use-auth";
+import { useStoreGetDevice } from "../../store/Store";
 import { useEffect, useState } from "react";
 import {
   CheckCircleOutlined,

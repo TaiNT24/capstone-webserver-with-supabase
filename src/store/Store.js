@@ -1,19 +1,14 @@
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import moment from "moment";
+import {supabase} from "../utils/supabase";
 
 // axios.defaults.headers.common["apikey"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
-const url_avs_server = 'https://api.amr-system.me';
-const api_create_new_staff = '/users/create-new-user';
+// const url_avs_server = "http://localhost:3001";
+const url_avs_server = "https://api.amr-system.me";
+const api_create_new_staff = "/users/create-new-user";
 const api_update_staff = "/users/update-user";
-
-export const supabase = createClient(
-  process.env.REACT_APP_PUBLIC_SUPABASE_URL,
-  process.env.REACT_APP_PUBLIC_SUPABASE_KEY
-  // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjIyNjA3MTA1LCJleHAiOjE5MzgxODMxMDV9.cyBPtsY2EBcRLWPHEmL9nSdUqglFzPv4tZlmPaF3sEw"
-);
 
 export const useStoreGetDevice = (props) => {
   const [devices, setDevices] = useState();

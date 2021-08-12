@@ -17,7 +17,7 @@ import {
   SaveOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { fetchDevice, updateVehicle } from "../../lib/Store";
+import { fetchDevice, updateVehicle } from "../../store/Store";
 import TaskRecentByVehicle from "../task/TaskRecentByVehicle";
 import moment from "moment";
 import ConfirmDeleteVehicle from "../../component/ConfirmDeleteVehicle";

@@ -1,6 +1,6 @@
 import { List, Button, Skeleton, Typography, Descriptions, Tag } from "antd";
 import { useState, useEffect } from "react";
-import { fetchAllStaff, fetchTaskByVehicleId } from "../../lib/Store";
+import { fetchAllStaff, fetchTaskByVehicleId } from "../../store/Store";
 import {
   CheckCircleOutlined,
   SyncOutlined,

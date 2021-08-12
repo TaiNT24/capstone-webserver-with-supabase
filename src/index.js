@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { ProvideAuth } from "./lib/use-auth";
+import { ProvideAuth } from "./store/use-auth";
 
 ReactDOM.render(
   // <React.StrictMode>

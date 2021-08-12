@@ -22,8 +22,8 @@ import {
   loadAvatar,
   onUpdateStaff,
   checkServer,
-  supabase,
-} from "../../lib/Store";
+} from "../../store/Store";
+import {supabase} from "../../utils/supabase";
 import {
   CloseCircleOutlined,
   UserOutlined,

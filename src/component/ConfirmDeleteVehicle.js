@@ -1,7 +1,7 @@
 import { Modal, message } from "antd";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { deleteVehicle } from "../lib/Store";
+import { deleteVehicle } from "../store/Store";
 
 const key = "delete";
 

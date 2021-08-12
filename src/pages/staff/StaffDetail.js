@@ -3,7 +3,7 @@ import {
   fetchStaffById,
   fetchDevice,
   fetchMappingDevice,
-} from "../../lib/Store";
+} from "../../store/Store";
 import {
   Avatar,
   Layout,

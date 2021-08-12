@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FilterDevice from "./FilterDevice";
 // import ClearLog from "./ClearLog";
-import { fetchDevice, useStoreGetLog } from "../../lib/Store";
+import { fetchDevice, useStoreGetLog } from "../../store/Store";
 import { MainTitle } from "../../utils/Text";
 
 // const { Sider, Content } = Layout;

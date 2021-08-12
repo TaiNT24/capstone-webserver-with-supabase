@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 import { useState, useEffect } from "react";
-import { useAuth } from "../lib/use-auth";
+import { useAuth } from "../store/use-auth";
 import { useHistory } from "react-router-dom";
 
 

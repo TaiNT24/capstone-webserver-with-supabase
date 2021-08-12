@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { fetchTaskDetailById } from "../../lib/Store";
+import { fetchTaskDetailById } from "../../store/Store";
 
 let percent = 1;
 const font_coordinate = "14px Arial";

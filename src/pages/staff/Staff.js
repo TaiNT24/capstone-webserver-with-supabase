@@ -4,7 +4,7 @@ import {
   fetchStaffCount,
   searchStaffLikeEmail,
   checkServer,
-} from "../../lib/Store";
+} from "../../store/Store";
 import { useState, useEffect } from "react";
 import UpdateStatusButton from "../../component/UpdateStatusButton";
 import StaffProfile from "./StaffProfile";
