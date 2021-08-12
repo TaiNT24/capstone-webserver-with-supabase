@@ -234,7 +234,7 @@ export default function VehicleDetails(props) {
                 Vehicle Information
               </Title>
 
-              <Row className="row-center-ele">
+              <Row className="row-center-ele" align="middle">
                 <Col span={12}>
                   {urlAvatar ? (
                     <img src={urlAvatar} className="photo" />
@@ -242,7 +242,7 @@ export default function VehicleDetails(props) {
                     <Avatar size={128} icon={<VehicleIcon />} shape="square" />
                   )}
                 </Col>
-                <Col span={12} style={{ marginTop: "4em" }}>
+                <Col span={11} offset={1}  style={{ marginTop: "2em" }} >
                   <Form.Item
                     name="image"
                     valuePropName="fileList"
