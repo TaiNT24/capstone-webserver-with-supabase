@@ -229,7 +229,7 @@ export default function NewVehicle(props) {
                       src={urlAvatar}
                       shape="square"
                     />
-                    <Button icon={<UploadOutlined />}>Update image</Button>
+                    <Button icon={<UploadOutlined />}>Upload image</Button>
                   </Space>
                 </Upload>
               </Form.Item>
