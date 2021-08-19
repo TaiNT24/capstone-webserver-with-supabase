@@ -164,7 +164,7 @@ export default function TaskRecentByVehicle(props) {
         renderItem={(item) => {
           let typeText = "";
           if (item.type === 0) {
-            typeText = "Task";
+            typeText = "Task A to B";
           } else if (item.type === 1) {
             typeText = "Follow Path";
           } else if (item.type === 2) {

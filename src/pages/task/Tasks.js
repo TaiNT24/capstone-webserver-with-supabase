@@ -125,7 +125,7 @@ export default function Tasks(props) {
         dataTask.forEach((task) => {
           let typeText = "";
           if(task.type === 0){
-            typeText = "Task";
+            typeText = "Task A to B";
           } else if(task.type === 1){
             typeText = "Follow Path";
           } else if(task.type === 2){
