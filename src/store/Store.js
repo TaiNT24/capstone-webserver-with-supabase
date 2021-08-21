@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import {supabase} from "../utils/supabase";
+import { supabase } from "../utils/supabase";
 
 // axios.defaults.headers.common["apikey"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjYwNzEwNSwiZXhwIjoxOTM4MTgzMTA1fQ.l2koUbo9t8iz6X9xU45tZwNIyEHfZm6nDTVoXnt5L-E";
 
@@ -10,6 +10,7 @@ const url_avs_server = "https://api.amr-system.me";
 const api_create_new_staff = "/users/create-new-user";
 const api_update_staff = "/users/update-user";
 const api_create_new_vehicle = "/vehicles/vehicle";
+const api_send_noti = "/users/send-notification";
 
 export const useStoreGetDevice = (props) => {
   const [devices, setDevices] = useState();
@@ -369,6 +370,23 @@ export const updateMappingDevice = async (id, devices) => {
     console.log("error_fetchMappingDevice", error);
   }
   return false;
+};
+
+export const sendNotiWhenAssignVehicle = async (id) => {
+  let token = supabase.auth.currentSession.access_token;
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  let res = await axios.post(
+    url_avs_server + api_send_noti,
+    { id: id },
+    config
+  );
+  console.log(res);
 };
 
 export const updateVehicle = async (id, dataUpdate) => {
